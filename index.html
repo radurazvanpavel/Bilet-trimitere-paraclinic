@@ -1,0 +1,936 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#2e3b52">
+<title>Bilet de trimitere paraclinic — cum se verifică</title>
+<style>:root{
+  --bg:#f4f3f0; --paper:#fffefb; --ink:#23262b; --ink2:#5d6068; --line:#dcd9d3; --line2:#c6c2ba;
+  --accent:#3f5a8a; --accent-soft:#e9edf4;
+  --medic:#42557a; --medic-bg:#eaeef5;
+  --noi:#3d6a55;   --noi-bg:#e8f0ea;
+  --pac:#8a6338;   --pac-bg:#f6efe5;
+  --tipar:#5f5e59; --tipar-bg:#eeedea;
+  --warn:#9c3b2e; --warn-bg:#f8eeec;
+  --fs:16px; --pad:16px; --tap:44px; --wrap:1180px; --r:12px; --mono:12.8px;
+}
+body[data-mode="desktop"]{ --fs:16px; --pad:24px; --tap:40px; --wrap:1180px; --mono:13.2px; }
+body[data-mode="mobile"]{  --fs:16.5px; --pad:12px; --tap:48px; --wrap:760px; --mono:12.2px; }
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;padding:0}
+body{font:var(--fs)/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;background:var(--bg);color:var(--ink)}
+.wrap{max-width:var(--wrap);margin:0 auto;padding:0 var(--pad)}
+
+header{background:#2e3b52;color:#f2f1ee;padding:15px 0 13px}
+.hrow{display:flex;gap:12px;align-items:flex-start;justify-content:space-between}
+header h1{margin:0;font-size:1.2em;line-height:1.3;font-weight:700}
+header p{margin:4px 0 0;font-size:.79em;opacity:.72}
+#modebtn{flex:0 0 auto;background:transparent;border:1px solid rgba(255,255,255,.35);color:#f2f1ee;
+  border-radius:8px;padding:8px 12px;font-size:.78em;font-weight:600;cursor:pointer;white-space:nowrap}
+
+nav.tabs{position:sticky;top:0;z-index:40;background:var(--paper);border-bottom:1px solid var(--line)}
+nav.tabs .wrap{display:flex;gap:2px;overflow-x:auto;scrollbar-width:none}
+nav.tabs .wrap::-webkit-scrollbar{display:none}
+nav.tabs button{flex:0 0 auto;border:0;background:none;padding:12px 13px 10px;font-size:.9em;font-weight:600;
+  color:var(--ink2);border-bottom:2px solid transparent;cursor:pointer;white-space:nowrap;min-height:var(--tap)}
+nav.tabs button.on{color:var(--accent);border-bottom-color:var(--accent)}
+
+main{padding:14px 0 42px}
+section.tab{display:none} section.tab.on{display:block}
+
+/* bara de sus: tip bilet + faţă/verso */
+.topbar{display:flex;flex-wrap:wrap;gap:14px;align-items:flex-end;justify-content:space-between;margin-bottom:14px}
+.fld{min-width:0}
+.fld .lbl{font-size:.71em;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--ink2);margin-bottom:6px}
+#types{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;padding-bottom:2px}
+#types::-webkit-scrollbar{display:none}
+.tp{flex:0 0 auto;border:1px solid var(--line2);background:var(--paper);border-radius:8px;padding:7px 12px;
+  cursor:pointer;color:var(--ink);font-size:.88em;font-weight:600;min-height:var(--tap)}
+.tp.on{border-color:var(--accent);background:var(--accent-soft);color:var(--accent)}
+.seg{display:inline-flex;border:1px solid var(--line2);border-radius:9px;overflow:hidden;background:var(--paper)}
+.seg button{border:0;background:none;padding:9px 18px;font-size:.9em;font-weight:600;color:var(--ink2);cursor:pointer;min-height:var(--tap)}
+.seg button.on{background:var(--accent);color:#fff}
+.seg button+button{border-left:1px solid var(--line2)}
+
+.typenote{font-size:.89em;line-height:1.55;color:var(--ink);background:#faf8f2;border:1px solid var(--line);
+  border-left:3px solid var(--accent);border-radius:8px;padding:10px 13px;margin:0 0 10px}
+.helper{font-size:.87em;color:var(--ink2);margin:0 0 12px}
+.legend{display:flex;flex-wrap:wrap;gap:12px;margin:0 0 14px;font-size:.8em;color:var(--ink2)}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.legend i{width:20px;height:12px;border-radius:3px;display:inline-block;border:1px solid #b8b4ac}
+.i-medic{background:#dbe3ef;border-color:#a9b7cf} .i-noi{background:#d8e8dd;border-color:#a3c2ae}
+.i-pac{background:#eee0cd;border-color:#ccb191} .i-tipar{background:#e4e2dd;border-color:#bbb8b1}
+
+/* ---------- LAYOUT: hârtia + panoul ---------- */
+.split{display:grid;grid-template-columns:minmax(0,1fr) 400px;gap:20px;align-items:start}
+body[data-mode="mobile"] .split{grid-template-columns:1fr;gap:0}
+
+/* ---------- HÂRTIA ---------- */
+.sheet{background:var(--paper);border:1px solid var(--line2);border-radius:var(--r);
+  box-shadow:0 2px 10px rgba(40,44,52,.07);overflow:hidden}
+.sheet-top{padding:12px 14px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;
+  align-items:center;gap:10px;background:#faf9f6}
+.sheet-top b{font-size:.84em;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--ink2)}
+.sheet-top span{font-size:.78em;color:var(--ink2)}
+.fz{position:relative;border-bottom:1px solid var(--line);padding:11px 13px 11px 40px;cursor:pointer;
+  font-family:ui-monospace,"SF Mono","Courier New",monospace;font-size:var(--mono);line-height:1.85;transition:background .12s}
+.fz:last-child{border-bottom:0}
+.fz:hover{background:#faf9f5}
+.fz .num{position:absolute;left:9px;top:11px;width:23px;height:23px;border-radius:6px;border:1px solid var(--line2);
+  display:grid;place-items:center;font:600 11px/1 -apple-system,system-ui,sans-serif;color:var(--ink2);background:#fff}
+.fz.w-medic{background:var(--medic-bg)} .fz.w-medic .num{border-color:#b9c4d8;color:var(--medic)}
+.fz.w-noi{background:var(--noi-bg)}     .fz.w-noi .num{border-color:#b3ccbd;color:var(--noi)}
+.fz.w-pac{background:var(--pac-bg)}     .fz.w-pac .num{border-color:#d9c3a7;color:var(--pac)}
+.fz.w-tipar{background:var(--tipar-bg)} .fz.w-tipar .num{border-color:#cac8c3;color:var(--tipar)}
+.fz.sel{box-shadow:inset 3px 0 0 var(--accent);background:#fff}
+.fz.sel .num{border-color:var(--accent);background:var(--accent);color:#fff}
+.fz .tap{position:absolute;right:10px;top:11px;font:600 10px/1 -apple-system,system-ui,sans-serif;
+  color:var(--ink2);opacity:0;letter-spacing:.06em;text-transform:uppercase;transition:opacity .12s}
+.fz:hover .tap{opacity:.45}
+.fz.sel .tap{color:var(--accent);opacity:1}
+body[data-mode="mobile"] .fz .tap{opacity:.3}
+body[data-mode="mobile"] .fz.sel .tap{opacity:1}
+
+.fz b{font-weight:700}
+.ttl{font-size:1.06em;font-weight:700;line-height:1.35}
+.ttl span{display:block;font-weight:400;color:var(--ink2);font-size:.85em}
+.r{margin-top:4px}
+.two{display:grid;grid-template-columns:1.3fr .9fr;gap:12px;margin-top:5px;align-items:start}
+body[data-mode="mobile"] .two{grid-template-columns:1fr;gap:6px}
+.subbox{border:1px solid var(--line);border-radius:7px;padding:6px 9px;background:#fff}
+.subbox .sep{margin-top:6px;padding-top:6px;border-top:1px solid var(--line)}
+.cats{display:grid;grid-template-columns:1fr 1fr;gap:0 14px}
+body[data-mode="mobile"] .cats{grid-template-columns:1fr}
+.tips{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0}
+.tips .t{display:inline-flex;flex-direction:column;align-items:center;gap:2px;border:1px solid var(--line2);
+  border-radius:6px;padding:2px 8px;background:#fff;min-width:34px}
+.tips .t b{font-size:.95em}
+.off{opacity:.55}
+.flag{font-family:-apple-system,system-ui,sans-serif;font-size:.82em;font-weight:700;color:var(--warn);
+  background:var(--warn-bg);border-radius:5px;padding:1px 6px}
+.cb{display:inline-block;width:11px;height:11px;border:1px solid #4a4a4a;margin-right:4px;vertical-align:-1px;background:#fff;border-radius:2px}
+.cells{display:inline-flex;vertical-align:-2px}
+.cells i{width:10px;height:14px;border:1px solid #4a4a4a;border-left-width:0;background:#fff}
+.cells i:first-child{border-left-width:1px}
+.dots{border-bottom:1px dotted #8f8b84;display:inline-block;height:11px;max-width:100%;vertical-align:2px}
+.dn{border:1px solid #4a4a4a;border-radius:3px;padding:0 5px;background:#fff}
+.cut{text-decoration:line-through}
+.bc{font-size:1.25em;letter-spacing:-1px;border:1px solid #4a4a4a;padding:1px 5px;background:#fff}
+table.inv{border-collapse:collapse;width:100%;font-size:.95em;margin-top:5px}
+table.inv td,table.inv th{border:1px solid #9b968e;padding:3px 5px;text-align:left;background:#fff}
+table.inv th{font-weight:700;font-size:.94em}
+.cN{background:var(--noi-bg)!important} .cM{background:var(--medic-bg)!important}
+td.more{text-align:center;color:var(--ink2);background:#faf9f6!important}
+.tkey{display:flex;gap:10px;margin-top:5px;font-family:-apple-system,system-ui,sans-serif;font-size:.84em;color:var(--ink2)}
+.tkey b{font-weight:600;border-radius:5px;padding:1px 7px}
+.warnline{margin-top:6px;font-family:-apple-system,system-ui,sans-serif;font-weight:700;color:var(--warn);font-size:.86em}
+
+/* ---------- PANOUL DE INSTRUCŢIUNI ---------- */
+.panel{background:var(--paper);border:1px solid var(--line2);border-radius:var(--r);padding:18px;position:sticky;top:58px}
+.panel .ph{display:flex;gap:10px;align-items:flex-start;margin-bottom:4px}
+.panel .pn{flex:0 0 auto;width:28px;height:28px;border-radius:7px;display:grid;place-items:center;
+  font-weight:700;font-size:.82em;border:1px solid var(--line2);background:#fff;color:var(--ink2)}
+.panel h2{margin:0;font-size:1.12em;line-height:1.3}
+.who{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0 2px}
+.chip{display:inline-block;border-radius:6px;padding:3px 9px;font-size:.76em;font-weight:700}
+.c-medic{background:var(--medic-bg);color:var(--medic)} .c-noi{background:var(--noi-bg);color:var(--noi)}
+.c-pac{background:var(--pac-bg);color:var(--pac)} .c-tipar{background:var(--tipar-bg);color:var(--tipar)}
+.whod{font-size:.85em;color:var(--ink2);margin:8px 0 0}
+h4.hh{font-size:.74em;font-weight:800;letter-spacing:.09em;text-transform:uppercase;margin:18px 0 8px;color:var(--ink2)}
+h4.hw{color:var(--warn)}
+ul.ok,ul.warn{list-style:none;padding:0;margin:0}
+ul.ok li,ul.warn li{position:relative;padding:0 0 0 20px;margin-bottom:9px;font-size:.93em;line-height:1.5}
+ul.ok li:before{content:"";position:absolute;left:4px;top:.55em;width:6px;height:6px;border-radius:50%;background:var(--ink2)}
+ul.warn li{background:var(--warn-bg);border-radius:8px;padding:8px 10px 8px 24px;margin-bottom:7px}
+ul.warn li:before{content:"";position:absolute;left:10px;top:1.05em;width:6px;height:6px;border-radius:50%;background:var(--warn)}
+.mini{display:inline-block;font-size:.74em;font-weight:700;border-radius:5px;padding:1px 6px;white-space:nowrap}
+.mini.c-medic{background:var(--medic-bg);color:var(--medic)} .mini.c-noi{background:var(--noi-bg);color:var(--noi)}
+.mini.c-pac{background:var(--pac-bg);color:var(--pac)} .mini.c-tipar{background:var(--tipar-bg);color:var(--tipar)}
+details.law{margin-top:16px;border-top:1px solid var(--line);padding-top:4px}
+details.law summary{cursor:pointer;padding:9px 0;font-weight:600;color:var(--accent);font-size:.87em}
+.lawtxt{font-size:.85em;color:#3a3e46;max-height:340px;overflow:auto;padding-right:4px}
+.lawtxt p{margin:0 0 9px}
+.pempty{color:var(--ink2);font-size:.9em;padding:22px 4px;text-align:center}
+.pnav{display:flex;gap:7px;margin-top:16px;border-top:1px solid var(--line);padding-top:12px}
+.pnav button{flex:1;border:1px solid var(--line2);background:#fff;border-radius:8px;padding:9px;
+  font-size:.83em;font-weight:600;color:var(--accent);cursor:pointer;min-height:var(--tap)}
+.pnav button:disabled{color:#b3b0aa;cursor:default}
+
+/* panou = sertar pe mobil */
+body[data-mode="mobile"] .panel{position:fixed;left:0;right:0;bottom:0;top:auto;z-index:60;border-radius:16px 16px 0 0;
+  border:1px solid var(--line2);border-bottom:0;max-height:78vh;overflow:auto;padding:8px 16px 22px;
+  box-shadow:0 -8px 30px rgba(35,38,43,.22);transform:translateY(101%);transition:transform .22s ease}
+body[data-mode="mobile"] .panel.up{transform:translateY(0)}
+.grab{display:none}
+body[data-mode="mobile"] .grab{display:flex;justify-content:space-between;align-items:center;gap:10px;
+  position:sticky;top:0;background:var(--paper);padding:8px 0 10px;margin-bottom:2px}
+body[data-mode="mobile"] .grab:before{content:"";position:absolute;left:50%;top:3px;transform:translateX(-50%);
+  width:38px;height:4px;border-radius:2px;background:var(--line2)}
+.grab button{border:0;background:#f0efec;border-radius:8px;width:34px;height:34px;font-size:1.1em;color:var(--ink2);cursor:pointer;margin-left:auto}
+#backdrop{display:none}
+body[data-mode="mobile"] #backdrop.on{display:block;position:fixed;inset:0;background:rgba(35,38,43,.34);z-index:55}
+
+/* ---------- verificare ---------- */
+.ck-top{display:flex;flex-wrap:wrap;gap:9px;align-items:center;justify-content:space-between;margin-bottom:12px}
+#score{display:flex;gap:6px;flex-wrap:wrap}
+.sc{background:var(--paper);border:1px solid var(--line);border-radius:8px;padding:6px 11px;font-weight:600;font-size:.83em;color:var(--ink2)}
+.btn{border:1px solid var(--accent);border-radius:8px;padding:9px 14px;font-weight:600;font-size:.85em;cursor:pointer;
+  background:var(--accent);color:#fff;min-height:var(--tap)}
+.btn.sec{background:var(--paper);color:var(--accent)}
+.hint{background:#faf8f2;border:1px solid var(--line);border-radius:10px;padding:10px 13px;font-size:.87em;margin-bottom:13px;color:var(--ink2)}
+.group{background:var(--paper);border:1px solid var(--line);border-radius:var(--r);padding:13px;margin-bottom:12px}
+.group h3{margin:0 0 10px;font-size:1em;display:flex;align-items:center;gap:8px}
+.item{display:flex;gap:9px;align-items:center;justify-content:space-between;border:1px solid var(--line);
+  border-radius:9px;padding:9px 11px;margin-bottom:7px;background:#fff}
+.item.ok{background:#f3f7f4;border-color:#cfe0d5}
+.item.bad{background:var(--warn-bg);border-color:#e6cac4}
+.it-t{flex:1;font-size:.93em}
+.it-z{display:block;font-size:.71em;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--ink2)}
+.it-b{display:flex;gap:6px;flex:0 0 auto}
+.it-b button{border:1px solid var(--line2);background:#fff;border-radius:8px;width:44px;height:var(--tap);
+  font-size:1em;cursor:pointer;color:var(--ink2)}
+.item.ok .b-ok{background:var(--noi);border-color:var(--noi);color:#fff}
+.item.bad .b-bad{background:var(--warn);border-color:var(--warn);color:#fff}
+.verdict{display:none;border-radius:var(--r);padding:13px 15px;margin-bottom:13px;font-size:.92em}
+.verdict.show{display:block}
+.verdict.good{background:#f3f7f4;border:1px solid #cfe0d5}
+.verdict.bad{background:var(--warn-bg);border:1px solid #e6cac4}
+.verdict ul{margin:7px 0 0;padding-left:20px} .verdict p{margin:9px 0 0;font-weight:600}
+
+/* ---------- dicţionar + ordin ---------- */
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:12px}
+body[data-mode="mobile"] .cards{grid-template-columns:1fr}
+.card{background:var(--paper);border:1px solid var(--line);border-radius:var(--r);padding:15px}
+.card h3{margin:0 0 11px;font-size:1em}
+.kv{display:grid;grid-template-columns:auto 1fr;gap:7px 12px;font-size:.9em;align-items:start}
+.kv b{background:#f0efec;color:var(--ink);border-radius:5px;padding:2px 8px;font-size:.88em;text-align:center;white-space:nowrap;font-weight:700}
+.cnote{margin:11px 0 0;font-size:.84em;color:var(--ink2);border-top:1px solid var(--line);padding-top:9px}
+.search{width:100%;padding:11px 13px;font-size:1em;border:1px solid var(--line2);border-radius:9px;
+  margin-bottom:10px;min-height:var(--tap);background:var(--paper);color:var(--ink)}
+.note-small{font-size:.81em;color:var(--ink2);margin:0 0 13px}
+.law-sec{background:var(--paper);border:1px solid var(--line);border-radius:var(--r);padding:15px 17px;margin-bottom:12px}
+.law-sec h3{margin:0 0 10px;font-size:1em;color:var(--accent)}
+.law-sec p{margin:0 0 9px;font-size:.9em} .law-sec p.hid{display:none}
+mark{background:#f2e3ad;border-radius:3px;padding:0 1px}
+.empty{text-align:center;color:var(--ink2);padding:32px 10px}
+footer{color:var(--ink2);font-size:.77em;text-align:center;padding:6px 16px 26px}
+
+@media print{
+  header,nav.tabs,.topbar,.helper,.legend,.btn,footer,.it-b,.hint,.panel,#backdrop{display:none!important}
+  body{background:#fff}
+  section.tab{display:none!important}
+  section#t-check{display:block!important}
+  .split{grid-template-columns:1fr} .item,.group{break-inside:avoid}
+}
+</style>
+</head>
+<body data-mode="desktop">
+
+<header><div class="wrap hrow">
+  <div>
+    <h1>Biletul de trimitere pentru investigaţii paraclinice</h1>
+    <p>Cum trebuie să arate un bilet completat corect · Ordinul MS/CNAS nr. 2.168/502/2023, text în vigoare</p>
+  </div>
+  <button id="modebtn" type="button">Vedere: desktop</button>
+</div></header>
+
+<nav class="tabs"><div class="wrap">
+  <button data-t="t-bilet" class="on">Biletul</button>
+  <button data-t="t-check">Verifică un bilet</button>
+  <button data-t="t-dict">Căsuţe şi coduri</button>
+  <button data-t="t-text">Textul ordinului</button>
+</div></nav>
+
+<main><div class="wrap">
+
+  <div class="topbar" id="topbar">
+    <div class="fld">
+      <div class="lbl">Ce bilet ai în mână</div>
+      <div id="types"></div>
+    </div>
+    <div class="fld">
+      <div class="lbl">Ce parte se vede</div>
+      <div class="seg" id="faceseg"></div>
+    </div>
+  </div>
+
+  <section class="tab on" id="t-bilet">
+    <p class="typenote" id="typenote"></p>
+    <p class="helper">Apasă pe orice zonă a biletului ca să vezi ce trebuie completat acolo şi de către cine. Fondul fiecărei zone arată cine o completează.</p>
+    <div class="legend">
+      <span><i class="i-medic"></i>medicul care trimite</span>
+      <span><i class="i-noi"></i>noi, clinica</span>
+      <span><i class="i-pac"></i>pacientul</span>
+      <span><i class="i-tipar"></i>tipărit pe formular</span>
+    </div>
+    <div class="split">
+      <div id="sheet"></div>
+      <aside class="panel" id="panel"></aside>
+    </div>
+  </section>
+
+  <section class="tab" id="t-check">
+    <div class="ck-top">
+      <div id="score"></div>
+      <div style="display:flex;gap:7px">
+        <button class="btn sec" id="ck-reset" type="button">Şterge bifele</button>
+        <button class="btn" type="button" onclick="window.print()">Tipăreşte</button>
+      </div>
+    </div>
+    <div class="hint">Pentru fiecare rând apasă <b>✔</b> dacă e în regulă sau <b>✘</b> dacă lipseşte ori este greşit. La final apare lista problemelor.</div>
+    <div class="verdict" id="verdict"></div>
+    <div id="checklist"></div>
+  </section>
+
+  <section class="tab" id="t-dict">
+    <div class="cards" id="dict"></div>
+  </section>
+
+  <section class="tab" id="t-text">
+    <input class="search" id="q" type="search" placeholder="Caută în text: parafă, verso, internat, majuscule…">
+    <p class="note-small">Ordinul ministrului sănătăţii şi al preşedintelui CNAS nr. 2.168/502/2023, publicat în Monitorul Oficial nr. 600 bis din 30 iunie 2023, cu modificările şi completările ulterioare. Text în vigoare. Penultima secţiune reproduce rubrica 4.4 aşa cum este tipărită pe formularele din anexele 1a–1d, nu textul instrucţiunilor.</p>
+    <div id="lawtext"></div>
+  </section>
+
+</div></main>
+
+<div id="backdrop"></div>
+<footer>Instrument de lucru pentru verificarea biletelor de trimitere. Nu înlocuieşte textul oficial al ordinului.</footer>
+
+<script>/* ================= DATE: text consolidat Ord. MS/CNAS 2168/502/2023 (versiune 30.12.2025) ================= */
+const L = {
+art1_1:`<p><b>Art. 1 (1)</b> Se aprobă modelul unic al biletului de trimitere pentru investigaţii paraclinice, ca imprimat cu regim special, în baza căruia se recomandă investigaţii medicale paraclinice decontate de casele de asigurări de sănătate, prevăzut în anexa nr. 1.</p>`,
+art1_2:`<p><b>Art. 1 (2)</b> Pentru serviciile de înaltă performanţă decontate de casele de asigurări de sănătate: RMN, CT, scintigrafie şi angiografie se utilizează biletul de trimitere pentru investigaţii paraclinice - formular cu regim special, al cărui model este prevăzut în anexele nr. 1a, 1b, 1c şi 1d, după caz.</p>`,
+art1_3:`<p><b>Art. 1 (3)</b> Pentru serviciile medicale paraclinice recomandate de medicii de familie ca urmare a consultaţiilor preventive: - pentru copiii cu vârsta cuprinsă între 2 şi 17 ani inclusiv, pentru persoanele asimptomatice cu vârsta de 18 ani şi peste 18 ani; - pentru depistarea precoce a unor afecţiuni cronice la adulţii care sunt înregistraţi la medicul de familie cu una sau mai multe afecţiuni cronice, se utilizează biletul de trimitere pentru investigaţii paraclinice - formular cu regim special, al cărui model este prevăzut în anexa nr. 1e.</p>`,
+art1_4:`<p><b>Art. 1 (4)</b> Biletul de trimitere pentru investigaţii paraclinice - formular cu regim special, al cărui model este prevăzut în anexa nr. 1e, este utilizat şi pentru recomandarea de investigaţii paraclinice:<br>- pentru persoanele care nu prezintă simptome sugestive pentru diabet zaharat, cu vârsta de 18 ani şi peste, supraponderale/obeze şi/sau care prezintă unul sau mai mulţi factori de risc pentru diabetul zaharat;<br>- pentru persoanele cu vârsta de 18 ani şi peste, care nu prezintă simptome sugestive pentru boala cronică de rinichi, dar care au unul sau mai mulţi factori de risc pentru boala cronică de rinichi, precum boli cardiovasculare, hipertensiune arterială sau diabet zaharat.</p>`,
+art3_2:`<p><b>Art. 3 (2)</b> Aplicarea prevederilor instrucţiunilor prevăzute la alin. (1) este obligatorie pentru toţi furnizorii de servicii medicale aflaţi în relaţii contractuale cu casele de asigurări de sănătate.</p>`,
+art5_2:`<p><b>Art. 5 (2)</b> […] Pentru pacienţii internaţi, serviciile medicale de înaltă performanţă, respectiv CT, RMN, scintigrafie, angiografie, se acordă numai pe bază de recomandare medicală conform fişelor de solicitare prevăzute în normele metodologice de aplicare a contractului-cadru, fără a se întocmi bilet de trimitere pentru servicii medicale paraclinice.</p>`,
+
+A1:`<p><b>Anexa 2a, A.1.</b> Recomandarea pentru investigaţii medicale paraclinice se face pe formularul cu regim special prevăzut în anexa nr. 1 la ordin, respectiv în anexele nr. 1a, 1b, 1c şi 1d la ordin, de către medicii care au, potrivit legii, dreptul de a face recomandări de investigaţii medicale paraclinice în sistemul de asigurări sociale de sănătate. Utilizarea altor formulare pentru recomandarea de investigaţii medicale paraclinice în sistemul de asigurări sociale de sănătate atrage răspunderea furnizorului şi conduce la aplicarea măsurilor prevăzute în contractul-cadru şi în normele metodologice de aplicare a acestuia.</p>`,
+A2:`<p><b>Anexa 2a, A.2.</b> Biletul de trimitere pentru investigaţii paraclinice, denumit în continuare bilet de trimitere, se completează de către medicii aflaţi în relaţie contractuală cu casa de asigurări de sănătate, de către medicii cărora le sunt recunoscute biletele de trimitere pentru investigaţii medicale paraclinice eliberate, în baza convenţiilor încheiate cu casele de asigurări de sănătate, în condiţiile contractului-cadru şi ale normelor metodologice de aplicare a acestuia.</p>`,
+A3:`<p><b>Anexa 2a, A.3.</b> Se interzic:<br>- emiterea biletelor de trimitere de către medicii care nu au încheiat contracte de furnizare de servicii medicale cu casele de asigurări de sănătate, respectiv convenţii în baza cărora le sunt recunoscute biletele de trimitere, direct sau prin reprezentantul legal al furnizorului;<br>- emiterea de către unităţile sanitare care furnizează servicii spitaliceşti a biletelor de trimitere pentru pacienţii spitalizaţi, în decursul internării acestora, precum şi a celor pentru investigaţii contra cost, deoarece tratamentul pacienţilor internaţi se asigură integral de către unitatea spitalicească respectivă, indiferent de afecţiunile asociate.</p>`,
+A4:`<p><b>Anexa 2a, A.4.</b> Investigaţiile medicale paraclinice se pot efectua de către orice furnizor de investigaţii medicale paraclinice aflat în relaţie contractuală cu casa de asigurări de sănătate, în condiţiile prevăzute în contractul-cadru şi în normele metodologice de aplicare a acestuia.</p>`,
+B1:`<p><b>Anexa 2a, B.1.</b> Biletul de trimitere este tipărit pe hârtie autocopiantă în două culori. Exemplarul 2 (verde) rămâne în carnet, la medicul care a făcut trimiterea, iar exemplarul 1 (alb) se predă pacientului, care îl depune la furnizorul de servicii medicale paraclinice care va efectua investigaţiile recomandate. Furnizorul de servicii medicale paraclinice va păstra exemplarul alb (originalul), pe care îl va prezenta casei de asigurări de sănătate doar la solicitarea acesteia.</p>`,
+B2:`<p><b>Anexa 2a, B.2.</b> În situaţia în care în interiorul carnetului cu bilete de trimitere există formulare greşit tipărite, incomplete sau completate greşit de către medic, se va scrie cuvântul "ANULAT" pe formular şi acesta nu va fi decupat din carnet. Aceste file vor fi pliate, rămânând în carnet. Pe verso-ul cotorului ultimului bilet de trimitere se va preciza: "Acest carnet conţine ... file (în cifre şi în litere), de la numărul ... la numărul ..., şi ... file anulate."</p>`,
+B3:`<p><b>Anexa 2a, B.3.</b> Gestionarea, distribuirea şi achiziţionarea carnetelor cu bilete de trimitere se vor face după cum urmează: <b>3.1.</b> Furnizorii de servicii medicale care au încheiat în prealabil contract/convenţie cu o casă de asigurări de sănătate îşi vor achiziţiona, în funcţie de necesităţi, pentru o perioadă de cel mult 3 luni, carnetele de bilete de trimitere de la Compania Naţională «Imprimeria Naţională» (CNIN). <b>3.2.</b> Achiziţia carnetelor de bilete de trimitere de către furnizori, respectiv distribuirea acestora se realizează după cum urmează: a) CNIN livrează carnetele de bilete de trimitere către casele de asigurări de sănătate în vederea distribuirii/livrării acestora către furnizori; b) casele de asigurări de sănătate vor elibera către furnizori carnetele de bilete de trimitere înseriate şi numerotate, în baza avizului de însoţire a mărfii care va conţine cantitatea carnetelor de bilete de trimitere, precum şi seriile şi numerele carnetelor eliberate; c) casele de asigurări de sănătate comunică, zilnic, CNIN baza de date cu carnetele de bilete de trimitere livrate către furnizori împreună cu avizele de însoţire a mărfii aferente; d) CNIN emite către furnizorii de servicii medicale factura conform prevederilor legale, în baza avizului de însoţire a mărfii; e) furnizorii de servicii medicale achită, în contul CNIN, contravaloarea formularelor, în termenul specificat în factură.</p>`,
+B4:`<p><b>Anexa 2a, B.4.</b> Furnizorul de servicii medicale îşi va organiza modul de gestionare şi evidenţă a carnetelor cu bilete de trimitere, precum şi modul de păstrare a carnetelor epuizate. Pentru furnizorii de servicii medicale care au mai mulţi medici angajaţi care au dreptul de a trimite pacientul la investigaţii medicale paraclinice pe baza biletului de trimitere, distribuirea şi arhivarea carnetelor cu bilete de trimitere la nivelul furnizorului se vor face pe baza unui tabel centralizator care va conţine următoarele rubrici obligatorii: numele şi prenumele medicului, data repartizării carnetului/carnetelor, seria (cu numerele) carnetului/carnetelor repartizat/repartizate, semnătura de primire şi parafa, data returnării în arhivă a exemplarului 2, seria biletelor de trimitere returnate (exemplarul 2), semnătura de returnare şi parafa. Înregistrarea biletelor de trimitere emise persoanelor beneficiare ale pachetului de servicii medicale de bază se va face în registrul de consultaţii, la rubrica "Recomandări", unde se vor nota seria şi numărul biletului de trimitere emis.</p>`,
+C0:`<p><b>Anexa 2a, C.</b> Formularele de bilete de trimitere se completează în succesiunea numerelor şi în ordinea cronologică a consultaţiilor, astfel:</p>`,
+Ccod:`<p><b>„Cod de bare”</b> – Formularele cu regim special - biletele de trimitere pentru investigaţii medicale paraclinice vor avea inscripţionat codul de bare aferent seriei şi numărului formularelor respective.</p>`,
+C1a:`<p><b>Câmpul 1 - „Unitate medicală”:</b> a) se completează cu denumirea unităţii medicale, codul unic de înregistrare (CUI) al cabinetului medical sau al unităţii sanitare, adresa completă, casa de asigurări de sănătate cu care furnizorul are încheiat(ă) contract/convenţie, numărul contractului/convenţiei de furnizare de servicii medicale în baza căruia/căreia medicul prescriptor prestează serviciul; medicii pot aplica şi codul de bare aferent numărului contractului/convenţiei de furnizare de servicii medicale;</p>`,
+C1b:`<p>b) se alege prin bifare cu "x" categoria de furnizor de servicii medicale, după cum urmează:<br>- "MF" pentru furnizorii de servicii de asistenţă primară;<br>- "Amb. Spec." pentru furnizorii de servicii ambulatorii de specialitate, inclusiv servicii de medicină dentară. Medicii angajaţi ai unui spital care prestează servicii în baza contractului încheiat între spital şi casele de asigurări de sănătate pentru servicii ambulatorii de specialitate vor bifa căsuţa "Amb. Spec." atunci când emit un bilet de trimitere pacienţilor consultaţi în ambulatoriul de specialitate al spitalului;<br>- "Altele" pentru situaţia în care se eliberează bilete de trimitere în baza convenţiilor încheiate cu casele de asigurări de sănătate pentru recunoaşterea acestora.</p>`,
+C1c:`<p>c) "Nivel de prioritate" - se va bifa cu "x" căsuţa corespunzătoare nivelului de prioritate al investigaţiilor medicale paraclinice recomandate.</p>`,
+C2a:`<p><b>Câmpul 2 - „Date identificare pacient”:</b> a) „Asigurat la CAS/Neasigurat”<br>- dacă pacientul este asigurat, se va tăia cu o linie «Neasigurat» şi se va înscrie casa de asigurări de sănătate în evidenţa căreia se află asiguratul;<br>- dacă pacientul este neasigurat, se va tăia cu o linie «Asigurat la CAS»;</p>`,
+C2b:`<p>b) "RC" - se completează numărul din registrul de consultaţii (RC);</p>`,
+C2c:`<p>c) se alege prin bifare cu "x" categoria în care se încadrează asiguratul. Medicul va bifa o singură categorie de asigurat, astfel:<br>- se bifează categoria "Salariat" pentru toate persoanele angajate în sectorul public/privat care fac dovada plăţii contribuţiei la Fondul naţional unic de asigurări sociale de sănătate (FNUASS);<br>- se bifează categoria "Co-asigurat" pentru soţul, soţia şi părinţii fără venituri proprii, aflaţi în întreţinerea unei persoane asigurate;<br>- se bifează căsuţa "Liber profesionist" pentru persoanele care exercită profesii liberale sau independente;<br>- se bifează categoria "Copil (&lt; 18 ani)" pentru toate persoanele care fac dovada calităţii lor de asigurat printr-un document cu valabilitate legală (certificat de naştere, carte de identitate);<br>- se bifează categoria "Elev/ucenic/student (18 - 26 ani)" pentru toate persoanele de la 18 la 26 ani, dacă sunt elevi, inclusiv absolvenţi de liceu până la începerea anului universitar, dar nu mai mult de 3 luni de la terminarea studiilor, ucenicii sau studenţii, studenţii-doctoranzi care desfăşoară activităţi didactice, potrivit contractului de studii de doctorat, în limita a 4 - 6 ore convenţionale didactice pe săptămână, precum şi persoanele care urmează modulul instruirii individuale, pe baza cererii lor, pentru a deveni soldaţi sau gradaţi profesionişti;<br>- se bifează căsuţa "Gravidă/Lehuză" numai pentru femeile gravide şi lehuze care nu au niciun venit sau au venituri sub salariul de bază minim brut pe ţară […]. Pentru femeile gravide/lehuze care nu se încadrează în această categorie se bifează exclusiv categoria de asigurat din care fac parte;<br>- se bifează căsuţa "Pensionar" pentru toate persoanele care îşi dovedesc această calitate printr-un cupon de pensie;<br>- se bifează căsuţa "Veteran", "Revoluţionar" sau "Handicap" numai pentru asiguraţii care nu realizează alte venituri decât cele provenite din drepturile băneşti acordate de legile speciale prin care li se stabileşte această calitate;<br>- se bifează căsuţa "PNS" şi se notează numărul programului/subprogramului de sănătate pentru bolnavii cu afecţiuni incluse în Programul naţional de sănătate cu scop curativ, stabilit de Ministerul Sănătăţii, până la vindecarea respectivei afecţiuni, dacă nu realizează venituri din muncă, pensie sau alte resurse, pe perioada în care sunt incluşi în program;<br>- se bifează căsuţa "Ajutor social" pentru persoanele care fac parte dintr-o familie care are dreptul la ajutor social, potrivit Legii nr. 416/2001 privind venitul minim garantat, cu modificările şi completările ulterioare;<br>- se bifează căsuţa "Şomaj" pentru persoanele care beneficiază de indemnizaţia de şomaj;<br>- se bifează căsuţa "Card european (CE)" pentru pacienţii din statele membre ale Uniunii Europene/ale Spaţiului Economic European/ai Confederaţiei Elveţiene/ai Regatului Unit al Marii Britanii şi al Irlandei de Nord (cu excepţia României), titulari ai cardului european de asigurări sociale de sănătate;<br>- se bifează căsuţa "Acorduri internaţionale" pentru persoanele care se încadrează în una dintre categoriile beneficiare ale acordurilor, înţelegerilor, convenţiilor sau protocoalelor internaţionale cu prevederi în domeniul sănătăţii, la care România este parte;<br>- la rubrica "Alte categorii" se va nota: cifra 1, pentru persoanele care nu se încadrează în categoriile de asigurat prevăzute în biletul de trimitere, menţionându-se expres categoria de asigurat numai pentru persoanele beneficiare ale unei legi speciale (Legea nr. 309/2002, Decretul-lege nr. 118/1990, Legea nr. 51/1993, Ordonanţa Guvernului nr. 105/1999), dacă nu realizează alte venituri decât cele provenite din drepturile băneşti acordate de aceste legi; cifra 2, pentru beneficiarii formularelor europene, menţionându-se distinct fiecare tip de formular european, respectiv: S1, S2, E 106; E 109; E 112; E 120; E 121, SED similar; cifra 3, pentru persoanele beneficiare ale Ordonanţei de urgenţă a Guvernului nr. 15/2022 […].</p>`,
+C2c1:`<p>c<sup>1</sup>) se alege prin bifare cu «x» categoria în care se încadrează persoana neasigurată, astfel:<br>- până la 31 decembrie 2025 se bifează căsuţa «PNS» şi se notează numărul programului/subprogramului de sănătate pentru bolnavii cu afecţiuni incluse în programele naţionale de sănătate, până la vindecarea respectivei afecţiuni, dacă nu realizează venituri din muncă, pensie sau alte resurse, pe perioada în care sunt incluşi în program;<br>- începând cu 1 ianuarie 2026 se bifează cu «x» căsuţa «PNS» şi se notează numărul Programului naţional de diabet zaharat în vederea dozării hemoglobinei glicozilate (HbA1c);<br>- începând cu 1 ianuarie 2026 se bifează cu «x» căsuţa «PNS» şi se notează numărul Programului naţional de prevenire, supraveghere şi control al infecţiei HIV/SIDA, respectiv al Programului naţional de prevenire, supraveghere şi control al tuberculozei în vederea recomandării de servicii medicale paraclinice din pachetul de bază.</p>`,
+C2d:`<p>d) se vor nota datele de identificare ale pacientului (numele, prenumele, adresa completă); adresa completă nu este câmp obligatoriu de completat;</p>`,
+C2e:`<p>e) câmpul "CID/CNP/CE/PASS" corespunde codului unic de identificare/codului numeric personal/numărului cârdului european/numărului paşaportului. Acest câmp va permite alocarea până la 20 de caractere şi se completează astfel:<br>- pentru cetăţenii români se completează codul unic de identificare sau, după caz, codul numeric personal al pacientului format din 13 cifre, lăsând libere restul de 7 căsuţe; se poate aplica şi codul de bare aferent CNP-ului asiguratului beneficiar;<br>- pentru cetăţenii statelor membre ale Uniunii Europene, ale Spaţiului Economic European şi ai Confederaţiei Elveţiene/Regatului Unit al Marii Britanii şi Irlandei de Nord se va completa: numărul paşaportului/cărţii de identitate pentru beneficiarii formularelor/documentelor europene emise în baza Regulamentului (CE) nr. 883/2004 […], respectiv toate cele 20 de căsuţe corespunzătoare numărului de identificare al cardului european de asigurări de sănătate (câmpul nr. 8 de pe acesta) pentru titularii de card european;<br>- pentru cetăţenii străini din statele cu care România a încheiat acorduri, înţelegeri, convenţii sau protocoale internaţionale cu prevederi în domeniul sănătăţii se va completa numărul paşaportului;<br>- pentru persoanele beneficiare ale Ordonanţei de urgenţă a Guvernului nr. 15/2022 […] se va completa numărul unic de identificare atribuit prin aplicaţia pusă la dispoziţie de către Casa Naţională de Asigurări de Sănătate […]. Pentru cetăţenii străini menţionaţi mai sus se va preciza cetăţenia, prin selecţia codului ţării din Lista abrevierilor […] prevăzută în anexa nr. 3 la ordin.</p>`,
+C3i:`<p><b>Câmpul 3 - „Cod diagnostic”:</b> (i) Se vor completa căsuţele destinate codului de diagnostic corespunzător diagnosticului sau diagnosticelor cunoscute ori prezumtive pentru care se recomandă investigaţiile, utilizând clasificarea CIM revizia a 10-a, varianta 999 coduri de boală.</p>`,
+C3ii:`<p>(ii) Se va bifa cu «x»: căsuţa P pentru efectuarea de investigaţii paraclinice specifice pentru afecţiunile cuprinse în programele naţionale de sănătate; căsuţa A/S pentru efectuarea de investigaţii paraclinice specifice pentru afecţiunile acute/subacute; căsuţa C pentru efectuarea de investigaţii paraclinice specifice pentru bolile cronice, altele decât cele incluse în programele naţionale de sănătate; căsuţa M pentru efectuarea de investigaţii paraclinice pentru cazurile la care se realizează plan de management integrat pentru boli cronice cu impact major asupra poverii îmbolnăvirilor privind: riscul cardiovascular înalt - HTA, dislipidemie şi diabet zaharat tip 2/astm bronşic/boală cronică respiratorie obstructivă (BPOC)/boală cronică de rinichi; căsuţa G pentru efectuarea de investigaţii paraclinice legate de sarcină pentru monitorizarea evoluţiei sarcinii; căsuţa SO pentru serviciile medicale paraclinice acordate persoanelor cu suspiciune de afecţiune oncologică pentru confirmare; căsuţa AO pentru servicii medicale paraclinice acordate persoanelor diagnosticate cu afecţiune oncologică în aplicarea Planului naţional de prevenire şi combatere a cancerului aprobat prin Legea nr. 293/2022 […]; căsuţa HS pentru servicii medicale paraclinice acordate persoanelor neasigurate, în vederea efectuării testării pentru virusul hepatitic B, virusul hepatitic C şi la gravidă, virusul HIV; pentru stabilirea termenului de valabilitate a biletului de trimitere, conform prevederilor din contractul-cadru şi normele metodologice de aplicare a acestuia.</p><p>Dată fiind perioada de valabilitate a biletului de trimitere, diferită pentru afecţiuni acute/subacute şi afecţiuni cronice, inclusiv cele cuprinse în programele naţionale de sănătate, pe acelaşi formular de bilet de trimitere nu se va combina tip diagnostic acut/subacut cu tip diagnostic cronic/tip diagnostic pentru afecţiuni cuprinse în programele naţionale de sănătate. Pentru recomandarea de investigaţii paraclinice pentru cazurile la care se realizează plan de management integrat pentru boli cronice cu impact major asupra poverii îmbolnăvirilor privind: riscul cardiovascular înalt - HTA, dislipidemie şi diabet zaharat tip 2/astm bronşic/boală cronică respiratorie obstructivă (BPOC)/boală cronică de rinichi, se va completa bilet de trimitere distinct, acesta având termen de valabilitate conform prevederilor din contractul-cadru şi normele metodologice de aplicare a acestuia.</p><p>Pentru recomandarea de investigaţii histopatologice, citologice şi imunohistochimice se va întocmi bilet de trimitere distinct, având termen de valabilitate conform prevederilor din contractul-cadru şi normele metodologice de aplicare a acestuia.</p>`,
+C3nota:`<p><b>NOTĂ:</b> Pentru situaţiile în care se recomandă investigaţii paraclinice necesare monitorizării pacienţilor diagnosticaţi cu boli oncologice, diabet zaharat, boli cardiovasculare, boli rare, boli neurologice, boală cronică renală şi boli cerebrovasculare - pentru afecţiunile respective, medicul care face recomandarea va menţiona pe formularul biletului de trimitere, după caz, următoarele:<br>- «Monitor 2» - dacă investigaţiile paraclinice se recomandă pentru monitorizarea pacienţilor diagnosticaţi cu boli oncologice;<br>- «Monitor 3» - dacă investigaţiile paraclinice se recomandă pentru monitorizarea pacienţilor cu diabet zaharat;<br>- «Monitor 4» - dacă investigaţiile paraclinice se recomandă pentru monitorizarea pacienţilor diagnosticaţi cu boli cardiovasculare;<br>- «Monitor 5» - dacă investigaţiile paraclinice se recomandă pentru monitorizarea pacienţilor diagnosticaţi cu boli rare;<br>- «Monitor 6» - dacă investigaţiile paraclinice se recomandă pentru monitorizarea pacienţilor diagnosticaţi cu boli neurologice;<br>- «Monitor 7» - dacă investigaţiile paraclinice se recomandă pentru monitorizarea pacienţilor diagnosticaţi cu boli cerebrovasculare;<br>- «Monitor 8» - dacă investigaţiile paraclinice se recomandă pentru monitorizarea pacienţilor diagnosticaţi cu boală cronică renală.</p><p>Pentru recomandarea investigaţiilor paraclinice necesare monitorizării pacienţilor diagnosticaţi cu boli oncologice, diabet zaharat, boli cardiovasculare, boli rare, boli neurologice, boli cerebrovasculare şi boală cronică renală - pentru afecţiunile respective, medicul care face recomandarea va întocmi bilet de trimitere distinct.</p><p>Pentru situaţiile în care se recomandă investigaţii necesare monitorizării pacienţilor cu boli oncologice, medicul care va emite recomandarea va menţiona pe formularul biletului de trimitere «Monitor 2» şi va bifa căsuţa «AO».</p>`,
+C3iii:`<p>(iii) "Data trimiterii" - se va specifica data trimiterii asiguratului pentru efectuarea investigaţiilor recomandate; la biletele de trimitere pentru recomandarea de investigaţii histopatologice, citologice şi imunohistochimice, la câmpul "data trimiterii" se va specifica data trimiterii asiguratului pentru efectuarea investigaţiilor recomandate sau se va specifica data recoltării probei/probelor la nivelul medicului de specialitate din ambulatoriu (dată ce coincide cu data transmiterii probei/probelor recoltate către laboratorul de anatomie patologică), după caz.</p>`,
+C3iv:`<p>(iv) "Semnătura medicului/Cod parafă" - se execută specimenul de semnătură a medicului care a emis biletul de trimitere şi se aplică parafa şi codul corespunzător acestuia; medicii pot aplica şi codul de bare aferent codului de parafă.</p>`,
+C3v:`<p>(v) "Data reconfirmării" - acest câmp nu va fi completat. În situaţia în care asiguratul se internează în spital în perioada de valabilitate a biletului de trimitere şi investigaţiile medicale paraclinice de înaltă performanţă nu au fost efectuate în timpul spitalizării, asiguratul are obligaţia prezentării biletului de externare/scrisorii medicale din care să rezulte că aceste investigaţii nu au fost făcute pe perioada internării.</p>`,
+C3vi:`<p>(vi) "Semnătura medicului/Cod parafă" - se execută specimenul de semnătură a medicului care a reconfirmat biletul de trimitere şi se aplică parafa şi codul corespunzător acestuia pe cele două exemplare ale biletului de trimitere; medicii pot aplica şi codul de bare aferent codului de parafă pe cele două exemplare ale biletului de trimitere.</p>`,
+C3vii:`<p>(vii) Se bifează căsuţa "Accidente de muncă/Boli profesionale/Daune" dacă la nivelul furnizorului există documente doveditoare pentru cazurile respective, astfel:<br>- se notează cifra 1 pentru cazurile care reprezintă accidente de muncă;<br>- se notează cifra 2 pentru cazurile care reprezintă boli profesionale;<br>- se notează cifra 3 pentru cazurile prezentate ca urmare a situaţiilor în care au fost aduse prejudicii sau daune sănătăţii de către alte persoane.</p>`,
+C4std:`<p><b>Câmpul 4</b> - În situaţia în care se completează anexa nr. 1: "Cod investigaţie/Investigaţii recomandate/Investigaţii efectuate":<br>- medicul care trimite asiguratul, în mod facultativ, poate completa codul de investigaţie, respectiv numărul curent pentru investigaţiile paraclinice care nu au prevăzute coduri în normele metodologice de aplicare a contractului-cadru, separat, pentru fiecare investigaţie recomandată;<br>- codurile proprii investigaţiilor paraclinice se vor completa obligatoriu de către furnizorul de servicii medicale paraclinice care a efectuat investigaţiile, corespunzător reglementărilor în vigoare; pentru investigaţiile paraclinice care nu au prevăzute coduri în normele metodologice de aplicare a contractului-cadru se vor înscrie numerele curente aferente investigaţiilor respective;<br>- "Investigaţii recomandate" - se va completa de medicul care trimite pacientul; investigaţiile recomandate vor fi scrise lizibil cu majuscule;<br>- "Investigaţii efectuate" - se va completa prin bifare cu "x" de furnizorul de servicii medicale paraclinice care a efectuat investigaţiile. În situaţia în care furnizorul nu poate efectua toate investigaţiile prescrise, le va anula cu o linie pe cele neefectuate, pe biletul de trimitere, fără a avea posibilitatea înlocuirii sau adăugării altor investigaţii medicale paraclinice, prin completarea acestuia la nivelul laboratorului/punctului de lucru.</p>`,
+C41:`<p><b>Câmpul 4</b> - În situaţia în care se completează una dintre anexele nr. 1a, 1b, 1c, 1d: <b>4.1</b> "Cod investigaţie/Investigaţii recomandate/Investigaţii efectuate":<br>- medicul care trimite asiguratul, în mod facultativ, poate completa codul de investigaţie, respectiv numărul curent pentru investigaţiile paraclinice care nu au prevăzute coduri în normele metodologice de aplicare a contractului-cadru, separat, pentru fiecare investigaţie recomandată;<br>- codurile proprii investigaţiilor paraclinice se vor completa obligatoriu de către furnizorul de servicii medicale paraclinice care a efectuat investigaţiile, corespunzător reglementărilor în vigoare; pentru investigaţiile paraclinice care nu au prevăzute coduri în normele metodologice de aplicare a contractului-cadru se vor înscrie numerele curente aferente investigaţiilor respective;<br>- "Investigaţii recomandate" - se va completa de medicul care trimite pacientul; investigaţiile recomandate vor fi scrise lizibil cu majuscule;<br>- "Investigaţii efectuate" - se va completa prin bifare cu "x" de furnizorul de servicii medicale paraclinice care a efectuat investigaţiile. În situaţia în care furnizorul nu poate efectua toate investigaţiile prescrise, le va anula cu o linie pe cele neefectuate, pe biletul de trimitere, fără a avea posibilitatea înlocuirii sau adăugării altor investigaţii medicale paraclinice, prin completarea acestuia la nivelul laboratorului/punctului de lucru.</p>`,
+C42:`<p><b>4.2</b> "Date clinice şi paraclinice care să justifice investigaţia" - medicul va consemna datele clinice şi paraclinice care justifică investigaţia;</p>`,
+C43:`<p><b>4.3</b> "Examen RMN anterior: Da/Nu", "Examen CT anterior: Da/Nu", "Examen scintigrafic anterior: Da/Nu", "Examen angiografic anterior: Da/Nu" - se va bifa de către medicul care face recomandarea căsuţa "Da", dacă s-a efectuat examen RMN, CT, scintigrafic, angiografic, după caz, în antecedente, respectiv căsuţa "Nu", dacă nu s-a efectuat examen RMN, CT, scintigrafic, angiografic, după caz, în antecedente;</p>`,
+C44:`<p><b>4.4</b> "Observaţii speciale legate de pacient" - se vor consemna, de către medicul care face recomandarea, observaţiile speciale legate de pacient, prin bifarea căsuţei care corespunde situaţiei pacientului, în funcţie de tipul de serviciu de înaltă performanţă recomandat;</p>`,
+C45:`<p><b>4.5</b> "Substanţă de contrast: Da/Nu" - pentru serviciile de înaltă performanţă, RMN şi CT se va bifa, de către medicul radiolog, căsuţa "Da", dacă se utilizează substanţă de contrast, respectiv căsuţa "Nu", dacă nu se utilizează substanţa de contrast.</p>`,
+C4nota:`<p><b>Notă:</b> Pentru situaţiile în care se recomandă investigaţiile medicale paraclinice angiografie RMN şi angiografie CT, medicul prescriptor va completa anexa nr. 1a, respectiv anexa nr. 1b la ordin.</p>`,
+C5:`<p><b>Câmpul 5 - "Numele şi semnătura persoanei desemnate de furnizorul de servicii medicale paraclinice":</b><br>- se va completa în clar numele persoanei desemnate de furnizorul de servicii medicale paraclinice, care va executa specimenul de semnătură.</p>`,
+C6:`<p><b>Câmpul 6 - "Data prezentării pacientului":</b><br>- se va completa de către pacient data la care acesta s-a prezentat la furnizorul de servicii paraclinice pentru efectuarea investigaţiilor, numai dacă investigaţiile medicale paraclinice sunt efectuate la momentul prezentării;<br>- "Semnătura pacientului" - se execută semnătura beneficiarului serviciilor paraclinice recomandate după ce a fost informat asupra tipurilor de investigaţii medicale paraclinice de care urmează să beneficieze, numai dacă investigaţiile medicale paraclinice sunt efectuate la momentul prezentării;<br>- pe biletele de trimitere pentru investigaţii histologice şi citologice se completează de către pacient câmpurile "data prezentării pacientului" şi "semnătura pacientului", numai în situaţia în care recoltarea probei/probelor se face la nivelul laboratorului.</p>`,
+C7:`<p><b>Câmpul 7 - "Date care necesită a fi inscripţionate pe versoul biletului de trimitere pentru investigaţii medicale paraclinice"</b><br>În situaţia în care, din motive obiective, investigaţiile nu au putut fi efectuate la momentul prezentării pacientului, furnizorul de servicii medicale paraclinice are obligaţia de a-l programa în perioada de valabilitate a biletului de trimitere, consemnând pe versoul exemplarului de bilet de trimitere data prezentării pentru programare şi data programării; dacă pacientul refuză programarea, furnizorul va restitui pacientului biletul de trimitere pentru ca acesta să se poată prezenta la alt furnizor de investigaţii medicale paraclinice. La momentul prezentării la furnizorul de investigaţii paraclinice din ambulatoriu pentru efectuarea investigaţiilor, cu excepţia examinărilor histopatologice şi citologice, pacientul va declara pe propria răspundere pe versoul biletului de trimitere că a fost sau nu internat pe perioada de la data eliberării biletului de trimitere până la data efectuării investigaţiilor.</p>`,
+
+P_A1:`<p><b>Anexa 2b, A.1.</b> Recomandarea pentru investigaţii medicale paraclinice în cadrul consultaţiilor preventive se face pe formularul cu regim special prevăzut în anexa nr. 1e la ordin de către medicii de familie care au, potrivit reglementărilor legale în vigoare, dreptul de a face recomandări de astfel de investigaţii medicale paraclinice în sistemul de asigurări sociale de sănătate.</p>`,
+P_A2:`<p><b>Anexa 2b, A.2.</b> Biletul de trimitere pentru investigaţii paraclinice, denumit în continuare bilet de trimitere, se completează de către medicii de familie aflaţi în relaţie contractuală cu casa de asigurări de sănătate în condiţiile contractului-cadru şi ale normelor metodologice de aplicare a acestuia.<br>În situaţia în care, în cadrul consultaţiei de prevenţie, sunt recomandate atât analize medicale de laborator, cât şi investigaţii paraclinice de radiologie - imagistică medicală se va întocmi bilet de trimitere distinct pentru analizele medicale de laborator recomandate, respectiv bilet de trimitere distinct pentru fiecare investigaţie de radiologie - imagistică medicală recomandată. În situaţia în care între analizele medicale pe care medicul de familie le recomandă în cadrul consultaţiei de prevenţie se regăseşte testul Babeş-Papanicolau se întocmeşte bilet distinct pentru acest test.</p>`,
+P_A3:`<p><b>Anexa 2b, A.3.</b> Se interzice emiterea acestor bilete de trimitere de către medicii de familie care nu au încheiat contracte/convenţii de furnizare de servicii medicale cu casele de asigurări de sănătate.</p>`,
+P_B1:`<p><b>Anexa 2b, B.1.</b> Biletul de trimitere este tipărit pe hârtie autocopiantă în două culori. Exemplarul 2 (roz) rămâne în carnet, la medicul de familie care a făcut trimiterea, iar exemplarul 1 (alb) se predă pacientului, care îl depune la furnizorul de servicii medicale paraclinice care va efectua investigaţiile recomandate. Furnizorul de servicii medicale paraclinice va păstra exemplarul alb (originalul), pe care îl va prezenta casei de asigurări de sănătate doar la solicitarea acesteia.</p>`,
+P_C1:`<p><b>Câmpul 1 - "Unitate medicală" (anexa 2b):</b> Se completează cu denumirea unităţii medicale, codul unic de înregistrare (CUI) al cabinetului medical sau al unităţii sanitare, adresa completă, casa de asigurări de sănătate cu care furnizorul are încheiat(ă) contract/convenţie, numărul contractului/convenţiei de furnizare de servicii medicale în baza căruia/căreia medicul prescriptor prestează serviciul; medicii de familie pot aplica şi codul de bare aferent numărului contractului/convenţiei de furnizare de servicii medicale.</p>`,
+P_C2:`<p><b>Câmpul 2 - "Date de identificare asigurat" (anexa 2b):</b> a) «Asigurat la CAS/Neasigurat» - dacă pacientul este asigurat, se va tăia cu o linie «Neasigurat» şi se va înscrie casa de asigurări de sănătate în evidenţa căreia se află asiguratul; - dacă pacientul este neasigurat, se va tăia cu o linie «Asigurat la CAS». b) "RC" - se completează numărul din registrul de consultaţii (RC); c) "data naşterii" - se va completa ziua, luna şi anul naşterii; d) la "vârstă" se notează în cifre vârsta împlinită a asiguratului; e) se va bifa cu x căsuţa F sau M corespunzătoare sexului (feminin/masculin); f) se bifează căsuţa "Acorduri internaţionale" pentru persoanele care se încadrează în una dintre categoriile beneficiare ale acordurilor […]; g) la rubrica "Alte categorii" se va nota: cifra 2, pentru beneficiarii formularelor europene […]; cifra 3, pentru persoanele beneficiare ale Ordonanţei de urgenţă a Guvernului nr. 15/2022 […]; h) se vor nota datele de identificare ale pacientului - numele şi prenumele; i) câmpul "CID/CNP/PASS" corespunde codului unic de identificare/codului numeric personal/numărului paşaportului. Acest câmp va permite alocarea până la 20 de caractere […]: pentru cetăţenii români se completează codul unic de asigurare sau, după caz, codul numeric personal al pacientului format din 13 cifre, lăsând libere restul de 7 căsuţe […].</p>`,
+P_C3:`<p><b>Câmpul 3 - "Cod diagnostic" (anexa 2b):</b> (i) Pentru biletele de trimitere emise de medicii de familie prin care se recomandă investigaţii paraclinice în cadrul consultaţiilor preventive din pachetul de bază codul de diagnostic completat va fi 999.<br>(ii) În căsuţa "PREV" se va nota:<br>- cifra 1 - pentru copiii cu vârsta cuprinsă între 2 şi 5 ani inclusiv;<br>- cifra 2 - pentru copiii cu vârsta cuprinsă între 6 şi 9 ani inclusiv;<br>- cifra 3 - pentru copiii cu vârsta cuprinsă între 10 şi 17 ani inclusiv;<br>- cifra 4 - pentru persoanele asimptomatice cu vârsta cuprinsă între 18 şi 39 de ani;<br>- cifra 5 - pentru persoanele asimptomatice cu vârsta de 40 de ani şi peste;<br>- cifra 6 - pentru persoanele cu vârsta cuprinsă între 40 şi 60 de ani care sunt înregistrate la medicul de familie cu una sau mai multe afecţiuni cronice;<br>- cifra 7 - pentru persoanele cu vârsta de peste 60 de ani care sunt înregistrate la medicul de familie cu una sau mai multe afecţiuni cronice;<br>- cifra 8 - pentru persoanele care nu prezintă simptome sugestive pentru diabet zaharat, cu vârsta de 18 ani şi peste, supraponderali/obezi şi/sau care prezintă unul sau mai mulţi factori de risc pentru diabetul zaharat;<br>- cifra 9 - pentru persoanele cu vârsta de 18 ani şi peste, care nu prezintă simptome sugestive pentru boala cronică de rinichi, dar care au unul sau mai mulţi factori de risc pentru boală cronică de rinichi precum boli cardiovasculare, hipertensiune arterială sau diabet zaharat.<br><b>NOTĂ:</b> Cifra 8 sau 9 se completează numai pentru persoanele asigurate de către medicul de familie pentru biletele de trimitere pentru efectuarea de investigaţii pentru depistarea diabetului zaharat, respectiv a bolii cronice de rinichi, cu ocazia acordării altor tipuri de consultaţii, dacă persoana nu a mai efectuat investigaţiile recomandate în ultimele 6 luni.<br>(iii) "Data trimiterii" - se va specifica data întocmirii biletului de trimitere pentru investigaţiile paraclinice recomandate.<br>(iv) "Semnătura medicului/Cod parafă" - se execută specimenul de semnătură a medicului de familie care a emis biletul de trimitere şi se aplică parafa şi codul corespunzător acestuia; medicii de familie pot aplica şi codul de bare aferent codului de parafă.</p>`,
+P_C4:`<p><b>Câmpul 4 (anexa 2b)</b> "Cod investigaţie/Investigaţii recomandate/Investigaţii efectuate":<br>- medicul care trimite pacientul, în mod facultativ, poate completa codul de investigaţie, separat, pentru fiecare investigaţie recomandată;<br>- codurile proprii investigaţiilor paraclinice se vor completa obligatoriu de către furnizorul de servicii medicale paraclinice care a efectuat investigaţiile, corespunzător reglementărilor în vigoare;<br>- "Investigaţii recomandate" - se va completa de medicul care trimite pacientul; investigaţiile recomandate vor fi scrise lizibil cu majuscule;<br>- "Investigaţii efectuate" - se va completa prin bifare cu "x" de furnizorul de servicii medicale paraclinice care a efectuat investigaţiile. În situaţia în care furnizorul nu poate efectua toate investigaţiile prescrise, le va anula cu o linie pe cele neefectuate, pe biletul de trimitere, fără a avea posibilitatea înlocuirii sau adăugării altor investigaţii medicale paraclinice, prin completarea acestuia la nivelul laboratorului/punctului de lucru.</p>`,
+P_C5:`<p><b>Câmpul 5 - "Numele şi semnătura persoanei desemnate de furnizorul de servicii paraclinice" (anexa 2b):</b> se va completa în clar numele persoanei desemnate de furnizorul de servicii medicale paraclinice, care va executa specimenul de semnătură.</p>`,
+P_C6:`<p><b>Câmpul 6 - "Data prezentării pacientului" (anexa 2b):</b> se va completa de către pacient data la care acesta s-a prezentat la furnizorul de servicii paraclinice pentru efectuarea investigaţiilor, numai dacă investigaţiile medicale paraclinice sunt efectuate la momentul prezentării; "Semnătura pacientului" - se execută semnătura beneficiarului serviciilor paraclinice recomandate după ce a fost informat asupra tipurilor de investigaţii medicale paraclinice de care urmează să beneficieze, numai dacă investigaţiile medicale paraclinice sunt efectuate la momentul prezentării.</p>`,
+P_C7:`<p><b>Câmpul 7 (anexa 2b)</b> În situaţia în care, din motive obiective, investigaţiile nu au putut fi efectuate la momentul prezentării pacientului, furnizorul de servicii medicale paraclinice are obligaţia de a-l programa în perioada de valabilitate a biletului de trimitere, consemnând pe versoul exemplarului de bilet de trimitere data prezentării pentru programare şi data programării; dacă pacientul refuză programarea, furnizorul va restitui pacientului biletul de trimitere pentru ca acesta să se poată prezenta la alt furnizor de investigaţii medicale paraclinice. La momentul prezentării la furnizorul de investigaţii paraclinice din ambulatoriu pentru efectuarea investigaţiilor, pacientul va declara pe propria răspundere pe versoul biletului de trimitere că a fost sau nu internat pe perioada de la data eliberării biletului de trimitere până la data efectuării investigaţiilor.</p>`,
+
+F44rmn:`<p><b>Anexa 1a — rubrica 4.4 tipărită pe formularul RMN:</b> a) Greutate … kg; b) Cooperare previzibilă Normală/Dificilă; c) Astm bronşic; d) Suspiciune de sarcină; e) Valve cardiace, ventriculare; f) Dispozitive intrauterine; g) Alte proteze; h) Schije, gloanţe, obiecte metalice; i) Proteze articulare, materiale de osteosinteză; j) Meserii legate de prelucrarea metalelor (schije, obiecte metalice); k) Clipuri chirurgicale, materiale metalice de sutură; l) Asistat cardiorespirator; m) Antecedente alergice; n) Crize epileptice; o) Claustrofobie; p) Proteze auditive; r) Materiale stomatologice; s) Corpi străini intraocular – fiecare DA/NU. „PREZENŢA UNUI PACEMAKER ESTE O CONTRAINDICAŢIE ABSOLUTĂ PENTRU EXAMINARE!!!”</p>`,
+F44ct:`<p><b>Anexa 1b — rubrica 4.4 tipărită pe formularul CT:</b> a) Greutate … kg; b) Toleranţă la substanţa iodată DA/NU.</p>`,
+F44sc:`<p><b>Anexa 1c — rubrica 4.4 tipărită pe formularul de scintigrafie:</b> a) Greutate … kg; b) Antecedente alergice DA/NU. „SARCINA ESTE O CONTRAINDICAŢIE ABSOLUTĂ PENTRU EFECTUAREA EXAMENULUI SCINTIGRAFIC!!!”</p>`,
+F44an:`<p><b>Anexa 1d — rubrica 4.4 tipărită pe formularul de angiografie:</b> a) Greutate … kg; b) Antecedente alergice DA/NU; c) Puls: artera femurală dreaptă … şi artera femurală stângă …; d) Pacient diabetic DA/NU – în tratament cu sulfamide hipoglicemiante DA/NU (dacă DA se opreşte tratamentul cu 48 de ore înaintea investigaţiei); e) Hepatita DA/NU. Pacientul se va prezenta obligatoriu cu următoarele teste efectuate: activitatea protrombinică şi timpul de protrombină determinate în ziua efectuării investigaţiei, creatinină, uree, ECG, tensiune arterială, antigen HbS, test HIV; administrarea anticoagulantelor cumarinice trebuie oprită cu 72 de ore înaintea investigaţiei; administrarea medicaţiei antihipertensive şi antiaritmice NU se opreşte.</p>`
+};
+</script>
+<script>/* ================= TIPURI DE BILET ================= */
+const TYPES = [
+  {id:'std',   n:'Standard',     s:'Anexa 1',
+   d:'Formularul pe care se recomandă <b>toate investigaţiile paraclinice decontate de CAS, în afară de cele de înaltă performanţă</b>: analize medicale de laborator şi investigaţiile de radiologie – imagistică medicală (radiografie, ecografie, mamografie, osteodensitometrie şi celelalte din listele normelor de aplicare a contractului-cadru). Examinările histopatologice, citologice şi imunohistochimice se recomandă tot pe acest formular, dar pe bilet distinct. RMN, CT, scintigrafia şi angiografia <b>nu</b> se scriu aici.'},
+  {id:'rmn',   n:'RMN',          s:'Anexa 1a',
+   d:'Formular propriu, doar pentru RMN. Angiografia RMN se recomandă tot pe acest formular.'},
+  {id:'ct',    n:'CT',           s:'Anexa 1b',
+   d:'Formular propriu, doar pentru CT. Angiografia CT se recomandă tot pe acest formular.'},
+  {id:'scinti',n:'Scintigrafie', s:'Anexa 1c',
+   d:'Formular propriu, doar pentru scintigrafie.'},
+  {id:'angio', n:'Angiografie',  s:'Anexa 1d',
+   d:'Formular propriu, doar pentru angiografie (cea RMN merge pe anexa 1a, cea CT pe anexa 1b).'},
+  {id:'prev',  n:'Prevenţie MF', s:'Anexa 1e',
+   d:'Numai pentru investigaţiile recomandate de medicul de familie în cadrul consultaţiilor preventive din pachetul de bază, inclusiv pentru depistarea diabetului zaharat şi a bolii cronice de rinichi. Analizele de laborator şi fiecare investigaţie de radiologie – imagistică se cer pe bilete separate.'}
+];
+const HP = ['rmn','ct','scinti','angio'];
+function on(spec,t){
+  if(!spec||spec==='all') return true;
+  if(Array.isArray(spec)) return spec.includes(t);
+  if(spec==='hp') return HP.includes(t);
+  if(spec==='nothp') return !HP.includes(t);
+  if(spec==='notprev') return t!=='prev';
+  if(spec==='rmnct') return t==='rmn'||t==='ct';
+  return spec===t;
+}
+const WHO = {
+  medic:{n:'Medicul care trimite', s:'M', d:'Completează medicul care a dat biletul. Noi nu completăm în locul lui.'},
+  noi:{n:'Noi (clinica)', s:'N', d:'Completează furnizorul care efectuează investigaţiile — adică noi.'},
+  pac:{n:'Pacientul', s:'P', d:'Completează şi semnează pacientul.'},
+  tipar:{n:'Tipărit pe formular', s:'T', d:'Este deja tipărit pe formularul cu regim special.'}
+};
+
+/* ================= ZONE ================= */
+/* face:'fata' | 'verso' */
+const Z = [
+{id:'z0', b:'0', face:'fata', title:'Formularul în sine', short:'Serie, număr, cod de bare, exemplarul corect', who:['tipar'],
+ ok:[
+  {t:'Formular tipizat cu regim special, cu <b>cod de bare</b>, <b>serie</b> şi <b>număr</b>', w:'tipar'},
+  {t:'Ai primit <b>exemplarul 1 – ALB</b> (originalul). Exemplarul 2 verde rămâne în carnet, la medic.', w:'tipar', on:'notprev'},
+  {t:'Ai primit <b>exemplarul 1 – ALB</b> (originalul). Exemplarul 2 roz rămâne în carnet, la medicul de familie.', w:'tipar', on:'prev'},
+  {t:'Formularul e cel potrivit investigaţiei: RMN pe anexa 1a, CT pe 1b, scintigrafie pe 1c, angiografie pe 1d', w:'tipar', on:'hp'},
+  {t:'Angio-RMN se scrie pe formularul RMN (1a), iar angio-CT pe formularul CT (1b)', w:'tipar', on:'rmnct'},
+  {t:'Pe acest formular intră toate investigaţiile paraclinice decontate de CAS, <b>cu excepţia celor de înaltă performanţă</b>: analize de laborator şi radiologie – imagistică medicală', w:'tipar', on:'std'},
+  {t:'RMN, CT, scintigrafia şi angiografia NU se scriu pe acest formular — au formularele lor (anexele 1a–1d)', w:'tipar', on:'std'},
+  {t:'Examinările histopatologice, citologice şi imunohistochimice se cer pe acest formular, dar pe bilet distinct', w:'tipar', on:'std'},
+  {t:'La prevenţie: analizele de laborator au bilet separat, iar FIECARE investigaţie de radiologie-imagistică are biletul ei separat', w:'tipar', on:'prev'},
+  {t:'Testul Babeş-Papanicolau are bilet separat', w:'tipar', on:'prev'}
+ ],
+ warn:[
+  {t:'Orice alt formular (copie, reţetă, scrisoare medicală, bilet de trimitere pentru consultaţie) NU ţine loc de bilet. Folosirea altor formulare atrage răspunderea furnizorului.'},
+  {t:'Scrie „ANULAT” pe formular? Nu se primeşte — fila aceea trebuia să rămână în carnet.'}
+ ],
+ law:[{k:'A1'},{k:'P_A1',on:'prev'},{k:'art1_2',on:'hp'},{k:'art1_3',on:'prev'},{k:'art1_4',on:'prev'},{k:'B1',on:'notprev'},{k:'P_B1',on:'prev'},{k:'P_A2',on:'prev'},{k:'B2'},{k:'Ccod'},{k:'C4nota',on:'rmnct'},{k:'art3_2'}]
+},
+{id:'z1', b:'1', face:'fata', title:'Unitatea medicală care trimite', short:'Denumire, CUI, adresă, CAS, nr. contract + tip unitate şi prioritate', who:['medic'],
+ ok:[
+  {t:'Denumirea unităţii medicale', w:'medic'},
+  {t:'CUI-ul cabinetului sau al unităţii sanitare', w:'medic'},
+  {t:'Adresa completă a unităţii', w:'medic'},
+  {t:'Casa de asigurări cu care furnizorul are contract/convenţie', w:'medic'},
+  {t:'Numărul contractului/convenţiei (poate fi şi cod de bare)', w:'medic'},
+  {t:'Bifat tipul de furnizor: <b>MF</b>, <b>Amb. Spec.</b> sau <b>Altele</b>', w:'medic', on:'notprev'},
+  {t:'Bifată căsuţa corespunzătoare <b>nivelului de prioritate</b> al investigaţiilor recomandate', w:'medic', on:'notprev'}
+ ],
+ warn:[
+  {t:'Medicul trebuie să fie în contract sau convenţie cu CAS. Fără asta, emiterea biletului este interzisă.'},
+  {t:'Spitalul NU poate emite bilet pentru un pacient internat, pe durata internării, nici bilet pentru investigaţii contra cost.'},
+  {t:'Pacienţii internaţi fac CT/RMN/scintigrafie/angiografie pe fişă de solicitare, fără bilet de trimitere.', on:'hp'}
+ ],
+ law:[{k:'C1a',on:'notprev'},{k:'C1b',on:'notprev'},{k:'C1c',on:'notprev'},{k:'P_C1',on:'prev'},{k:'A2',on:'notprev'},{k:'A3',on:'notprev'},{k:'P_A3',on:'prev'},{k:'art5_2',on:'hp'}]
+},
+{id:'z2', b:'2', face:'fata', title:'Datele pacientului', short:'Asigurat/neasigurat, RC, categorie, nume, CNP', who:['medic'],
+ ok:[
+  {t:'„Asigurat la CAS / Neasigurat”: una din variante e <b>tăiată cu o linie</b>; la asigurat e scrisă şi casa de asigurări', w:'medic'},
+  {t:'<b>RC</b> — numărul din registrul de consultaţii', w:'medic'},
+  {t:'<b>O SINGURĂ</b> categorie de asigurat bifată', w:'medic', on:'notprev'},
+  {t:'Numele şi prenumele (adresa nu este câmp obligatoriu de completat)', w:'medic', on:'notprev'},
+  {t:'Numele şi prenumele', w:'medic', on:'prev'},
+  {t:'<b>CNP complet, 13 cifre</b>; restul celor 7 căsuţe rămân libere', w:'medic'},
+  {t:'Străini: nr. card european (toate 20 de căsuţe) sau nr. paşaport / carte de identitate, plus <b>codul ţării</b> la „Cetăţenia”', w:'medic', on:'notprev'},
+  {t:'Străini: nr. paşaport sau carte de identitate, plus <b>codul ţării</b> la „Cetăţenia”', w:'medic', on:'prev'},
+  {t:'Data naşterii, vârsta împlinită (în cifre) şi sexul bifat (M / F)', w:'medic', on:'prev'},
+  {t:'La „Alte categorii”, dacă e bifat: 1 = legi speciale · 2 = formular european (S1, S2, E106…) · 3 = O.U.G. 15/2022', w:'medic', on:'notprev'},
+  {t:'La „Alte categorii”, dacă e bifat: 2 = formular european · 3 = O.U.G. 15/2022', w:'medic', on:'prev'}
+ ],
+ warn:[
+  {t:'Două sau mai multe categorii bifate = bilet greşit completat.', on:'notprev'},
+  {t:'Gravidă/Lehuză se bifează numai dacă nu are venituri sau are venituri sub salariul minim brut. Altfel se bifează categoria ei de asigurat.', on:'notprev'},
+  {t:'Neasigurat cu „PNS” bifat: din 1 ianuarie 2026 se notează numărul Programului naţional de diabet zaharat (HbA1c), al Programului HIV/SIDA sau al Programului de tuberculoză.', on:'notprev'}
+ ],
+ law:[{k:'C2a',on:'notprev'},{k:'C2b',on:'notprev'},{k:'C2c',on:'notprev'},{k:'C2c1',on:'notprev'},{k:'C2d',on:'notprev'},{k:'C2e',on:'notprev'},{k:'P_C2',on:'prev'}]
+},
+{id:'z3', b:'3', face:'fata', title:'Diagnostic, dată, semnătură şi parafă', short:'Cod CIM-10, căsuţa de tip, data trimiterii, parafa', who:['medic'],
+ ok:[
+  {t:'Codul de diagnostic (CIM-10, varianta 999 coduri) + diagnosticul scris', w:'medic', on:'notprev'},
+  {t:'Codul de diagnostic este <b>999</b>', w:'medic', on:'prev'},
+  {t:'Bifată căsuţa de tip corespunzătoare: <b>P · A/S · C · M · G · SO · AO · HS</b>', w:'medic', on:'std'},
+  {t:'Bifată căsuţa de tip corespunzătoare: <b>P · A/S · C · SO · AO</b>', w:'medic', on:'hp'},
+  {t:'În căsuţa <b>PREV</b> este o cifră de la 1 la 9', w:'medic', on:'prev'},
+  {t:'<b>Data trimiterii</b>', w:'medic'},
+  {t:'<b>Semnătura</b> medicului + <b>parafa</b> + <b>codul de parafă</b>', w:'medic'},
+  {t:'„Data reconfirmării” este <b>GOALĂ</b> — acest câmp nu se completează', w:'medic', on:'hp'},
+  {t:'„Accidente de muncă/Boli profesionale/Daune”: dacă e bifat, are cifra 1, 2 sau 3', w:'medic', on:'notprev'}
+ ],
+ warn:[
+  {t:'Pe acelaşi bilet NU se combină acut/subacut (A/S) cu cronic (C) sau cu program naţional (P).', on:'notprev'},
+  {t:'Scrie „Monitor 2…8”? Biletul trebuie să fie distinct, doar pentru afecţiunea respectivă. La monitorizare oncologică: „Monitor 2” <b>şi</b> bifă pe AO.', on:'notprev'},
+  {t:'Management integrat (M) şi investigaţiile histopatologice/citologice/imunohistochimice se cer pe bilet distinct.', on:'std'},
+  {t:'Cifra 8 sau 9 la PREV se pune numai pentru persoane asigurate şi numai dacă nu a făcut investigaţiile în ultimele 6 luni.', on:'prev'}
+ ],
+ law:[{k:'art1_4',on:'prev'},{k:'C3i',on:'notprev'},{k:'C3ii',on:'notprev'},{k:'C3nota',on:'notprev'},{k:'C3iii',on:'notprev'},{k:'C3iv',on:'notprev'},{k:'C3v',on:'hp'},{k:'C3vi',on:'hp'},{k:'C3vii',on:'notprev'},{k:'P_C3',on:'prev'}]
+},
+{id:'z4', b:'4', face:'fata', title:'Investigaţiile', short:'Recomandate de medic · codurile şi bifele le punem noi', who:['medic','noi'],
+ ok:[
+  {t:'Investigaţiile recomandate sunt scrise <b>lizibil, cu MAJUSCULE</b>', w:'medic'},
+  {t:'Codul investigaţiei — medicul îl poate completa, dar este <b>facultativ</b> pentru el', w:'medic'},
+  {t:'Noi completăm <b>obligatoriu</b> codul propriu al fiecărei investigaţii efectuate', w:'noi'},
+  {t:'Noi bifăm cu „x” la „Investigaţii efectuate” ce s-a efectuat', w:'noi'},
+  {t:'Investigaţiile pe care nu le putem efectua le anulăm cu o linie', w:'noi'}
+ ],
+ warn:[
+  {t:'NU avem dreptul să înlocuim şi să adăugăm alte investigaţii pe bilet, nici la nivelul laboratorului/punctului de lucru.'}
+ ],
+ law:[{k:'C4std',on:'std'},{k:'C41',on:'hp'},{k:'P_C4',on:'prev'}]
+},
+{id:'z42', b:'4.2', face:'fata', title:'Date clinice care justifică investigaţia', short:'Medicul scrie de ce e nevoie de investigaţie', who:['medic'], on:'hp',
+ ok:[{t:'Datele clinice şi paraclinice care justifică investigaţia sunt consemnate', w:'medic'}],
+ warn:[{t:'Rubrică goală = bilet incomplet.'}],
+ law:[{k:'C42'}]
+},
+{id:'z43', b:'4.3', face:'fata', title:'Examen anterior', short:'A mai făcut sau nu acest tip de examen', who:['medic'], on:'hp',
+ ok:[{t:'Bifat <b>DA</b> sau <b>NU</b> la examenul anterior', w:'medic'}],
+ warn:[],
+ law:[{k:'C43'}]
+},
+{id:'z44', b:'4.4', face:'fata', title:'Observaţii speciale legate de pacient', short:'Bifele de siguranţă înainte de examinare', who:['medic'], on:'hp',
+ ok:[
+  {t:'Bifat DA/NU la fiecare rând: greutate, cooperare, astm, sarcină, valve, dispozitive intrauterine, proteze, metale, osteosinteză, clipuri, asistare cardiorespiratorie, alergii, epilepsie, claustrofobie, proteze auditive, materiale stomatologice, corpi străini intraoculari', w:'medic', on:'rmn'},
+  {t:'Completate: greutatea şi toleranţa la substanţa iodată (DA/NU)', w:'medic', on:'ct'},
+  {t:'Completate: greutatea şi antecedentele alergice (DA/NU)', w:'medic', on:'scinti'},
+  {t:'Completate: greutate, antecedente alergice, puls femural dreapta/stânga, pacient diabetic (şi sulfamide hipoglicemiante), hepatită', w:'medic', on:'angio'}
+ ],
+ warn:[
+  {t:'<b>PREZENŢA UNUI PACEMAKER ESTE O CONTRAINDICAŢIE ABSOLUTĂ PENTRU EXAMINARE.</b>', on:'rmn'},
+  {t:'<b>SARCINA ESTE O CONTRAINDICAŢIE ABSOLUTĂ</b> pentru examenul scintigrafic.', on:'scinti'},
+  {t:'Pacientul se prezintă obligatoriu cu: activitatea protrombinică şi timpul de protrombină din ziua investigaţiei, creatinină, uree, ECG, tensiune arterială, antigen HbS, test HIV. Anticoagulantele cumarinice se opresc cu 72 de ore înainte; medicaţia antihipertensivă şi antiaritmică NU se opreşte.', on:'angio'},
+  {t:'Dacă e bifat diabet cu sulfamide hipoglicemiante, tratamentul se opreşte cu 48 de ore înaintea investigaţiei.', on:'angio'}
+ ],
+ law:[{k:'C44'},{k:'F44rmn',on:'rmn'},{k:'F44ct',on:'ct'},{k:'F44sc',on:'scinti'},{k:'F44an',on:'angio'}]
+},
+{id:'z45', b:'4.5', face:'fata', title:'Substanţă de contrast', short:'O bifează medicul nostru radiolog', who:['noi'], on:'rmnct',
+ ok:[{t:'Bifat <b>DA</b> sau <b>NU</b> de medicul radiolog, după cum se foloseşte sau nu substanţă de contrast', w:'noi'}],
+ warn:[{t:'Ordinul spune că bifa se face „de către medicul radiolog”, nu de medicul care trimite. În practică se completează la momentul examinării.'}],
+ law:[{k:'C45'}]
+},
+{id:'z5', b:'5', face:'fata', title:'Persoana desemnată de clinică', short:'Numele în clar + semnătura', who:['noi'],
+ ok:[
+  {t:'Numele persoanei desemnate de furnizor, scris <b>în clar</b>', w:'noi'},
+  {t:'Specimenul de semnătură al acesteia', w:'noi'}
+ ],
+ warn:[],
+ law:[{k:'C5',on:'notprev'},{k:'P_C5',on:'prev'}]
+},
+{id:'z6', b:'6', face:'fata', title:'Data prezentării şi semnătura pacientului', short:'Numai dacă investigaţia se face pe loc', who:['pac'],
+ ok:[
+  {t:'Data prezentării, scrisă de pacient', w:'pac'},
+  {t:'Semnătura pacientului, după ce a fost informat despre tipurile de investigaţii de care urmează să beneficieze', w:'pac'}
+ ],
+ warn:[
+  {t:'Se completează <b>numai dacă investigaţiile se efectuează la momentul prezentării</b>. Dacă se programează pentru altă zi, informaţiile merg pe verso.'},
+  {t:'La investigaţiile histologice şi citologice, pacientul completează aceste câmpuri numai dacă recoltarea se face la laborator.', on:'std'}
+ ],
+ law:[{k:'C6',on:'notprev'},{k:'P_C6',on:'prev'}]
+},
+/* ---------------- VERSO ---------------- */
+{id:'v1', b:'7', face:'verso', title:'Programarea, când nu se poate face pe loc', short:'Data prezentării pentru programare + data programării', who:['noi'],
+ ok:[
+  {t:'Dacă din motive obiective investigaţiile nu s-au putut efectua la prezentare, <b>avem obligaţia să programăm pacientul în perioada de valabilitate a biletului</b>', w:'noi'},
+  {t:'Scriem pe verso <b>data prezentării pentru programare</b>', w:'noi'},
+  {t:'Scriem pe verso <b>data programării</b>', w:'noi'}
+ ],
+ warn:[
+  {t:'Dacă pacientul refuză programarea, îi <b>restituim biletul</b>, ca să se poată prezenta la alt furnizor.'},
+  {t:'Programarea trebuie să cadă în perioada de valabilitate a biletului.'}
+ ],
+ law:[{k:'C7',on:'notprev'},{k:'P_C7',on:'prev'}]
+},
+{id:'v2', b:'7', face:'verso', title:'Declaraţia pacientului privind internarea', short:'Pe propria răspundere: a fost sau nu internat', who:['pac'],
+ ok:[
+  {t:'La momentul prezentării pentru efectuarea investigaţiilor, pacientul declară pe verso, <b>pe propria răspundere</b>, dacă a fost sau nu internat', w:'pac'},
+  {t:'Perioada la care se referă declaraţia: de la data eliberării biletului până la data efectuării investigaţiilor', w:'pac'},
+  {t:'Excepţie: la examinările histopatologice şi citologice nu se cere această declaraţie', w:'pac', on:'notprev'}
+ ],
+ warn:[
+  {t:'A fost internat şi investigaţia de înaltă performanţă nu s-a făcut în spital? Prezintă biletul de externare / scrisoarea medicală din care rezultă asta.', on:'hp'}
+ ],
+ law:[{k:'C7',on:'notprev'},{k:'P_C7',on:'prev'},{k:'C3v',on:'hp'}]
+},
+{id:'v3', b:'·', face:'verso', title:'După efectuare: originalul rămâne la noi', short:'Nu se scrie pe verso — este regula de păstrare a exemplarului alb', who:['noi'],
+ ok:[
+  {t:'Păstrăm <b>exemplarul alb (originalul)</b>', w:'noi'},
+  {t:'Îl prezentăm casei de asigurări <b>doar la solicitarea acesteia</b>', w:'noi'},
+  {t:'Aceasta nu este o menţiune care se scrie pe verso — este regula de la litera B a instrucţiunilor', w:'noi'}
+ ],
+ warn:[],
+ law:[{k:'B1',on:'notprev'},{k:'P_B1',on:'prev'}]
+}
+];
+function zoneOn(z,t){ return on(z.on||'all',t); }
+</script>
+<script>/* ================= STARE ================= */
+var T='rmn', FACE='fata', SEL=null, CK={}, MODE='auto';
+function eff(){ return MODE!=='auto' ? MODE : (window.innerWidth<900?'mobile':'desktop'); }
+function save(){ try{ localStorage.setItem('bilet-mode',MODE); }catch(e){} }
+function load(){ try{ var m=localStorage.getItem('bilet-mode'); if(m==='mobile'||m==='desktop') MODE=m; }catch(e){} }
+function el(id){ return document.getElementById(id); }
+
+/* ================= FRAGMENTE DE FORMULAR ================= */
+function cb(t){ return '<span class="cb"></span>'+t; }
+function cells(n){ return '<span class="cells">'+new Array(n+1).join('<i></i>')+'</span>'; }
+function dots(w){ return '<span class="dots" style="min-width:'+(w||70)+'px"></span>'; }
+
+function frag(id){
+  var hp = HP.indexOf(T)>=0, prev = T==='prev';
+  var sub = {std:'', rmn:'Servicii de înaltă performanţă – RMN', ct:'Servicii de înaltă performanţă – CT',
+    scinti:'Servicii de înaltă performanţă – SCINTIGRAFIE', angio:'Servicii de înaltă performanţă – ANGIOGRAFIE',
+    prev:'recomandate de medicii de familie în cadrul consultaţiilor preventive din pachetul de bază'}[T];
+  switch(id){
+  case 'z0':
+    return '<div class="ttl">BILET DE TRIMITERE<br>pentru investigaţii paraclinice'+(prev?'':' decontate de CAS')+
+      (sub?'<span>'+sub+'</span>':'')+'</div>'+
+      '<div class="r"><span class="bc">▌▎▌▌▎▌ ▎▌▎▌▌</span> &nbsp; SERIE '+dots(60)+' &nbsp; NR. '+dots(70)+'</div>';
+  case 'z1':
+    return '<b>1. Unitate medicală</b> '+dots(130)+
+      '<div class="two"><div>CUI '+dots(90)+'<br>Sediu (localitate, str., nr.) '+dots(80)+'<br>Judeţul '+dots(90)+
+      '<br>Casa de asigurări '+dots(80)+'<br>Nr. Contract/Convenţie '+dots(70)+'</div>'+
+      (prev?'':'<div class="subbox">'+cb('MF')+'<br>'+cb('Amb. Spec.')+'<br>'+cb('Altele')+
+      '<div class="sep"><b>Nivel de prioritate</b><br>'+cb('Urgenţă')+'<br>'+cb('Curente')+'</div></div>')+'</div>';
+  case 'z2':
+    var cats = prev
+      ? '<div class="subbox">'+cb('Acorduri internaţionale')+'<br>'+cb('Alte categorii')+'</div>'
+      : '<div class="cats">'+['Salariat','Veteran','Co-asigurat','Revoluţionar','Liber-profesionist','Handicap',
+         'Copil (&lt; 18 ani)','PNS ……','Elev/Ucenic/Student (18-26 ani)','Ajutor social','Gravidă/Lăuză','Şomaj',
+         'Pensionar','Card European (CE)','Alte categorii','Acorduri internaţionale']
+         .map(function(x){return '<div>'+cb(x)+'</div>';}).join('')+'</div>';
+    return '<b>2. Date de identificare pacient</b>'+
+      '<div class="r">Asigurat la CAS<span class="cut">/</span>Neasigurat: '+dots(70)+' &nbsp; RC: '+dots(50)+'</div>'+
+      '<div class="two"><div>Nume '+dots(95)+'<br>Prenume '+dots(95)+
+        (prev?'<br>Data naşterii '+dots(70)+'<br>Vârsta '+cells(2)+'<br>Sexul '+cb('M')+' '+cb('F')
+             :'<br>Adresa '+dots(95)+'<br>'+dots(110))+'</div>'+cats+'</div>'+
+      '<div class="r">CID/CNP/'+(prev?'':'CE/')+'PASS '+cells(20)+' &nbsp; Cetăţenia '+cells(2)+'</div>'+
+      (hp?'<div class="r">COD CARD ASIGURAT '+cells(20)+'</div>':'');
+  case 'z3':
+    var tips = T==='std'?['P','A/S','C','M','G','SO','AO','HS']:(hp?['P','A/S','C','SO','AO']:['PREV.']);
+    return '<b>3. Cod diagnostic</b>'+
+      '<div class="r">'+cells(5)+' Diagnostic '+dots(110)+'<br>'+cells(5)+' '+dots(130)+'</div>'+
+      '<div class="tips">'+tips.map(function(x){return '<span class="t"><b>'+x+'</b><span class="cb"></span></span>';}).join('')+'</div>'+
+      (prev?'':'<div class="r">Accidente de muncă/Boli profesionale/Daune '+cb('')+'</div>')+
+      '<div class="r">Data trimiterii ..../..../.... &nbsp; Semnătura medicului '+dots(70)+' &nbsp; Cod parafă '+cells(6)+(prev?' &nbsp; L.S.':'')+'</div>'+
+      (hp?'<div class="r off">Data reconfirmării ..../..../.... &nbsp; Semnătura medicului '+dots(55)+' &nbsp; Cod parafă '+cells(6)+
+          ' <span class="flag">nu se completează</span></div>':'');
+  case 'z4':
+    var n = hp?4:15, rows='';
+    for(var i=1;i<=(hp?4:4);i++) rows+='<tr><td>'+i+'</td><td class="cN">'+cells(6)+'</td><td class="cM"></td><td class="cN"></td></tr>';
+    if(!hp) rows+='<tr><td colspan="4" class="more">… rândurile 5 – '+n+'</td></tr>';
+    return '<b>'+(hp?'4.1 Cod investigaţie / Investigaţii recomandate / Investigaţii efectuate':'4.')+'</b>'+
+      '<table class="inv"><tr><th>Poz.</th><th class="cN">Cod investigaţie</th><th class="cM">Investigaţii recomandate</th><th class="cN">Investigaţii efectuate</th></tr>'+rows+'</table>'+
+      '<div class="tkey"><b class="cM">scrie medicul</b><b class="cN">completăm noi</b></div>';
+  case 'z42': return '<b>4.2 Date clinice şi paraclinice care să justifice investigaţia:</b><div class="r">'+dots(200)+'<br>'+dots(200)+'</div>';
+  case 'z43': return '<b>4.3 Examen '+({rmn:'RMN',ct:'CT',scinti:'scintigrafic',angio:'angiografic'}[T])+' anterior:</b> <span class="dn">DA</span> / <span class="dn">NU</span>';
+  case 'z44':
+    var o = {
+      rmn:'<div class="cats"><div>a) Greutate …… kg</div><div>l) Asistat cardiorespirator DA/NU</div>'+
+          '<div>b) Cooperare Normală/Dificilă</div><div>m) Antecedente alergice DA/NU</div>'+
+          '<div>c) Astm bronşic DA/NU</div><div>n) Crize epileptice DA/NU</div>'+
+          '<div>d) Suspiciune de sarcină DA/NU</div><div>o) Claustrofobie DA/NU</div>'+
+          '<div>e) Valve cardiace, ventriculare DA/NU</div><div>p) Proteze auditive DA/NU</div>'+
+          '<div>f) Dispozitive intrauterine DA/NU</div><div>r) Materiale stomatologice DA/NU</div>'+
+          '<div>g) Alte proteze DA/NU</div><div>s) Corpi străini intraocular DA/NU</div></div>'+
+          '<div class="r">h) Schije, gloanţe, obiecte metalice · i) Proteze articulare, osteosinteză · j) Meserii cu prelucrarea metalelor · k) Clipuri chirurgicale, materiale metalice de sutură — DA/NU</div>'+
+          '<div class="warnline">PREZENŢA UNUI PACEMAKER ESTE O CONTRAINDICAŢIE ABSOLUTĂ PENTRU EXAMINARE!!!</div>',
+      ct:'<div class="r">a) Greutate …… kg<br>b) Toleranţă la substanţa iodată DA/NU</div>',
+      scinti:'<div class="r">a) Greutate …… kg<br>b) Antecedente alergice DA/NU</div>'+
+             '<div class="warnline">SARCINA ESTE O CONTRAINDICAŢIE ABSOLUTĂ PENTRU EFECTUAREA EXAMENULUI SCINTIGRAFIC!!!</div>',
+      angio:'<div class="r">a) Greutate …… kg · b) Antecedente alergice DA/NU · c) Puls: artera femurală dreaptă …… şi stângă …… · d) Pacient diabetic DA/NU – în tratament cu sulfamide hipoglicemiante DA/NU · e) Hepatita DA/NU</div>'+
+            '<div class="warnline">Teste obligatorii la prezentare: activitate protrombinică şi timp de protrombină din ziua investigaţiei, creatinină, uree, ECG, tensiune arterială, antigen HbS, test HIV</div>'
+    }[T];
+    return '<b>4.4 Observaţii speciale legate de pacient</b>'+o;
+  case 'z45': return '<b>4.5 Substanţă de contrast:</b> <span class="dn">DA</span> / <span class="dn">NU</span>';
+  case 'z5': return '<b>5. Numele şi semnătura persoanei desemnate de furnizorul de servicii paraclinice:</b><div class="r">'+dots(220)+'</div>';
+  case 'z6': return '<b>6. Data prezentării pacientului</b> ......./........./........ &nbsp;&nbsp; <b>Semnătura pacientului</b> '+dots(90);
+  case 'v1': return '<b>Programare</b><div class="r">Data prezentării pentru programare '+dots(90)+'</div>'+
+      '<div class="r">Data programării '+dots(90)+'</div><div class="r">Numele şi semnătura persoanei care a programat '+dots(120)+'</div>';
+  case 'v2': return '<b>Declaraţia pacientului</b><div class="r">Declar pe propria răspundere că, de la data eliberării biletului de trimitere</div>'+
+      '<div class="r">până la data efectuării investigaţiilor, '+cb('am fost')+' &nbsp; '+cb('nu am fost')+' internat(ă).</div>'+
+      '<div class="r">Data '+dots(70)+' &nbsp; Semnătura pacientului '+dots(90)+'</div>';
+  case 'v3': return '<b>Exemplarul 1 – ALB (originalul)</b><div class="r">rămâne la furnizorul care a efectuat investigaţiile şi se prezintă casei de asigurări doar la solicitarea acesteia</div>';
+  }
+  return '';
+}
+
+/* ================= HÂRTIA ================= */
+function zonesFor(face){ return Z.filter(function(z){ return z.face===face && zoneOn(z,T); }); }
+function renderSheet(){
+  var zs = zonesFor(FACE), tp = TYPES.filter(function(x){return x.id===T;})[0];
+  var h = '<div class="sheet"><div class="sheet-top"><b>'+(FACE==='fata'?'Faţa biletului':'Versoul biletului')+
+          '</b><span>'+tp.n+' · '+tp.s+'</span></div>';
+  zs.forEach(function(z){
+    h += '<div class="fz w-'+z.who[0]+(SEL===z.id?' sel':'')+'" data-z="'+z.id+'" role="button" tabindex="0">'+
+         '<span class="num">'+z.b+'</span><span class="tap">'+(SEL===z.id?'selectat':'apasă')+'</span>'+
+         frag(z.id)+'</div>';
+  });
+  h += '</div>';
+  el('sheet').innerHTML = h;
+  el('sheet').querySelectorAll('.fz').forEach(function(d){
+    d.onclick = function(){ pick(d.dataset.z); };
+    d.onkeydown = function(e){ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); pick(d.dataset.z); } };
+  });
+}
+
+/* ================= PANOUL ================= */
+function whoChips(ws){ return ws.map(function(w){ return '<span class="chip c-'+w+'">'+WHO[w].n+'</span>'; }).join(''); }
+function lawHTML(list){
+  var seen={}, out='';
+  list.filter(function(x){return on(x.on||'all',T);}).forEach(function(x){
+    if(!L[x.k]||seen[x.k]) return; seen[x.k]=1; out+=L[x.k];
+  });
+  return out;
+}
+function renderPanel(){
+  var p = el('panel');
+  var grab = '<div class="grab"><button id="closep" type="button" aria-label="închide">✕</button></div>';
+  if(!SEL){
+    p.innerHTML = grab+'<div class="pempty">Apasă pe o zonă din bilet ca să vezi ce trebuie completat acolo şi de către cine.</div>';
+    p.classList.remove('up'); el('backdrop').classList.remove('on');
+    bindPanel(); return;
+  }
+  var z = Z.filter(function(x){return x.id===SEL;})[0];
+  var ok = z.ok.filter(function(i){return on(i.on||'all',T);});
+  var wr = z.warn.filter(function(i){return on(i.on||'all',T);});
+  var multi = z.who.length>1;
+  var zs = zonesFor(FACE), ix = zs.map(function(x){return x.id;}).indexOf(SEL);
+  p.innerHTML = grab+
+    '<div class="ph"><span class="pn">'+z.b+'</span><h2>'+z.title+'</h2></div>'+
+    '<div class="who">'+whoChips(z.who)+'</div>'+
+    '<p class="whod">'+z.who.map(function(w){return WHO[w].d;}).join(' ')+'</p>'+
+    '<h4 class="hh">Ce trebuie să găseşti aici</h4>'+
+    '<ul class="ok">'+ok.map(function(i){
+        return '<li>'+i.t+(multi?' <span class="mini c-'+i.w+'">'+WHO[i.w].n+'</span>':'')+'</li>';
+      }).join('')+'</ul>'+
+    (wr.length?'<h4 class="hh hw">Atenţie</h4><ul class="warn">'+wr.map(function(i){return '<li>'+i.t+'</li>';}).join('')+'</ul>':'')+
+    '<details class="law"><summary>Textul din ordin</summary><div class="lawtxt">'+lawHTML(z.law)+'</div></details>'+
+    '<div class="pnav"><button id="pprev" type="button"'+(ix<=0?' disabled':'')+'>← zona anterioară</button>'+
+    '<button id="pnext" type="button"'+(ix>=zs.length-1?' disabled':'')+'>zona următoare →</button></div>';
+  if(eff()==='mobile'){ p.classList.add('up'); el('backdrop').classList.add('on'); }
+  bindPanel();
+  function step(d){
+    var t = zs[ix+d]; if(t) pick(t.id, true);
+  }
+  if(el('pprev')) el('pprev').onclick=function(){ step(-1); };
+  if(el('pnext')) el('pnext').onclick=function(){ step(1); };
+}
+function bindPanel(){
+  if(el('closep')) el('closep').onclick = function(){ SEL=null; renderSheet(); renderPanel(); };
+}
+function pick(id, scroll){
+  SEL = (SEL===id && eff()!=='mobile') ? null : id;
+  renderSheet(); renderPanel();
+  if(SEL && (scroll || eff()==='mobile')){
+    var n = el('sheet').querySelector('.fz.sel');
+    if(n) n.scrollIntoView({behavior:'smooth', block: eff()==='mobile'?'start':'center'});
+  }
+}
+
+/* ================= VERIFICARE ================= */
+function ckItems(){
+  var out=[];
+  Z.filter(function(z){return zoneOn(z,T);}).forEach(function(z){
+    z.ok.filter(function(i){return on(i.on||'all',T);}).forEach(function(i,ix){
+      out.push({key:z.id+'|'+ix, z:z, i:i});
+    });
+  });
+  return out;
+}
+function renderCheck(){
+  var items=ckItems(), h='';
+  [{w:'tipar',h:'Formularul'},{w:'medic',h:'Ce trebuia completat de medicul care trimite'},
+   {w:'noi',h:'Ce completăm noi'},{w:'pac',h:'Ce completează pacientul'}].forEach(function(g){
+    var its = items.filter(function(x){return x.i.w===g.w;});
+    if(!its.length) return;
+    h += '<section class="group"><h3><span class="chip c-'+g.w+'">'+WHO[g.w].n+'</span>'+g.h+'</h3>';
+    its.forEach(function(x){
+      h += '<div class="item '+(CK[x.key]||'')+'" data-k="'+x.key+'">'+
+           '<div class="it-t"><span class="it-z">'+(x.z.face==='verso'?'verso · ':'')+'zona '+x.z.b+'</span>'+x.i.t+'</div>'+
+           '<div class="it-b"><button class="b-ok" aria-label="în regulă">✔</button><button class="b-bad" aria-label="lipseşte">✘</button></div></div>';
+    });
+    h += '</section>';
+  });
+  el('checklist').innerHTML = h;
+  el('checklist').querySelectorAll('.item').forEach(function(d){
+    d.querySelector('.b-ok').onclick=function(){ CK[d.dataset.k]=CK[d.dataset.k]==='ok'?'':'ok'; renderCheck(); };
+    d.querySelector('.b-bad').onclick=function(){ CK[d.dataset.k]=CK[d.dataset.k]==='bad'?'':'bad'; renderCheck(); };
+  });
+  var n=items.length,
+      ok=items.filter(function(x){return CK[x.key]==='ok';}).length,
+      bad=items.filter(function(x){return CK[x.key]==='bad';});
+  el('score').innerHTML='<span class="sc">'+TYPES.filter(function(t){return t.id===T;})[0].n+'</span>'+
+    '<span class="sc">verificate '+(ok+bad.length)+' / '+n+'</span><span class="sc">în regulă '+ok+'</span>'+
+    '<span class="sc">de semnalat '+bad.length+'</span>';
+  var v=el('verdict');
+  if(bad.length){
+    var bm=bad.filter(function(x){return x.i.w==='medic'||x.i.w==='tipar';});
+    v.className='verdict show bad';
+    v.innerHTML='<b>Probleme găsite ('+bad.length+')</b><ul>'+bad.map(function(x){return '<li>'+x.i.t+'</li>';}).join('')+'</ul>'+
+      (bm.length?'<p>Ce ţine de formular sau de medicul care trimite nu se completează de către noi.</p>':'');
+  } else if(n&&ok===n){ v.className='verdict show good'; v.innerHTML='<b>Toate punctele sunt în regulă.</b>'; }
+  else { v.className='verdict'; v.innerHTML=''; }
+}
+
+/* ================= CĂSUŢE ================= */
+function renderDict(){
+  function card(t,rows,note){
+    return '<section class="card"><h3>'+t+'</h3><div class="kv">'+
+      rows.map(function(r){return '<b>'+r[0]+'</b><span>'+r[1]+'</span>';}).join('')+'</div>'+
+      (note?'<p class="cnote">'+note+'</p>':'')+'</section>';
+  }
+  var h='';
+  h+=card('Căsuţa de tip din zona 3',[
+    ['P','afecţiuni cuprinse în programele naţionale de sănătate'],
+    ['A/S','afecţiuni acute / subacute'],
+    ['C','boli cronice, altele decât cele din programele naţionale'],
+    ['M','plan de management integrat: risc cardiovascular înalt (HTA, dislipidemie, diabet tip 2), astm bronşic, BPOC, boală cronică de rinichi'],
+    ['G','investigaţii legate de sarcină, pentru monitorizarea evoluţiei sarcinii'],
+    ['SO','suspiciune de afecţiune oncologică, pentru confirmare'],
+    ['AO','persoane diagnosticate cu afecţiune oncologică'],
+    ['HS','neasiguraţi — testare hepatită B, hepatită C şi, la gravidă, HIV']
+  ],'Pe biletele de înaltă performanţă (anexele 1a–1d) există doar P, A/S, C, SO şi AO. Pe acelaşi bilet nu se combină A/S cu C sau cu P.');
+  h+=card('Menţiunea „Monitor” — cere bilet distinct',[
+    ['2','boli oncologice — se bifează şi AO'],['3','diabet zaharat'],['4','boli cardiovasculare'],
+    ['5','boli rare'],['6','boli neurologice'],['7','boli cerebrovasculare'],['8','boală cronică renală']
+  ]);
+  h+=card('Categoria pacientului din zona 2 — o singură bifă',[
+    ['Salariat','angajat în sectorul public/privat care face dovada plăţii contribuţiei la FNUASS'],
+    ['Co-asigurat','soţul, soţia şi părinţii fără venituri proprii, în întreţinerea unui asigurat'],
+    ['Liber prof.','persoane care exercită profesii liberale sau independente'],
+    ['Copil','sub 18 ani, cu dovada calităţii de asigurat printr-un document cu valabilitate legală'],
+    ['Elev/Student','18–26 ani: elevi, absolvenţi de liceu (max. 3 luni), ucenici, studenţi, studenţi-doctoranzi'],
+    ['Gravidă','gravide şi lehuze fără venit sau cu venit sub salariul minim brut'],
+    ['Pensionar','dovedeşte calitatea cu cupon de pensie'],
+    ['Veteran / Revol. / Handicap','numai dacă nu realizează alte venituri decât cele din legile speciale'],
+    ['PNS','Program naţional de sănătate cu scop curativ + numărul programului/subprogramului, dacă nu realizează venituri din muncă, pensie sau alte resurse'],
+    ['Ajutor social','familie îndreptăţită la ajutor social (Legea 416/2001)'],
+    ['Şomaj','beneficiari de indemnizaţie de şomaj'],
+    ['Card european','titulari de card european (UE/SEE/Elveţia/Regatul Unit, cu excepţia României)'],
+    ['Acorduri int.','beneficiari ai acordurilor internaţionale la care România este parte'],
+    ['Alte categorii','1 = legi speciale · 2 = formulare europene (S1, S2, E106, E109, E112, E120, E121, SED similar) · 3 = O.U.G. 15/2022']
+  ]);
+  h+=card('Tipul furnizorului din zona 1',[
+    ['MF','furnizori de servicii de asistenţă primară'],
+    ['Amb. Spec.','ambulatoriu de specialitate, inclusiv medicină dentară şi ambulatoriul de specialitate al spitalului'],
+    ['Altele','bilete eliberate în baza convenţiilor încheiate cu casele de asigurări']
+  ]);
+  h+=card('Accidente de muncă / Boli profesionale / Daune',[
+    ['1','accidente de muncă'],['2','boli profesionale'],
+    ['3','prejudicii sau daune aduse sănătăţii de către alte persoane']
+  ]);
+  h+=card('Căsuţa PREV — biletul de prevenţie al medicului de familie',[
+    ['999','codul de diagnostic pe acest bilet'],
+    ['1','copii 2–5 ani inclusiv'],['2','copii 6–9 ani inclusiv'],['3','copii 10–17 ani inclusiv'],
+    ['4','persoane asimptomatice 18–39 ani'],['5','persoane asimptomatice 40 ani şi peste'],
+    ['6','40–60 ani, înregistraţi la medicul de familie cu una sau mai multe afecţiuni cronice'],
+    ['7','peste 60 ani, înregistraţi cu una sau mai multe afecţiuni cronice'],
+    ['8','risc de diabet zaharat, 18 ani şi peste'],['9','risc de boală cronică de rinichi, 18 ani şi peste']
+  ],'Cifrele 8 şi 9 se completează numai pentru persoane asigurate şi numai dacă investigaţiile nu au fost efectuate în ultimele 6 luni.');
+  h+=card('Exemplarele biletului',[
+    ['Alb','exemplarul 1, originalul — se predă pacientului, ajunge şi rămâne la noi'],
+    ['Verde','exemplarul 2 — rămâne în carnet, la medicul care a trimis'],
+    ['Roz','exemplarul 2 al biletului de prevenţie — rămâne la medicul de familie'],
+    ['ANULAT','formular greşit — rămâne pliat în carnet, nu se decupează şi nu se primeşte']
+  ]);
+  el('dict').innerHTML=h;
+}
+
+/* ================= TEXTUL ORDINULUI ================= */
+var SECTIONS=[
+  ['Ordinul — articole',['art1_1','art1_2','art1_3','art1_4','art3_2','art5_2']],
+  ['Anexa 2a — A. Principii generale',['A1','A2','A3','A4']],
+  ['Anexa 2a — B. Utilizarea formularelor',['B1','B2','B3','B4']],
+  ['Anexa 2a — C. Completarea biletului',['C0','Ccod','C1a','C1b','C1c','C2a','C2b','C2c','C2c1','C2d','C2e','C3i','C3ii','C3nota','C3iii','C3iv','C3v','C3vi','C3vii','C4std','C41','C42','C43','C44','C45','C4nota','C5','C6','C7']],
+  ['Anexele 1a–1d — rubrica 4.4 tipărită pe formular',['F44rmn','F44ct','F44sc','F44an']],
+  ['Anexa 2b — biletul de prevenţie al medicului de familie',['P_A1','P_A2','P_A3','P_B1','P_C1','P_C2','P_C3','P_C4','P_C5','P_C6','P_C7']]
+];
+function norm(s){
+  return s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'')
+    .replace(/ş|ș/g,'s').replace(/ţ|ț/g,'t');
+}
+function esc(s){ return s.replace(/&/g,'&amp;').replace(/</g,'&lt;'); }
+function renderText(q){
+  var nq=norm(q||'').trim(), h='';
+  SECTIONS.forEach(function(s){
+    var body='', any=false;
+    s[1].forEach(function(k){
+      if(!L[k]) return;
+      var tmp=document.createElement('div'); tmp.innerHTML=L[k];
+      tmp.querySelectorAll('p').forEach(function(p){
+        var plain=p.textContent, hit=!nq||norm(plain).indexOf(nq)>=0;
+        if(hit) any=true;
+        var inner=p.innerHTML;
+        if(nq&&hit){
+          var np=norm(plain), out='', i=0, idx;
+          while((idx=np.indexOf(nq,i))!==-1){
+            out+=esc(plain.slice(i,idx))+'<mark>'+esc(plain.slice(idx,idx+nq.length))+'</mark>'; i=idx+nq.length;
+          }
+          out+=esc(plain.slice(i)); inner=out;
+        }
+        body+='<p'+(hit?'':' class="hid"')+'>'+inner+'</p>';
+      });
+    });
+    if(any) h+='<section class="law-sec"><h3>'+s[0]+'</h3>'+body+'</section>';
+  });
+  el('lawtext').innerHTML = h || '<p class="empty">Nu am găsit nimic.</p>';
+}
+
+/* ================= NAVIGARE ================= */
+function renderTypes(){
+  el('types').innerHTML = TYPES.map(function(t){
+    return '<button data-id="'+t.id+'" class="tp'+(t.id===T?' on':'')+'">'+t.n+'</button>';
+  }).join('');
+  el('types').querySelectorAll('.tp').forEach(function(b){
+    b.onclick=function(){ T=b.dataset.id; CK={}; SEL=null; renderAll(); };
+  });
+  var tp = TYPES.filter(function(x){return x.id===T;})[0];
+  el('typenote').innerHTML = '<b>'+tp.n+' · '+tp.s+'.</b> '+tp.d;
+}
+function renderFaceSeg(){
+  el('faceseg').innerHTML =
+    '<button data-f="fata" class="'+(FACE==='fata'?'on':'')+'">Faţa</button>'+
+    '<button data-f="verso" class="'+(FACE==='verso'?'on':'')+'">Versoul</button>';
+  el('faceseg').querySelectorAll('button').forEach(function(b){
+    b.onclick=function(){ FACE=b.dataset.f; SEL=null; renderFaceSeg(); renderSheet(); renderPanel(); };
+  });
+}
+function applyMode(){
+  var m=eff();
+  document.body.dataset.mode=m;
+  el('modebtn').textContent = m==='mobile'?'Vedere: mobil':'Vedere: desktop';
+  el('modebtn').title = MODE==='auto'?'Se potriveşte automat. Apasă pentru a fixa.':'Fixat. Dublu-click pentru automat.';
+  if(m!=='mobile'){ el('backdrop').classList.remove('on'); el('panel').classList.remove('up'); }
+  else if(SEL){ el('panel').classList.add('up'); el('backdrop').classList.add('on'); }
+}
+function renderAll(){ renderTypes(); renderFaceSeg(); renderSheet(); renderPanel(); renderCheck(); applyMode(); }
+function setTab(id){
+  document.querySelectorAll('nav.tabs button').forEach(function(b){ b.classList.toggle('on',b.dataset.t===id); });
+  document.querySelectorAll('section.tab').forEach(function(s){ s.classList.toggle('on',s.id===id); });
+  el('topbar').style.display = id==='t-bilet' ? '' : 'none';
+  if(id!=='t-bilet'){ SEL=null; el('panel').classList.remove('up'); el('backdrop').classList.remove('on'); }
+  window.scrollTo({top:0});
+}
+document.querySelectorAll('nav.tabs button').forEach(function(b){ b.onclick=function(){ setTab(b.dataset.t); }; });
+el('modebtn').onclick=function(){ MODE = eff()==='mobile'?'desktop':'mobile'; save(); applyMode(); renderSheet(); renderPanel(); };
+el('modebtn').ondblclick=function(){ MODE='auto'; save(); applyMode(); };
+el('backdrop').onclick=function(){ SEL=null; renderSheet(); renderPanel(); };
+el('ck-reset').onclick=function(){ CK={}; renderCheck(); };
+el('q').addEventListener('input',function(e){ renderText(e.target.value); });
+window.addEventListener('resize',function(){ if(MODE==='auto') applyMode(); });
+document.addEventListener('keydown',function(e){ if(e.key==='Escape'&&SEL){ SEL=null; renderSheet(); renderPanel(); } });
+
+load(); renderAll(); renderDict(); renderText(''); setTab('t-bilet');
+</script>
+</body>
+</html>
