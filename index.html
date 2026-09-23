@@ -85,7 +85,8 @@ header p{margin:2px 0 0;font-size:.79em;color:var(--ink-3);letter-spacing:-.005e
 .zoom span{min-width:52px;text-align:center;font-size:.76em;font-weight:650;color:var(--ink-2);
   border-left:1px solid var(--line);border-right:1px solid var(--line);padding:0 2px;
   font-variant-numeric:tabular-nums;cursor:pointer}
-body[data-mode="mobile"] .zoom{display:none}
+.zoom{display:none}
+body.can-zoom .zoom{display:inline-flex}
 
 /* ============ TABS ============ */
 nav.tabs{position:sticky;top:0;z-index:40;background:rgba(255,255,255,.88);
@@ -142,32 +143,37 @@ section.tab{display:none} section.tab.on{display:block;animation:fade .22s ease}
 .i-tipar{background:var(--tipar);box-shadow:0 0 0 3px var(--tipar-bg)}
 
 /* ============ LAYOUT ============ */
-.split{display:grid;grid-template-columns:minmax(0,1fr) 420px;gap:24px;align-items:start}
+.split{display:grid;grid-template-columns:minmax(0,1fr) minmax(320px,400px);gap:24px;align-items:start}
 body[data-mode="mobile"] .split{grid-template-columns:minmax(0,1fr);gap:0}
 .split > div{min-width:0}
 
 /* ============ SHEET ============ */
 .sheet{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-l);
-  box-shadow:var(--sh-2);overflow:hidden}
+  box-shadow:var(--sh-2);overflow:hidden;container-type:inline-size;container-name:sheet}
 .sheet-top{padding:14px 22px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;
   align-items:center;gap:12px;background:var(--surface-2)}
 .sheet-top b{font-size:.76em;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-2)}
 .sheet-top span{font-size:.78em;color:var(--ink-3);font-weight:500}
 
-.fz{position:relative;border-bottom:1px solid var(--line);padding:22px 52px 24px 60px;cursor:pointer;
-  font-family:var(--font-sheet);font-size:calc(14px * var(--zoom));line-height:1.45;color:var(--ink-2);
+.fz{position:relative;border-bottom:1px solid rgba(16,19,26,.07);padding:22px 52px 24px 60px;cursor:pointer;
+  font-family:var(--font-sheet);font-size:14px;line-height:1.45;color:var(--ink-2);
   transition:background .16s}
 .fz:last-child{border-bottom:0}
 .fz:before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--accent);
   transform:scaleX(0);transform-origin:left;transition:transform .18s cubic-bezier(.4,0,.2,1)}
-.fz:hover{background:var(--surface-2)}
+.fz.w-medic{background:var(--medic-bg)}
+.fz.w-noi{background:var(--noi-bg)}
+.fz.w-pac{background:var(--pac-bg)}
+.fz.w-tipar{background:var(--tipar-bg)}
+.fz.w-medic:hover{background:#e6ecfc} .fz.w-noi:hover{background:#e0f2e8}
+.fz.w-pac:hover{background:#fbebd8} .fz.w-tipar:hover{background:#e9ebf0}
 .fz .num{position:absolute;left:18px;top:21px;min-width:26px;height:24px;padding:0 6px;border-radius:7px;
   display:grid;place-items:center;font-family:var(--font);font-size:12px;font-weight:700;transition:all .18s}
 .fz.w-medic .num{background:var(--medic-bg);color:var(--medic);box-shadow:inset 0 0 0 1px var(--medic-ring)}
 .fz.w-noi .num{background:var(--noi-bg);color:var(--noi);box-shadow:inset 0 0 0 1px var(--noi-ring)}
 .fz.w-pac .num{background:var(--pac-bg);color:var(--pac);box-shadow:inset 0 0 0 1px var(--pac-ring)}
 .fz.w-tipar .num{background:var(--tipar-bg);color:var(--tipar);box-shadow:inset 0 0 0 1px var(--tipar-ring)}
-.fz.sel{background:#f6f8ff}
+.fz.sel,.fz.sel:hover{background:#fff;box-shadow:inset 0 0 0 1px var(--accent-ring)}
 .fz.sel:before{transform:scaleX(1)}
 .fz.sel .num{background:var(--accent);color:#fff;box-shadow:0 3px 9px -3px var(--accent-ring)}
 .fz .tap{position:absolute;right:16px;top:20px;width:24px;height:24px;border-radius:50%;
@@ -200,7 +206,7 @@ body[data-mode="mobile"] .split{grid-template-columns:minmax(0,1fr);gap:0}
 .fg.tight{gap:10px 16px}
 .fl{display:flex;align-items:flex-end;gap:10px;min-width:0;min-height:1.6em}
 .fl-l{flex:0 0 auto;font-size:.93em;color:var(--ink-2);white-space:nowrap}
-.fl-u{flex:1 1 auto;min-width:36px;height:1px;background:var(--line-2);margin-bottom:.32em}
+.fl-u{flex:1 1 auto;min-width:36px;height:1px;background:rgba(16,19,26,.17);margin-bottom:.32em}
 .fl-u.short{flex:0 0 70px}
 .slash{color:var(--ink-3);margin:0 2px}
 .gap{height:16px} .gap-s{height:11px}
@@ -208,7 +214,8 @@ body[data-mode="mobile"] .split{grid-template-columns:minmax(0,1fr);gap:0}
 /* două coloane: câmpuri + casetă cu opţiuni */
 .fsplit{display:grid;grid-template-columns:minmax(0,1.45fr) minmax(0,1fr);gap:26px;align-items:start}
 .fsplit.one{grid-template-columns:minmax(0,1fr)}
-.fbox{border:1px solid var(--line);border-radius:12px;padding:14px 16px;background:var(--surface-2)}
+.fbox{border:1px solid rgba(16,19,26,.08);border-radius:12px;padding:14px 16px;background:rgba(255,255,255,.62)}
+.fz.sel .fbox{background:var(--surface-2);border-color:var(--line)}
 .fbox-t{font-family:var(--font);font-size:10.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
   color:var(--ink-3);margin-bottom:10px}
 .fbox-t.sep{margin-top:16px;padding-top:14px;border-top:1px solid var(--line)}
@@ -246,19 +253,23 @@ body[data-mode="mobile"] .split{grid-template-columns:minmax(0,1fr);gap:0}
 .yn span+span{border-left:1px solid var(--line-2)}
 .qlist{gap:10px 30px}
 .qa{display:flex;align-items:center;justify-content:space-between;gap:12px;font-size:.93em;
-  padding-bottom:9px;border-bottom:1px solid var(--line);min-width:0}
+  padding-bottom:9px;border-bottom:1px solid rgba(16,19,26,.09);min-width:0}
 .qa > span:first-child{min-width:0}
 
 /* tabelul de investigaţii */
-.tscroll{overflow-x:auto}
-table.inv{border-collapse:separate;border-spacing:0;width:100%;font-size:.93em;
-  border:1px solid var(--line-2);border-radius:11px;overflow:hidden;min-width:480px}
+.tfit{width:100%}
+table.inv{border-collapse:separate;border-spacing:0;width:100%;table-layout:fixed;font-size:.93em;
+  border:1px solid var(--line-2);border-radius:11px;overflow:hidden}
+.k-pz{width:10%} .k-cod{width:27%} .k-rec{width:35%} .k-ef{width:28%}
+table.inv th{white-space:normal;overflow-wrap:normal;hyphens:manual;line-height:1.3;vertical-align:bottom}
+table.inv .cells{display:flex;width:100%;max-width:6.4em}
+table.inv .cells i{flex:1 1 0;width:auto;min-width:0}
 table.inv td,table.inv th{border-bottom:1px solid var(--line);border-right:1px solid var(--line);
   padding:9px 12px;text-align:left;background:var(--surface);vertical-align:middle}
 table.inv tbody tr:last-child td{border-bottom:0}
 table.inv td:last-child,table.inv th:last-child{border-right:0}
 table.inv th{font-weight:600;font-size:.9em;color:var(--ink);background:var(--surface-2)}
-table.inv .pz{width:54px;color:var(--ink-3);text-align:center}
+table.inv .pz{color:var(--ink-3);text-align:center;padding-left:4px;padding-right:4px}
 .cN{background:var(--noi-bg)!important} .cM{background:var(--medic-bg)!important}
 td.more{text-align:center;color:var(--ink-3);background:var(--surface-2)!important;font-size:.92em}
 .tkey{display:flex;gap:18px;margin-top:12px;font-family:var(--font);font-size:12.5px;color:var(--ink-3)}
@@ -282,6 +293,36 @@ body[data-mode="mobile"] .idg .sp,
 body[data-mode="mobile"] .idg > span:empty{display:none}
 body[data-mode="mobile"] .fg.sign{grid-template-columns:minmax(0,1fr)}
 body[data-mode="mobile"] .fg.tight{grid-template-columns:repeat(2,minmax(0,1fr))}
+
+/* foaia se rearanjează după lăţimea ei reală (inclusiv când pagina e mărită) */
+@container sheet (max-width: 720px){
+  .fsplit{grid-template-columns:minmax(0,1fr)}
+  .g3.opts{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .idg{grid-template-columns:max-content max-content}
+  .idg .sp{display:none}
+  .idg > span:empty{display:none}
+  .fg.sign{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .ft{flex-direction:column;gap:16px}
+  .ft-r{flex:1 1 auto;width:100%;max-width:340px}
+}
+@container sheet (max-width: 540px){
+  .tfit{margin:0 -30px 0 -36px;width:auto}
+  table.inv{font-size:.86em}
+  table.inv th{font-size:.84em;letter-spacing:-.005em}
+  table.inv td,table.inv th{padding:7px 7px}
+  .k-pz{width:11%} .k-cod{width:28%} .k-rec{width:33%} .k-ef{width:28%}
+  .tkey{margin-left:-36px;flex-wrap:wrap;gap:6px 16px}
+  .g2,.g3,.g3.opts,.fg.sign,.idg,.qlist{grid-template-columns:minmax(0,1fr)}
+  .fg.tight{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .ft-r{max-width:none}
+}
+
+/* etichetele lungi se pot rupe pe rânduri când nu încap */
+@container sheet (max-width: 540px){
+  .fl{flex-wrap:wrap;row-gap:4px}
+  .fl-l{white-space:normal;flex:0 1 auto;min-width:0}
+  .fl-u{flex-basis:60px}
+}
 
 /* mobil */
 body[data-mode="mobile"] .fz{padding:18px 44px 20px 50px;font-size:13.8px}
@@ -443,7 +484,7 @@ footer{color:var(--ink-3);font-size:.76em;text-align:center;padding:10px 16px 34
     </div>
   </div>
   <div class="hact">
-    <span class="zoom" title="Mărimea biletului (tastele + şi −; 0 revine la 100%)">
+    <span class="zoom" title="Mărimea paginii (tastele + şi −; 0 sau clic pe procent revine la 100%)">
       <button id="zout" type="button" aria-label="micşorează">−</button>
       <span id="zlabel">100%</span>
       <button id="zin" type="button" aria-label="măreşte">+</button>
@@ -792,22 +833,26 @@ function zoneOn(z,t){ return on(z.on||'all',t); }
 </script>
 <script>/* ================= STARE ================= */
 var T='rmn', FACE='fata', SEL=null, CK={}, MODE='auto';
-var ZSTEPS=[1,1.15,1.3,1.5,1.75], ZI=1;
-function eff(){ return MODE!=='auto' ? MODE : (window.innerWidth<900?'mobile':'desktop'); }
+var ZSTEPS=[1,1.1,1.2,1.3,1.4,1.5], ZI=1;
+function canZoom(){ return window.innerWidth>=900; }
+function pageZoom(){ return canZoom() ? ZSTEPS[ZI] : 1; }
+function eff(){ return MODE!=='auto' ? MODE : ((window.innerWidth/pageZoom())<900?'mobile':'desktop'); }
 function save(){ try{ localStorage.setItem('bilet-mode',MODE); localStorage.setItem('bilet-zoom',String(ZI)); }catch(e){} }
 function load(){ try{
   var m=localStorage.getItem('bilet-mode'); if(m==='mobile'||m==='desktop') MODE=m;
   var z=parseInt(localStorage.getItem('bilet-zoom'),10); if(!isNaN(z)&&z>=0&&z<ZSTEPS.length) ZI=z;
 }catch(e){} }
 function applyZoom(){
-  document.documentElement.style.setProperty('--zoom', ZSTEPS[ZI]);
+  document.body.classList.toggle('can-zoom', canZoom());
+  document.documentElement.style.zoom = pageZoom();
+  if(MODE==='auto') applyMode();
   var lbl=el('zlabel'); if(lbl) lbl.textContent = Math.round(ZSTEPS[ZI]*100)+'%';
   var zo=el('zout'), zi=el('zin');
   if(zo) zo.disabled = ZI===0;
   if(zi) zi.disabled = ZI===ZSTEPS.length-1;
 }
 function setZoom(d){
-  if(d===0) ZI=1; else ZI=Math.min(ZSTEPS.length-1, Math.max(0, ZI+d));
+  if(d===0) ZI=0; else ZI=Math.min(ZSTEPS.length-1, Math.max(0, ZI+d));
   applyZoom(); save();
 }
 function el(id){ return document.getElementById(id); }
@@ -874,7 +919,8 @@ function frag(id){
     for(var i=1;i<=4;i++) rows+='<tr><td class="pz">'+i+'</td><td class="cN">'+cells(6)+'</td><td class="cM"></td><td class="cN"></td></tr>';
     if(!hp) rows+='<tr><td colspan="4" class="more">… rândurile 5 – '+n+'</td></tr>';
     return fh('Investigaţii')+
-      '<div class="tscroll"><table class="inv"><thead><tr><th class="pz">Poz.</th><th class="cN">Cod investigaţie</th><th class="cM">Investigaţii recomandate</th><th class="cN">Investigaţii efectuate</th></tr></thead><tbody>'+rows+'</tbody></table></div>'+
+      '<div class="tfit"><table class="inv"><colgroup><col class="k-pz"><col class="k-cod"><col class="k-rec"><col class="k-ef"></colgroup>'+
+      '<thead><tr><th class="pz">Poz.</th><th class="cN">Cod investi&shy;gaţie</th><th class="cM">Investi&shy;gaţii recoman&shy;date</th><th class="cN">Investi&shy;gaţii efectuate</th></tr></thead><tbody>'+rows+'</tbody></table></div>'+
       '<div class="tkey"><span><i class="sw cM"></i>medicul care recomandă</span><span><i class="sw cN"></i>furnizorul</span></div>';
   case 'z42': return fh('Date clinice şi paraclinice care să justifice investigaţia')+g('g1',[ln(''),ln(''),ln('')]);
   case 'z43': return '<div class="inline-q">'+fh('Examen '+({rmn:'RMN',ct:'CT',scinti:'scintigrafic',angio:'angiografic'}[T])+' anterior')+yn()+'</div>';
@@ -1179,10 +1225,10 @@ el('modebtn').ondblclick=function(){ MODE='auto'; save(); applyMode(); };
 el('backdrop').onclick=function(){ SEL=null; renderSheet(); renderPanel(); };
 el('ck-reset').onclick=function(){ CK={}; renderCheck(); };
 el('q').addEventListener('input',function(e){ renderText(e.target.value); });
-window.addEventListener('resize',function(){ if(MODE==='auto') applyMode(); });
+window.addEventListener('resize',function(){ applyZoom(); if(MODE==='auto') applyMode(); });
 document.addEventListener('keydown',function(e){
   if(e.key==='Escape'&&SEL){ SEL=null; renderSheet(); renderPanel(); return; }
-  if(eff()==='mobile'||e.metaKey||e.ctrlKey||e.altKey) return;
+  if(!canZoom()||e.metaKey||e.ctrlKey||e.altKey) return;
   var t=(e.target.tagName||'').toLowerCase();
   if(t==='input'||t==='textarea'||t==='select') return;
   if(e.key==='+'||e.key==='='){ setZoom(1); }
