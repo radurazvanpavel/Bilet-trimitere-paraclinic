@@ -143,263 +143,295 @@ section.tab{display:none} section.tab.on{display:block;animation:fade .22s ease}
 .i-tipar{background:var(--tipar);box-shadow:0 0 0 3px var(--tipar-bg)}
 
 /* ============ LAYOUT ============ */
-.split{display:grid;grid-template-columns:minmax(0,1fr) minmax(320px,400px);gap:24px;align-items:start}
-body[data-mode="mobile"] .split{grid-template-columns:minmax(0,1fr);gap:0}
-.split > div{min-width:0}
+.split{display:grid;grid-template-columns:minmax(0,1fr) 250px;grid-template-areas:"sheet nav";gap:24px;align-items:start}
+#sheet{grid-area:sheet;min-width:0}
+#navwrap{grid-area:nav;min-width:0;align-self:stretch}
+body[data-mode="mobile"] .split{grid-template-columns:minmax(0,1fr);grid-template-areas:"nav" "sheet";gap:12px}
 
-/* ============ SHEET ============ */
-.sheet{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-l);
-  box-shadow:var(--sh-2);overflow:hidden;container-type:inline-size;container-name:sheet}
-.sheet-top{padding:14px 22px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;
-  align-items:center;gap:12px;background:var(--surface-2)}
-.sheet-top b{font-size:.76em;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-2)}
-.sheet-top span{font-size:.78em;color:var(--ink-3);font-weight:500}
 
-.fz{position:relative;border-bottom:1px solid rgba(16,19,26,.07);padding:22px 52px 24px 60px;cursor:pointer;
-  font-family:var(--font-sheet);font-size:14px;line-height:1.45;color:var(--ink-2);
-  transition:background .16s}
-.fz:last-child{border-bottom:0}
-.fz:before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--accent);
-  transform:scaleX(0);transform-origin:left;transition:transform .18s cubic-bezier(.4,0,.2,1)}
-.fz.w-medic{background:var(--medic-bg)}
-.fz.w-noi{background:var(--noi-bg)}
-.fz.w-pac{background:var(--pac-bg)}
-.fz.w-tipar{background:var(--tipar-bg)}
-.fz.w-medic:hover{background:#e6ecfc} .fz.w-noi:hover{background:#e0f2e8}
-.fz.w-pac:hover{background:#fbebd8} .fz.w-tipar:hover{background:#e9ebf0}
-.fz .num{position:absolute;left:18px;top:21px;min-width:26px;height:24px;padding:0 6px;border-radius:7px;
-  display:grid;place-items:center;font-family:var(--font);font-size:12px;font-weight:700;transition:all .18s}
-.fz.w-medic .num{background:var(--medic-bg);color:var(--medic);box-shadow:inset 0 0 0 1px var(--medic-ring)}
-.fz.w-noi .num{background:var(--noi-bg);color:var(--noi);box-shadow:inset 0 0 0 1px var(--noi-ring)}
-.fz.w-pac .num{background:var(--pac-bg);color:var(--pac);box-shadow:inset 0 0 0 1px var(--pac-ring)}
-.fz.w-tipar .num{background:var(--tipar-bg);color:var(--tipar);box-shadow:inset 0 0 0 1px var(--tipar-ring)}
-.fz.sel,.fz.sel:hover{background:#fff;box-shadow:inset 0 0 0 1px var(--accent-ring)}
-.fz.sel:before{transform:scaleX(1)}
-.fz.sel .num{background:var(--accent);color:#fff;box-shadow:0 3px 9px -3px var(--accent-ring)}
-.fz .tap{position:absolute;right:16px;top:20px;width:24px;height:24px;border-radius:50%;
-  display:grid;place-items:center;font-family:var(--font);font-size:15px;font-weight:700;line-height:1;
-  color:var(--ink-3);background:var(--surface);box-shadow:inset 0 0 0 1px var(--line);
-  opacity:0;transition:opacity .16s,transform .2s,background .16s,color .16s}
-.fz:hover .tap{opacity:1}
-.fz.sel .tap{opacity:1;background:var(--accent);color:#fff;box-shadow:none;transform:rotate(90deg)}
-
-/* titlul fiecărui câmp */
-.fh{font-size:1.07em;font-weight:600;color:var(--ink);letter-spacing:-.012em;line-height:1.35;margin:0 0 14px}
-
-/* antetul biletului */
-.ft{display:flex;justify-content:space-between;align-items:flex-start;gap:28px}
-.ft-l{min-width:0}
-.ft-t{font-size:1.5em;font-weight:600;letter-spacing:-.025em;color:var(--ink);line-height:1.15}
-.ft-s{font-size:1em;color:var(--ink-2);margin-top:4px}
-.ft-x{display:inline-block;margin-top:10px;font-size:.8em;font-weight:600;letter-spacing:.04em;text-transform:uppercase;
-  color:var(--accent);background:var(--accent-soft);border-radius:6px;padding:3px 9px}
-.ft-r{flex:0 0 250px;display:grid;gap:12px}
-.bc{height:34px;border-radius:5px;
-  background:repeating-linear-gradient(90deg,#2a2f3a 0 2px,transparent 2px 4px,#2a2f3a 4px 5px,transparent 5px 8px,#2a2f3a 8px 11px,transparent 11px 13px,#2a2f3a 13px 14px,transparent 14px 17px);
-  opacity:.82}
-
-/* linii de completat */
-.fg{display:grid;gap:13px 26px}
-.g1{grid-template-columns:minmax(0,1fr)}
-.g2{grid-template-columns:repeat(2,minmax(0,1fr))}
-.g3{grid-template-columns:repeat(3,minmax(0,1fr))}
-.fg.tight{gap:10px 16px}
-.fl{display:flex;align-items:flex-end;gap:10px;min-width:0;min-height:1.6em}
-.fl-l{flex:0 0 auto;font-size:.93em;color:var(--ink-2);white-space:nowrap}
-.fl-u{flex:1 1 auto;min-width:36px;height:1px;background:rgba(16,19,26,.17);margin-bottom:.32em}
-.fl-u.short{flex:0 0 70px}
-.slash{color:var(--ink-3);margin:0 2px}
-.gap{height:16px} .gap-s{height:11px}
-
-/* două coloane: câmpuri + casetă cu opţiuni */
-.fsplit{display:grid;grid-template-columns:minmax(0,1.45fr) minmax(0,1fr);gap:26px;align-items:start}
-.fsplit.one{grid-template-columns:minmax(0,1fr)}
-.fbox{border:1px solid rgba(16,19,26,.08);border-radius:12px;padding:14px 16px;background:rgba(255,255,255,.62)}
-.fz.sel .fbox{background:var(--surface-2);border-color:var(--line)}
-.fbox-t{font-family:var(--font);font-size:10.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
-  color:var(--ink-3);margin-bottom:10px}
-.fbox-t.sep{margin-top:16px;padding-top:14px;border-top:1px solid var(--line)}
-.opts{gap:9px 18px}
-.opt{display:inline-flex;align-items:center;gap:9px;font-size:.93em;color:var(--ink-2);line-height:1.35}
-.opts-inline{display:inline-flex;gap:18px;flex-wrap:wrap}
-.opts-inline.big .opt{font-size:1em}
-.cb{flex:0 0 auto;display:inline-block;width:.95em;height:.95em;border:1.5px solid #a3aab8;border-radius:4px;background:#fff}
-.fline-opt{margin:0 0 16px}
-
-/* căsuţe tip CNP */
-.cells{display:inline-flex;flex:0 1 auto;min-width:0;overflow:hidden}
-.cells i{width:.82em;height:1.3em;border:1px solid #b9bfcb;border-left-width:0;background:#fff}
-.cells i:first-child{border-left-width:1px;border-radius:4px 0 0 4px}
-.cells i:last-child{border-radius:0 4px 4px 0}
-.ids{grid-template-columns:minmax(0,1fr) auto;align-items:end}
-.ls{font-family:var(--font);font-size:.82em;font-weight:600;color:var(--ink-3)}
-
-/* căsuţele P, A/S, C... */
-.tips{display:flex;flex-wrap:wrap;gap:8px;margin:16px 0}
-.tips .t{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line-2);border-radius:9px;
-  padding:6px 11px;background:var(--surface);font-size:.93em}
-.tips .t b{font-weight:600;color:var(--ink)}
-.sign{margin-top:4px}
-.off-row{margin-top:16px;padding-top:14px;border-top:1px dashed var(--line-2);opacity:.6;display:grid;gap:10px}
-.off-row .flag{justify-self:start}
-.flag{font-family:var(--font);font-size:11.5px;font-weight:700;color:var(--warn);background:var(--warn-bg);
-  border-radius:6px;padding:3px 9px;letter-spacing:.01em}
-
-/* DA / NU */
-.inline-q{display:flex;align-items:center;justify-content:space-between;gap:18px;flex-wrap:wrap}
-.inline-q .fh{margin:0}
-.yn{display:inline-flex;border:1px solid var(--line-2);border-radius:8px;overflow:hidden;flex:0 0 auto;background:#fff}
-.yn span{padding:3px 11px;font-size:.8em;font-weight:600;color:var(--ink-2);font-family:var(--font);letter-spacing:.02em}
-.yn span+span{border-left:1px solid var(--line-2)}
-.qlist{gap:10px 30px}
-.qa{display:flex;align-items:center;justify-content:space-between;gap:12px;font-size:.93em;
-  padding-bottom:9px;border-bottom:1px solid rgba(16,19,26,.09);min-width:0}
-.qa > span:first-child{min-width:0}
-
-/* tabelul de investigaţii */
-.tfit{width:100%}
-table.inv{border-collapse:separate;border-spacing:0;width:100%;table-layout:fixed;font-size:.93em;
-  border:1px solid var(--line-2);border-radius:11px;overflow:hidden}
-.k-pz{width:10%} .k-cod{width:27%} .k-rec{width:35%} .k-ef{width:28%}
-table.inv th{white-space:normal;overflow-wrap:normal;hyphens:manual;line-height:1.3;vertical-align:bottom}
-table.inv .cells{display:flex;width:100%;max-width:6.4em}
-table.inv .cells i{flex:1 1 0;width:auto;min-width:0}
-table.inv td,table.inv th{border-bottom:1px solid var(--line);border-right:1px solid var(--line);
-  padding:9px 12px;text-align:left;background:var(--surface);vertical-align:middle}
-table.inv tbody tr:last-child td{border-bottom:0}
-table.inv td:last-child,table.inv th:last-child{border-right:0}
-table.inv th{font-weight:600;font-size:.9em;color:var(--ink);background:var(--surface-2)}
-table.inv .pz{color:var(--ink-3);text-align:center;padding-left:4px;padding-right:4px}
-.cN{background:var(--noi-bg)!important} .cM{background:var(--medic-bg)!important}
-td.more{text-align:center;color:var(--ink-3);background:var(--surface-2)!important;font-size:.92em}
-.tkey{display:flex;gap:18px;margin-top:12px;font-family:var(--font);font-size:12.5px;color:var(--ink-3)}
-.tkey span{display:inline-flex;align-items:center;gap:7px}
-.tkey .sw{width:14px;height:10px;border-radius:3px;display:inline-block;box-shadow:inset 0 0 0 1px rgba(16,19,26,.08)}
-
-.decl{margin:0 0 14px;font-size:.98em;color:var(--ink-2);line-height:1.55;max-width:62ch}
-.warnline{margin-top:16px;font-family:var(--font);font-weight:600;color:#8a2c22;font-size:.9em;
-  background:var(--warn-bg);border-radius:9px;padding:10px 13px;line-height:1.45}
-
-/* grila CNP / card */
-.idg{display:grid;grid-template-columns:max-content max-content minmax(12px,1fr) max-content max-content;
-  gap:12px 12px;align-items:center}
-.idg .sp{display:block}
-/* semnătura: dată scurtă, semnătură lată, parafă cât îi trebuie */
-.fg.sign{grid-template-columns:minmax(0,.85fr) minmax(0,1.25fr) max-content;gap:13px 24px}
-.kg{display:inline-flex;align-items:flex-end;gap:8px;flex:0 0 auto;color:var(--ink-2)}
-.kg .fl-u{margin-bottom:.32em}
-body[data-mode="mobile"] .idg{grid-template-columns:minmax(0,1fr);gap:8px}
-body[data-mode="mobile"] .idg .sp,
-body[data-mode="mobile"] .idg > span:empty{display:none}
-body[data-mode="mobile"] .fg.sign{grid-template-columns:minmax(0,1fr)}
-body[data-mode="mobile"] .fg.tight{grid-template-columns:repeat(2,minmax(0,1fr))}
-
-/* foaia se rearanjează după lăţimea ei reală (inclusiv când pagina e mărită) */
-@container sheet (max-width: 720px){
-  .fsplit{grid-template-columns:minmax(0,1fr)}
-  .g3.opts{grid-template-columns:repeat(2,minmax(0,1fr))}
-  .idg{grid-template-columns:max-content max-content}
-  .idg .sp{display:none}
-  .idg > span:empty{display:none}
-  .fg.sign{grid-template-columns:repeat(2,minmax(0,1fr))}
-  .ft{flex-direction:column;gap:16px}
-  .ft-r{flex:1 1 auto;width:100%;max-width:340px}
-}
-@container sheet (max-width: 540px){
-  .tfit{margin:0 -30px 0 -36px;width:auto}
-  table.inv{font-size:.86em}
-  table.inv th{font-size:.84em;letter-spacing:-.005em}
-  table.inv td,table.inv th{padding:7px 7px}
-  .k-pz{width:11%} .k-cod{width:28%} .k-rec{width:33%} .k-ef{width:28%}
-  .tkey{margin-left:-36px;flex-wrap:wrap;gap:6px 16px}
-  .g2,.g3,.g3.opts,.fg.sign,.idg,.qlist{grid-template-columns:minmax(0,1fr)}
-  .fg.tight{grid-template-columns:repeat(2,minmax(0,1fr))}
-  .ft-r{max-width:none}
-}
-
-/* etichetele lungi se pot rupe pe rânduri când nu încap */
-@container sheet (max-width: 540px){
-  .fl{flex-wrap:wrap;row-gap:4px}
-  .fl-l{white-space:normal;flex:0 1 auto;min-width:0}
-  .fl-u{flex-basis:60px}
-}
-
-/* mobil */
-body[data-mode="mobile"] .fz{padding:18px 44px 20px 50px;font-size:13.8px}
-body[data-mode="mobile"] .fz .num{left:13px;top:17px}
-body[data-mode="mobile"] .fz .tap{right:12px;top:16px;opacity:.6}
-body[data-mode="mobile"] .fz.sel .tap{opacity:1}
-body[data-mode="mobile"] .g2,
-body[data-mode="mobile"] .g3,
-body[data-mode="mobile"] .fsplit,
-body[data-mode="mobile"] .ids{grid-template-columns:minmax(0,1fr)}
-body[data-mode="mobile"] .ft{flex-direction:column;gap:16px}
-body[data-mode="mobile"] .ft-r{flex:1 1 auto;width:100%}
-body[data-mode="mobile"] .ft-t{font-size:1.35em}
-body[data-mode="mobile"] .fg{gap:12px 18px}
-
-/* ============ PANEL ============ */
-.panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-l);padding:22px;
-  position:sticky;top:70px;box-shadow:var(--sh-2)}
-.panel .ph{display:flex;gap:12px;align-items:flex-start;margin-bottom:2px}
-.panel .pn{flex:0 0 auto;min-width:30px;height:30px;padding:0 8px;border-radius:9px;display:grid;place-items:center;
-  font-weight:700;font-size:.78em;background:linear-gradient(145deg,var(--accent),var(--accent-2));color:#fff;
-  box-shadow:0 4px 12px -5px var(--accent-ring)}
-.panel h2{margin:0;font-size:1.14em;font-weight:650;line-height:1.3;letter-spacing:-.018em}
-.who{display:flex;flex-wrap:wrap;gap:6px;margin:12px 0 0}
+/* etichete de rol */
 .chip{display:inline-block;border-radius:999px;padding:4px 11px;font-size:.75em;font-weight:700;letter-spacing:-.005em}
 .c-medic{background:var(--medic-bg);color:var(--medic)}
 .c-noi{background:var(--noi-bg);color:var(--noi)}
 .c-pac{background:var(--pac-bg);color:var(--pac)}
 .c-tipar{background:var(--tipar-bg);color:var(--tipar)}
-.whod{font-size:.84em;color:var(--ink-3);margin:9px 0 0;line-height:1.5}
-h4.hh{font-size:.71em;font-weight:800;letter-spacing:.11em;text-transform:uppercase;margin:22px 0 10px;
-  color:var(--ink-3);display:flex;align-items:center;gap:9px}
-h4.hh:after{content:"";flex:1;height:1px;background:var(--line)}
-h4.hw{color:var(--warn)}
-ul.ok,ul.warn{list-style:none;padding:0;margin:0}
-ul.ok li{position:relative;padding:0 0 0 22px;margin-bottom:11px;font-size:.92em;line-height:1.55;color:var(--ink-2)}
-ul.ok li b{color:var(--ink);font-weight:650}
-ul.ok li:before{content:"";position:absolute;left:5px;top:.62em;width:5px;height:5px;border-radius:50%;
-  background:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
-ul.warn li{position:relative;background:var(--warn-bg);border-radius:11px;padding:11px 13px 11px 30px;
-  margin-bottom:8px;font-size:.89em;line-height:1.5;color:#6d2a21}
-ul.warn li b{color:#4d1d17}
-ul.warn li:before{content:"";position:absolute;left:13px;top:1.15em;width:5px;height:5px;border-radius:50%;background:var(--warn)}
-.mini{display:inline-block;font-size:.73em;font-weight:700;border-radius:6px;padding:2px 7px;white-space:nowrap}
+.mini{display:inline-block;font-size:.73em;font-weight:700;border-radius:6px;padding:2px 7px;white-space:nowrap;vertical-align:1px}
 .mini.c-medic{background:var(--medic-bg);color:var(--medic)} .mini.c-noi{background:var(--noi-bg);color:var(--noi)}
 .mini.c-pac{background:var(--pac-bg);color:var(--pac)} .mini.c-tipar{background:var(--tipar-bg);color:var(--tipar)}
-details.law{margin-top:18px;border-top:1px solid var(--line);padding-top:4px}
-details.law summary{cursor:pointer;padding:11px 0;font-weight:650;color:var(--accent);font-size:.86em;
-  list-style:none;display:flex;align-items:center;gap:7px}
-details.law summary::-webkit-details-marker{display:none}
-details.law summary:before{content:"›";display:inline-block;transition:transform .18s;font-size:1.3em;line-height:1}
-details.law[open] summary:before{transform:rotate(90deg)}
-.lawtxt{font-size:.84em;color:var(--ink-2);max-height:360px;overflow:auto;padding:0 6px 0 0;line-height:1.6}
-.lawtxt p{margin:0 0 10px}
-.pempty{color:var(--ink-3);font-size:.9em;padding:30px 6px;text-align:center;line-height:1.55}
-.pnav{display:flex;gap:8px;margin-top:20px;border-top:1px solid var(--line);padding-top:14px}
-.pnav button{flex:1;border:1px solid var(--line-2);background:var(--surface);border-radius:var(--r-s);padding:10px;
-  font-size:.82em;font-weight:650;color:var(--accent);cursor:pointer;min-height:var(--tap);transition:all .15s}
-.pnav button:hover:not(:disabled){background:var(--accent-soft);border-color:var(--accent)}
-.pnav button:disabled{color:#c4c9d4;cursor:default}
 
-/* sertar pe mobil */
-body[data-mode="mobile"] .panel{position:fixed;left:0;right:0;bottom:0;top:auto;z-index:60;
-  border-radius:20px 20px 0 0;border:1px solid var(--line-2);border-bottom:0;max-height:80vh;overflow:auto;
-  padding:10px 18px 26px;box-shadow:0 -10px 40px rgba(16,19,26,.24);
-  transform:translateY(101%);transition:transform .26s cubic-bezier(.32,.72,0,1)}
-body[data-mode="mobile"] .panel.up{transform:translateY(0)}
-.grab{display:none}
-body[data-mode="mobile"] .grab{display:flex;justify-content:flex-end;align-items:center;
-  position:sticky;top:0;background:var(--surface);padding:10px 0 12px;margin-bottom:2px;z-index:2}
-body[data-mode="mobile"] .grab:before{content:"";position:absolute;left:50%;top:5px;transform:translateX(-50%);
-  width:40px;height:4px;border-radius:2px;background:var(--line-2)}
-.grab button{border:0;background:var(--surface-2);border-radius:9px;width:36px;height:36px;
-  font-size:1.05em;color:var(--ink-2);cursor:pointer}
-#backdrop{display:none}
-body[data-mode="mobile"] #backdrop.on{display:block;position:fixed;inset:0;background:rgba(16,19,26,.32);
-  z-index:55;animation:fade .2s ease}
+/* ============ INDEXUL RUBRICILOR ============ */
+.toc{position:sticky;top:66px;background:var(--surface);border:1px solid var(--line);border-radius:var(--r-l);
+  padding:14px 12px;box-shadow:var(--sh-1)}
+.toc.static{position:static}
+.toc-h{font-size:.7em;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);margin:0 4px 10px}
+.nav-g{margin-bottom:10px}
+.nav-g:last-child{margin-bottom:0}
+.nav-t{font-size:.68em;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);margin:8px 6px 6px}
+.nv{display:flex;align-items:center;gap:9px;width:100%;border:0;background:none;text-align:left;cursor:pointer;
+  padding:6px 7px;border-radius:9px;color:var(--ink-2);font-size:.84em;line-height:1.3;transition:background .15s}
+.nv:hover{background:var(--surface-2)}
+.nv-n{flex:0 0 auto;min-width:28px;height:22px;padding:0 5px;border-radius:6px;display:grid;place-items:center;
+  font-size:.86em;font-weight:700}
+.nv.w-medic .nv-n{background:var(--medic-bg);color:var(--medic)}
+.nv.w-noi .nv-n{background:var(--noi-bg);color:var(--noi)}
+.nv.w-pac .nv-n{background:var(--pac-bg);color:var(--pac)}
+.nv.w-tipar .nv-n{background:var(--tipar-bg);color:var(--tipar)}
+.nv.on{background:var(--accent-soft);color:var(--accent);font-weight:600}
+.nv.on .nv-n{background:var(--accent);color:#fff}
+/* pe telefon: bandă orizontală lipită sub taburi */
+body[data-mode="mobile"] #navwrap{position:sticky;top:46px;z-index:30;margin:0 calc(-1 * var(--pad));
+  padding:8px var(--pad);background:rgba(245,246,249,.94);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+  border-bottom:1px solid var(--line)}
+body[data-mode="mobile"] .toc{position:static;background:none;border:0;box-shadow:none;padding:0;display:flex;gap:6px;
+  overflow-x:auto;scrollbar-width:none}
+body[data-mode="mobile"] .toc::-webkit-scrollbar{display:none}
+body[data-mode="mobile"] .toc-h{display:none}
+body[data-mode="mobile"] .nav-g{display:contents}
+body[data-mode="mobile"] .nav-t{flex:0 0 auto;align-self:center;margin:0 2px 0 6px}
+body[data-mode="mobile"] .nv{flex:0 0 auto;width:auto;max-width:170px;border:1px solid var(--line);background:var(--surface);
+  padding:5px 10px 5px 5px;border-radius:999px}
+body[data-mode="mobile"] .nv-t{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+body[data-mode="mobile"] .nv.on{border-color:var(--accent)}
+
+/* ============ FOAIA ============ */
+.sheet{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-l);
+  box-shadow:var(--sh-2);overflow:hidden;container-type:inline-size;container-name:sheet}
+.sheet-top{padding:13px 20px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;
+  align-items:center;gap:12px;background:var(--surface-2)}
+.sheet-top b{font-size:.76em;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-2)}
+.sheet-top span{font-size:.78em;color:var(--ink-3);font-weight:500}
+.vnote{margin:0;padding:12px 20px;font-size:.86em;color:var(--ink-2);background:#fffaf0;border-bottom:1px solid var(--line)}
+
+.fz{position:relative;border-bottom:1px solid rgba(16,19,26,.08);padding:18px 46px 18px 58px;cursor:pointer;
+  font-family:var(--font-sheet);font-size:14px;line-height:1.5;color:#272c38;transition:background .16s;
+  scroll-margin-top:72px}
+body[data-mode="mobile"] .fz{scroll-margin-top:124px}
+.fz:last-child{border-bottom:0}
+.fz.w-medic{background:#e7edfc} .fz.w-noi{background:#e1f2e8}
+.fz.w-pac{background:#fbeedd} .fz.w-tipar{background:#eceef2}
+.fz.w-medic:hover{background:#dfe7fb} .fz.w-noi:hover{background:#d8eee1}
+.fz.w-pac:hover{background:#f8e6cf} .fz.w-tipar:hover{background:#e4e7ec}
+.fz:before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--accent);
+  transform:scaleX(0);transform-origin:left;transition:transform .18s}
+.fz.sel,.fz.sel:hover{background:#fff}
+.fz.sel:before{transform:scaleX(1)}
+.fz .num{position:absolute;left:16px;top:17px;min-width:26px;height:24px;padding:0 6px;border-radius:7px;
+  display:grid;place-items:center;font-family:var(--font);font-size:12px;font-weight:700}
+.fz.w-medic .num{background:#fff;color:var(--medic);box-shadow:inset 0 0 0 1px var(--medic-ring)}
+.fz.w-noi .num{background:#fff;color:var(--noi);box-shadow:inset 0 0 0 1px var(--noi-ring)}
+.fz.w-pac .num{background:#fff;color:var(--pac);box-shadow:inset 0 0 0 1px var(--pac-ring)}
+.fz.w-tipar .num{background:#fff;color:var(--tipar);box-shadow:inset 0 0 0 1px var(--tipar-ring)}
+.fz.sel .num{background:var(--accent);color:#fff;box-shadow:none}
+.fz .tap{position:absolute;right:13px;top:17px;width:24px;height:24px;border-radius:50%;display:grid;place-items:center;
+  font-family:var(--font);font-size:15px;font-weight:700;line-height:1;color:var(--ink-3);background:#fff;
+  box-shadow:inset 0 0 0 1px var(--line);opacity:.0;transition:opacity .16s,transform .2s,background .16s,color .16s}
+.fz:hover .tap{opacity:1}
+.fz.sel .tap{opacity:1;background:var(--accent);color:#fff;box-shadow:none;transform:rotate(90deg)}
+body[data-mode="mobile"] .fz .tap{opacity:.7}
+
+/* elemente comune ale formularului */
+.f-lbl{font-weight:600;color:var(--ink);margin-bottom:8px}
+.dl{display:flex;align-items:baseline;gap:7px;min-width:0;margin:3px 0}
+.dl-l{flex:0 1 auto;min-width:0}
+.dl-d{display:inline-block;flex:1 1 auto;min-width:28px;height:0;border-bottom:1.5px dotted #8b91a0;vertical-align:.2em}
+.dl-d.s{flex:0 0 44px;width:44px} .dl-d.m{flex:0 0 92px;width:92px}
+.dl.dd{min-height:1.5em;align-items:flex-end}
+.dl.dd .dl-d{margin-bottom:.32em}
+.mut{color:var(--ink-3)}
+.o{display:inline-flex;align-items:flex-start;gap:7px;line-height:1.3;min-width:0}
+.o > span:last-child{min-width:0;overflow-wrap:anywhere}
+.cb{flex:0 0 auto;display:inline-block;width:12px;height:12px;border:1.5px solid #6f7685;border-radius:2px;background:#fff;margin-top:.18em}
+.cells{display:inline-flex;vertical-align:-3px;max-width:100%}
+.cells i{flex:0 1 11px;width:11px;min-width:6px;height:15px;border:1px solid #8a909e;border-left-width:0;background:#fff}
+.cells i:first-child{border-left-width:1px}
+.caps{margin-top:8px;font-weight:600;font-size:.92em;letter-spacing:.01em;color:var(--ink)}
+
+/* antet */
+.f-head{text-align:center}
+.f-title{font-size:1.18em;font-weight:600;letter-spacing:.07em;color:var(--ink)}
+.f-sub{margin-top:3px;color:var(--ink-2);line-height:1.45}
+.f-id{display:flex;flex-direction:column;align-items:flex-end;gap:10px;margin-top:14px}
+.barcode{width:170px;height:36px;border:1px solid #8a909e;border-radius:3px;display:grid;place-items:center;
+  font-size:.78em;letter-spacing:.06em;color:var(--ink-2);background:#fff}
+.f-sn{display:flex;align-items:baseline;gap:7px;white-space:nowrap}
+
+/* câmpul 1 */
+.c1g{display:grid;grid-template-columns:minmax(0,1fr) auto 168px;column-gap:20px;row-gap:4px;align-items:start}
+.c1-c,.c1-o,.c1-p{min-width:0}
+.c1-rl{border-left:1px solid rgba(16,19,26,.22);margin-left:-10px;align-self:stretch}
+.c1-pt,.c1-p{padding-left:6px}
+.c1-p{align-self:center}
+.c1-r{border-left:1px solid rgba(16,19,26,.22);padding-left:16px;display:flex;flex-direction:column;gap:12px}
+.pbox{display:flex;align-items:stretch;border:1px solid #8a909e;border-radius:3px;background:#fff;width:100%}
+.pbox > span:first-child{flex:1;padding:4px 9px}
+.pb{flex:0 0 26px;border-left:1px solid #8a909e}
+
+/* câmpul 2 */
+.c2t,.c2p{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr) minmax(0,1fr);border-top:1px solid rgba(16,19,26,.14)}
+.c2p{grid-template-columns:minmax(0,1.7fr) minmax(0,1fr)}
+.c2t > div,.c2p > div{padding:6px 10px 6px 0;border-bottom:1px solid rgba(16,19,26,.1);min-width:0}
+.c2t > .c2-b,.c2t > .c2-c,.c2p > .c2-b{padding-left:10px;border-left:1px solid rgba(16,19,26,.1)}
+.c2p > .c2-b{display:flex;flex-direction:column;gap:6px}
+.c2-id{display:flex;flex-direction:column;gap:4px}
+.c2h{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr) minmax(0,1fr);gap:8px 18px;align-items:start}
+.c2h-a,.c2h-b{min-width:0}
+.c2-sp{display:flex;flex-direction:column;justify-content:space-between;height:100%;gap:8px}
+.c2h > .c2h-b:has(.c2-sp){align-self:stretch}
+.c2-ids{display:grid;grid-template-columns:max-content minmax(0,max-content) max-content;gap:10px 14px;align-items:center;margin-top:14px}
+.c2-ids .ct{white-space:nowrap}
+
+/* câmpul 3 */
+.c3{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:0 16px;align-items:start}
+.c3-row{display:flex;align-items:center;gap:10px;margin:6px 0 4px;min-width:0}
+.c3-row .dl{flex:1}
+.c3-r{display:flex;gap:4px;border-left:1px solid rgba(16,19,26,.12)}
+.c3-k{display:flex;flex-direction:column;align-items:center;gap:9px;min-width:34px;padding:0 3px}
+.c3-k span:first-child{font-weight:600;color:var(--ink);font-size:.92em}
+.c3-k .cb{margin-top:6px}
+.c3-acc{text-align:center;margin:12px 0 4px;padding:8px 0;border-top:1px solid rgba(16,19,26,.1);border-bottom:1px solid rgba(16,19,26,.1)}
+.c3-acc .cb{vertical-align:-1px;margin-left:4px}
+.c3-sg{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.2fr) max-content;gap:6px 18px;padding:9px 0;
+  border-bottom:1px solid rgba(16,19,26,.1)}
+.c3-sg:last-child{border-bottom:0}
+.c3-pf{display:flex;flex-direction:column;align-items:center;gap:4px}
+.c3-pf.inl{flex-direction:row;align-items:center;gap:8px}
+.c3-sign1{margin-top:12px;display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 8px}
+
+/* câmpul 4 */
+table.inv{border-collapse:collapse;width:100%;table-layout:fixed;font-size:.95em;background:#fff}
+table.inv th,table.inv td{border:1px solid #8a909e;padding:5px 7px;text-align:left;vertical-align:top}
+table.inv th{font-weight:500;line-height:1.3;hyphens:manual;overflow-wrap:normal}
+table.inv td{height:28px}
+table.inv td.pz{text-align:left;color:var(--ink-2)}
+table.inv td.cod{padding:4px 5px;vertical-align:middle}
+table.inv .cells{display:flex;width:100%}
+table.inv .cells i{flex:1 1 0;width:auto}
+.k-pz{width:12%} .k-cod{width:28%} .k-rec{width:35%} .k-ef{width:25%}
+table.inv .cM{background:#dfe7fb} table.inv .cN{background:#dcefe3} table.inv .cT{background:#eceef2}
+table.inv th.cM{background:#d3defa} table.inv th.cN{background:#cfe8d9} table.inv th.cT{background:#e3e6ec}
+.tkey{display:flex;flex-wrap:wrap;gap:6px 18px;margin-top:9px;font-family:var(--font);font-size:12px;color:var(--ink-2)}
+.tkey span{display:inline-flex;align-items:center;gap:7px}
+.tkey .sw{width:16px;height:11px;border-radius:3px;display:inline-block;border:1px solid #8a909e}
+.tkey .sw.cM{background:#dfe7fb} .tkey .sw.cN{background:#dcefe3} .tkey .sw.cT{background:#eceef2}
+.c3-off > .c3-s{opacity:.55}
+.c3-flag{grid-column:1 / -1;justify-self:start;font-family:var(--font);font-size:11.5px;font-weight:700;color:var(--warn);
+  background:var(--warn-bg);border-radius:6px;padding:2px 9px}
+
+/* 4.4 */
+.c44{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:0 24px;margin-top:4px}
+.c44n{max-width:560px}
+.q{display:flex;align-items:baseline;gap:6px;margin:3px 0;min-width:0}
+.q-t{flex:0 1 auto;min-width:0}
+.q-d{flex:1 1 auto;min-width:16px;border-bottom:1.5px dotted #8b91a0;height:0;align-self:baseline;transform:translateY(-.25em)}
+.q-d.sh{flex:0 0 60px}
+.q-v{flex:0 0 auto;white-space:nowrap;text-align:right}
+.q.ind,.ind{margin-left:18px}
+.c44t{margin-top:8px;font-size:.95em;line-height:1.5}
+
+/* câmpul 6 */
+.c6{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:6px 24px}
+
+/* verso */
+.vt{line-height:1.5}
+
+/* foaie îngustă: coloanele rămân pe aceeaşi parte ca pe model; doar se strâng şi textul se rupe pe rânduri */
+.c2-ids{grid-template-columns:max-content minmax(0,max-content) max-content}
+.c2-ids .cw{min-width:0;display:flex}
+@container sheet (max-width: 700px){
+  .fz{font-size:13px}
+  .c1g{grid-template-columns:minmax(0,1fr) auto 112px;column-gap:10px}
+  .c1-rl{margin-left:-5px}
+  .c1-r{padding-left:10px}
+  .pbox > span:first-child{padding:3px 6px}
+  .pb{flex-basis:18px}
+  .c2h{gap:8px 10px}
+  .c2t > div,.c2p > div{padding-right:6px}
+  .c2t > .c2-b,.c2t > .c2-c,.c2p > .c2-b{padding-left:6px}
+  .c2-ids{grid-template-columns:max-content minmax(0,1fr) max-content;gap:8px 8px}
+  .c3{gap:0 10px}
+  .c3-k{min-width:27px;padding:0 1px}
+  .c3-sg{gap:6px 10px}
+  .c3-pf.inl{flex-direction:column;align-items:center;gap:4px}
+  .c44{gap:0 14px}
+  .dl{flex-wrap:wrap;row-gap:2px}
+  .q{flex-wrap:wrap}
+  .f-id{margin-top:10px}
+}
+@container sheet (max-width: 480px){
+  .fz{font-size:12.2px}
+  .c1g{grid-template-columns:minmax(0,1fr) auto 92px;column-gap:7px}
+  .c1-rl{margin-left:-3px}
+  .c1-pt,.c1-p{padding-left:2px}
+  .c3-r.many{display:grid;grid-template-columns:repeat(4,auto);row-gap:8px}
+  .c2h{grid-template-columns:minmax(0,1.15fr) minmax(0,1fr) minmax(0,1fr);gap:8px 7px}
+  .c2t{grid-template-columns:minmax(0,1.15fr) minmax(0,1fr) minmax(0,1fr)}
+  .barcode{width:130px}
+  table.inv{font-size:.9em}
+  table.inv th,table.inv td{padding:4px 4px}
+  .k-pz{width:15%} .k-cod{width:30%} .k-rec{width:30%} .k-ef{width:25%}
+  .o{gap:5px}
+}
+/* pe telefon numărul câmpului stă deasupra, ca formularul să aibă toată lăţimea */
+body[data-mode="mobile"] .fz{padding:10px 12px 14px 12px}
+body[data-mode="mobile"] .fz .num{position:static;display:inline-grid;margin:0 0 8px}
+body[data-mode="mobile"] .fz .tap{right:10px;top:9px}
+
+/* ============ EXPLICAŢIA, DESCHISĂ SUB CÂMP ============ */
+.exp{position:relative;background:#fff;border-bottom:1px solid var(--line);padding:4px 24px 20px 58px;
+  font-family:var(--font);animation:fade .2s ease}
+.exp:before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--accent)}
+body[data-mode="mobile"] .exp{padding:4px 16px 18px 16px}
+.exp-h{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;padding-top:12px;
+  border-top:1px dashed var(--line-2)}
+.eyebrow{font-size:.68em;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--accent)}
+.exp h2{margin:3px 0 0;font-size:1.12em;font-weight:650;letter-spacing:-.015em;line-height:1.3}
+.exp .who{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.exp .x{flex:0 0 auto;border:1px solid var(--line-2);background:#fff;border-radius:9px;width:34px;height:34px;
+  color:var(--ink-2);cursor:pointer;font-size:.95em}
+.exp .x:hover{border-color:var(--accent);color:var(--accent)}
+.sum{margin:12px 0 4px;font-size:.98em;line-height:1.6;color:var(--ink);background:var(--accent-soft);
+  border-radius:11px;padding:11px 14px}
+.exp-g{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);gap:22px;margin-top:6px;container-type:inline-size}
+.exp h3{font-size:.7em;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);
+  margin:16px 0 9px}
+.exp h3.hw{color:var(--warn)}
+.exp ul.ok,.exp ul.warn{list-style:none;padding:0;margin:0}
+.exp ul.ok li{position:relative;padding:0 0 0 20px;margin-bottom:9px;font-size:.92em;line-height:1.55;color:var(--ink-2)}
+.exp ul.ok li b{color:var(--ink);font-weight:650}
+.exp ul.ok li:before{content:"";position:absolute;left:4px;top:.6em;width:5px;height:5px;border-radius:50%;
+  background:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+.exp ul.warn li{position:relative;background:var(--warn-bg);border-radius:10px;padding:9px 12px 9px 26px;
+  margin-bottom:7px;font-size:.89em;line-height:1.5;color:#6d2a21}
+.exp ul.warn li:before{content:"";position:absolute;left:11px;top:1em;width:5px;height:5px;border-radius:50%;background:var(--warn)}
+.exp .law h3{color:var(--accent)}
+.lq{background:var(--surface-2);border:1px solid var(--line);border-left:3px solid var(--accent-2);border-radius:10px;
+  padding:11px 14px 9px;margin-bottom:9px;font-size:.86em;line-height:1.6;color:var(--ink-2)}
+.lq p{margin:0 0 7px}
+.lq b{color:var(--ink)}
+.lq-go{display:block;margin:2px 0 0 auto;border:0;background:none;color:var(--accent);font-size:.92em;font-weight:650;
+  cursor:pointer;padding:3px 0}
+.lq-go:hover{text-decoration:underline}
+.exp-nav{display:flex;gap:8px;margin-top:16px;padding-top:12px;border-top:1px solid var(--line)}
+.exp-nav button{flex:1;border:1px solid var(--line-2);background:#fff;border-radius:var(--r-s);padding:9px;
+  font-size:.83em;font-weight:650;color:var(--accent);cursor:pointer;min-height:var(--tap)}
+.exp-nav button:hover:not(:disabled){background:var(--accent-soft);border-color:var(--accent)}
+.exp-nav button:disabled{color:#c4c9d4;cursor:default}
+@container sheet (max-width: 760px){ .exp-g{grid-template-columns:minmax(0,1fr);gap:0} }
+
+/* ============ ÎNAPOI DIN TEXTUL ORDINULUI ============ */
+.backbar{display:none;position:sticky;top:50px;z-index:25;margin:0 calc(-1 * var(--pad)) 12px;padding:8px var(--pad);background:rgba(245,246,249,.94);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
+.backbar.on{display:flex}
+.backbar button{border:1px solid var(--accent);background:var(--accent);color:#fff;border-radius:999px;
+  padding:9px 16px;font-weight:650;font-size:.86em;cursor:pointer;box-shadow:0 6px 18px -8px var(--accent-ring)}
+.lawblk{scroll-margin-top:120px;border-radius:10px;transition:background .4s}
+.lawblk.hid{display:none}
+.lawblk.flash{background:#fff6d6;box-shadow:0 0 0 6px #fff6d6}
+
+
+
+.tp b{display:block;font-weight:600}
+.tp span{display:block;font-size:.72em;font-weight:500;opacity:.72;margin-top:1px}
+body[data-mode="mobile"] #nav{display:contents}
 
 /* ============ VERIFICARE ============ */
 .ck-top{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;margin-bottom:14px}
@@ -497,7 +529,7 @@ footer{color:var(--ink-3);font-size:.76em;text-align:center;padding:10px 16px 34
   <button data-t="t-bilet" class="on">Biletul</button>
   <button data-t="t-check">Verifică un bilet</button>
   <button data-t="t-dict">Căsuţe şi coduri</button>
-  <button data-t="t-text">Textul ordinului</button>
+  <button data-t="t-text">Textul integral al ordinului</button>
 </div></nav>
 
 <main><div class="wrap">
@@ -515,7 +547,7 @@ footer{color:var(--ink-3);font-size:.76em;text-align:center;padding:10px 16px 34
 
   <section class="tab on" id="t-bilet">
     <p class="typenote" id="typenote"></p>
-    <p class="helper">Apasă pe orice câmp al biletului pentru a vedea ce trebuie completat acolo şi de către cine. Fondul fiecărui câmp arată cui îi revine completarea.</p>
+    <p class="helper">Biletul e desenat exact după modelul din ordin. Apasă pe un câmp: explicaţia şi textul din ordin se deschid chiar sub el. Fondul fiecărui câmp arată cui îi revine completarea.</p>
     <div class="legend">
       <span><i class="i-medic"></i>medicul care recomandă</span>
       <span><i class="i-noi"></i>furnizorul de servicii paraclinice</span>
@@ -523,8 +555,8 @@ footer{color:var(--ink-3);font-size:.76em;text-align:center;padding:10px 16px 34
       <span><i class="i-tipar"></i>tipărit pe formular</span>
     </div>
     <div class="split">
+      <aside id="navwrap"><div class="toc" id="toc"><div class="toc-h">Rubricile biletului</div><div id="nav"></div></div></aside>
       <div id="sheet"></div>
-      <aside class="panel" id="panel"></aside>
     </div>
   </section>
 
@@ -546,14 +578,14 @@ footer{color:var(--ink-3);font-size:.76em;text-align:center;padding:10px 16px 34
   </section>
 
   <section class="tab" id="t-text">
+    <div class="backbar" id="backbar"><button id="backbtn" type="button">← Înapoi la bilet</button></div>
     <input class="search" id="q" type="search" placeholder="Caută în text: parafă, verso, internat, majuscule…">
-    <p class="note-small">Ordinul ministrului sănătăţii şi al preşedintelui CNAS nr. 2.168/502/2023, publicat în Monitorul Oficial nr. 600 bis din 30 iunie 2023, cu modificările şi completările ulterioare. Text în vigoare. Penultima secţiune reproduce rubrica 4.4 aşa cum este tipărită pe formularele din anexele 1a–1d, nu textul instrucţiunilor.</p>
+    <p class="note-small">Ordinul ministrului sănătăţii şi al preşedintelui CNAS nr. 2.168/502/2023, publicat în Monitorul Oficial nr. 600 bis din 30 iunie 2023, cu modificările şi completările ulterioare. Text în vigoare. Secţiunea „Anexele 1a–1d” reproduce rubrica 4.4 aşa cum este tipărită pe formulare, nu textul instrucţiunilor.</p>
     <div id="lawtext"></div>
   </section>
 
 </div></main>
 
-<div id="backdrop"></div>
 <footer>Instrument de lucru pentru verificarea biletelor de trimitere pentru investigaţii paraclinice. Nu înlocuieşte textul oficial al ordinului.</footer>
 
 <script>/* ================= DATE: text consolidat Ord. MS/CNAS 2168/502/2023 (versiune 30.12.2025) ================= */
@@ -618,7 +650,7 @@ P_C7:`<p><b>Câmpul 7 (anexa 2b)</b> În situaţia în care, din motive obiectiv
 F44rmn:`<p><b>Anexa 1a — rubrica 4.4 tipărită pe formularul RMN:</b> a) Greutate … kg; b) Cooperare previzibilă Normală/Dificilă; c) Astm bronşic; d) Suspiciune de sarcină; e) Valve cardiace, ventriculare; f) Dispozitive intrauterine; g) Alte proteze; h) Schije, gloanţe, obiecte metalice; i) Proteze articulare, materiale de osteosinteză; j) Meserii legate de prelucrarea metalelor (schije, obiecte metalice); k) Clipuri chirurgicale, materiale metalice de sutură; l) Asistat cardiorespirator; m) Antecedente alergice; n) Crize epileptice; o) Claustrofobie; p) Proteze auditive; r) Materiale stomatologice; s) Corpi străini intraocular – fiecare DA/NU. „PREZENŢA UNUI PACEMAKER ESTE O CONTRAINDICAŢIE ABSOLUTĂ PENTRU EXAMINARE!!!”</p>`,
 F44ct:`<p><b>Anexa 1b — rubrica 4.4 tipărită pe formularul CT:</b> a) Greutate … kg; b) Toleranţă la substanţa iodată DA/NU.</p>`,
 F44sc:`<p><b>Anexa 1c — rubrica 4.4 tipărită pe formularul de scintigrafie:</b> a) Greutate … kg; b) Antecedente alergice DA/NU. „SARCINA ESTE O CONTRAINDICAŢIE ABSOLUTĂ PENTRU EFECTUAREA EXAMENULUI SCINTIGRAFIC!!!”</p>`,
-F44an:`<p><b>Anexa 1d — rubrica 4.4 tipărită pe formularul de angiografie:</b> a) Greutate … kg; b) Antecedente alergice DA/NU; c) Puls: artera femurală dreaptă … şi artera femurală stângă …; d) Pacient diabetic DA/NU – în tratament cu sulfamide hipoglicemiante DA/NU (dacă DA se opreşte tratamentul cu 48 de ore înaintea investigaţiei); e) Hepatita DA/NU. Pacientul se va prezenta obligatoriu cu următoarele teste efectuate: activitatea protrombinică şi timpul de protrombină determinate în ziua efectuării investigaţiei, creatinină, uree, ECG, tensiune arterială, antigen HbS, test HIV; administrarea anticoagulantelor cumarinice trebuie oprită cu 72 de ore înaintea investigaţiei; administrarea medicaţiei antihipertensive şi antiaritmice NU se opreşte.</p>`
+F44an:`<p><b>Anexa 1d — rubrica 4.4 tipărită pe formularul de angiografie:</b> a) Greutate … kg; b) Antecedente alergice DA/NU; c) Puls: artera femurală dreaptă … şi artera femurală stângă …; d) Pacient diabetic DA/NU – în tratament cu sulfamide hipoglicemiante DA/NU (dacă DA se opreşte tratamentul cu 48 de ore înaintea investigaţiei); e) Hepatita DA/NU. Pacientul se va prezenta obligatoriu cu următoarele teste efectuate: activitatea protombinică şi timpul de protombină determinate în ziua efectuării investigaţiei, creatinină, uree, ECG, tensiune arterială, antigen HbS, test HIV; administrarea anticoagulantelor cumarinice trebuie oprită cu 72 de ore înaintea investigaţiei; administrarea medicaţiei antihipertensive şi antiaritmice NU se opreşte.</p>`
 };
 </script>
 <script>/* ================= TIPURI DE BILET ================= */
@@ -656,7 +688,7 @@ const WHO = {
 /* ================= ZONE ================= */
 /* face:'fata' | 'verso' */
 const Z = [
-{id:'z0', b:'0', face:'fata', title:'Formularul în sine', short:'Serie, număr, cod de bare, exemplarul corect', who:['tipar'],
+{id:'z0', b:'0', face:'fata', title:'Formularul în sine', sum:function(t){ return t==='prev' ? 'Biletul de prevenţie al medicului de familie este un formular distinct (anexa 1e). Se primeşte doar exemplarul alb, original, cu cod de bare, serie şi număr.' : (HP.indexOf(t)>=0 ? 'Pentru RMN, CT, scintigrafie şi angiografie există câte un formular propriu. Trebuie să fie exact formularul investigaţiei cerute, în original (exemplarul alb), cu cod de bare, serie şi număr.' : 'Este formularul pentru toate investigaţiile paraclinice decontate de CAS, în afară de RMN, CT, scintigrafie şi angiografie. Se primeşte doar exemplarul alb, original, cu cod de bare, serie şi număr.'); }, short:'Serie, număr, cod de bare, exemplarul corect', who:['tipar'],
  ok:[
   {t:'Formular tipizat cu regim special, cu <b>cod de bare</b>, <b>serie</b> şi <b>număr</b>', w:'tipar'},
   {t:'Furnizorului de servicii paraclinice i se predă <b>exemplarul 1 – ALB</b> (originalul); exemplarul 2 verde rămâne în carnet, la medicul care a recomandat', w:'tipar', on:'notprev'},
@@ -675,7 +707,7 @@ const Z = [
  ],
  law:[{k:'A1'},{k:'P_A1',on:'prev'},{k:'art1_2',on:'hp'},{k:'art1_3',on:'prev'},{k:'art1_4',on:'prev'},{k:'B1',on:'notprev'},{k:'P_B1',on:'prev'},{k:'P_A2',on:'prev'},{k:'B2'},{k:'Ccod'},{k:'C4nota',on:'rmnct'},{k:'art3_2'}]
 },
-{id:'z1', b:'1', face:'fata', title:'Unitatea medicală care trimite', short:'Denumire, CUI, adresă, CAS, nr. contract + tip unitate şi prioritate', who:['medic'],
+{id:'z1', b:'1', face:'fata', title:'Unitatea medicală care trimite', sum:function(t){ return t==='prev' ? 'Arată cine trimite pacientul: unitatea medicală, CUI-ul, adresa, casa de asigurări şi contractul cu CAS. Pe biletul de prevenţie nu există căsuţe pentru tipul de furnizor sau pentru prioritate.' : 'Arată cine trimite pacientul: unitatea medicală, CUI-ul, adresa, casa de asigurări şi contractul cu CAS în baza căruia lucrează medicul. În mijloc se bifează tipul de furnizor, iar în dreapta nivelul de prioritate.'; }, short:'Denumire, CUI, adresă, CAS, nr. contract + tip unitate şi prioritate', who:['medic'],
  ok:[
   {t:'Denumirea unităţii medicale', w:'medic'},
   {t:'CUI-ul cabinetului sau al unităţii sanitare', w:'medic'},
@@ -687,14 +719,16 @@ const Z = [
  ],
  warn:[
   {t:'Medicul trebuie să fie în contract sau convenţie cu CAS. Fără asta, emiterea biletului este interzisă.'},
+  {t:'Pe formularul din anexa 1 există şi căsuţa „Unitate sanitară cu paturi”. Instrucţiunile de completare (lit. C, câmpul 1 b) descriu numai MF, Amb. Spec. şi Altele.', on:'std'},
   {t:'Spitalul NU poate emite bilet pentru un pacient internat, pe durata internării, nici bilet pentru investigaţii contra cost.'},
   {t:'Pacienţii internaţi fac CT/RMN/scintigrafie/angiografie pe fişă de solicitare, fără bilet de trimitere.', on:'hp'}
  ],
  law:[{k:'C1a',on:'notprev'},{k:'C1b',on:'notprev'},{k:'C1c',on:'notprev'},{k:'P_C1',on:'prev'},{k:'A2',on:'notprev'},{k:'A3',on:'notprev'},{k:'P_A3',on:'prev'},{k:'art5_2',on:'hp'}]
 },
-{id:'z2', b:'2', face:'fata', title:'Datele pacientului', short:'Asigurat/neasigurat, RC, categorie, nume, CNP', who:['medic'],
+{id:'z2', b:'2', face:'fata', title:'Datele pacientului', sum:function(t){ return t==='prev' ? 'Identifică pacientul: asigurat sau neasigurat, numărul din registrul de consultaţii, numele, data naşterii, vârsta, sexul şi CNP-ul.' : 'Identifică pacientul şi calitatea lui de asigurat: casa de asigurări, numărul din registrul de consultaţii, o singură categorie de asigurat bifată în coloanele din dreapta şi CNP-ul complet.'; }, short:'Asigurat/neasigurat, RC, categorie, nume, CNP', who:['medic'],
  ok:[
-  {t:'„Asigurat la CAS / Neasigurat”: una din variante e <b>tăiată cu o linie</b>; la asigurat e scrisă şi casa de asigurări', w:'medic'},
+  {t:'„Asigurat la CAS/Neasigurat”: una din variante e <b>tăiată cu o linie</b>; la asigurat e scrisă şi casa de asigurări', w:'medic', on:'nothp'},
+  {t:'„Asigurat la CAS:” — casa de asigurări în evidenţa căreia se află asiguratul', w:'medic', on:'hp'},
   {t:'<b>RC</b> — numărul din registrul de consultaţii', w:'medic'},
   {t:'<b>O SINGURĂ</b> categorie de asigurat bifată', w:'medic', on:'notprev'},
   {t:'Numele şi prenumele (adresa nu este câmp obligatoriu de completat)', w:'medic', on:'notprev'},
@@ -708,18 +742,19 @@ const Z = [
  ],
  warn:[
   {t:'Două sau mai multe categorii bifate = bilet greşit completat.', on:'notprev'},
+  {t:'Pe formularele de înaltă performanţă câmpul 2 nu a fost modificat: rubrica tipărită este „Asigurat la CAS:”, deşi instrucţiunile (lit. C, câmpul 2 a) vorbesc de „Asigurat la CAS/Neasigurat”.', on:'hp'},
   {t:'Gravidă/Lehuză se bifează numai dacă nu are venituri sau are venituri sub salariul minim brut. Altfel se bifează categoria ei de asigurat.', on:'notprev'},
   {t:'Neasigurat cu „PNS” bifat: din 1 ianuarie 2026 se notează numărul Programului naţional de diabet zaharat (HbA1c), al Programului HIV/SIDA sau al Programului de tuberculoză.', on:'notprev'}
  ],
  law:[{k:'C2a',on:'notprev'},{k:'C2b',on:'notprev'},{k:'C2c',on:'notprev'},{k:'C2c1',on:'notprev'},{k:'C2d',on:'notprev'},{k:'C2e',on:'notprev'},{k:'P_C2',on:'prev'}]
 },
-{id:'z3', b:'3', face:'fata', title:'Diagnostic, dată, semnătură şi parafă', short:'Cod CIM-10, căsuţa de tip, data trimiterii, parafa', who:['medic'],
+{id:'z3', b:'3', face:'fata', title:'Diagnostic, dată, semnătură şi parafă', sum:function(t){ return t==='prev' ? 'Pe biletul de prevenţie codul de diagnostic este 999, iar în căsuţa PREV, aflată în dreapta, se scrie o cifră de la 1 la 9. Urmează data, semnătura, parafa şi codul de parafă.' : 'Motivul trimiterii: codul şi denumirea diagnosticului în stânga şi, în dreapta, pe acelaşi rând, căsuţa care arată tipul afecţiunii — de ea depinde perioada de valabilitate a biletului. Dedesubt: data trimiterii, semnătura medicului şi codul de parafă.'; }, short:'Cod CIM-10, căsuţa de tip, data trimiterii, parafa', who:['medic'],
  ok:[
   {t:'Codul de diagnostic (CIM-10, varianta 999 coduri) + diagnosticul scris', w:'medic', on:'notprev'},
   {t:'Codul de diagnostic este <b>999</b>', w:'medic', on:'prev'},
-  {t:'Bifată căsuţa de tip corespunzătoare: <b>P · A/S · C · M · G · SO · AO · HS</b>', w:'medic', on:'std'},
-  {t:'Bifată căsuţa de tip corespunzătoare: <b>P · A/S · C · SO · AO</b>', w:'medic', on:'hp'},
-  {t:'În căsuţa <b>PREV</b> este o cifră de la 1 la 9', w:'medic', on:'prev'},
+  {t:'Bifată căsuţa de tip corespunzătoare, din <b>dreapta</b> rândului cu diagnosticul: <b>P · A/S · C · M · G · SO · AO · HS</b>', w:'medic', on:'std'},
+  {t:'Bifată căsuţa de tip corespunzătoare, din <b>dreapta</b> rândului cu diagnosticul: <b>P · A/S · C · SO · AO</b>', w:'medic', on:'hp'},
+  {t:'În căsuţa <b>PREV</b>, din dreapta rândului cu diagnosticul, este o cifră de la 1 la 9', w:'medic', on:'prev'},
   {t:'<b>Data trimiterii</b>', w:'medic'},
   {t:'<b>Semnătura</b> medicului + <b>parafa</b> + <b>codul de parafă</b>', w:'medic'},
   {t:'„Data reconfirmării” este <b>GOALĂ</b> — acest câmp nu se completează', w:'medic', on:'hp'},
@@ -733,7 +768,7 @@ const Z = [
  ],
  law:[{k:'art1_4',on:'prev'},{k:'C3i',on:'notprev'},{k:'C3ii',on:'notprev'},{k:'C3nota',on:'notprev'},{k:'C3iii',on:'notprev'},{k:'C3iv',on:'notprev'},{k:'C3v',on:'hp'},{k:'C3vi',on:'hp'},{k:'C3vii',on:'notprev'},{k:'P_C3',on:'prev'}]
 },
-{id:'z4', b:'4', face:'fata', title:'Investigaţiile', short:'Recomandarea vine de la medic · codurile şi bifele le pune furnizorul', who:['medic','noi'],
+{id:'z4', b:'4', face:'fata', title:'Investigaţiile', sum:'Medicul scrie investigaţiile pe care le recomandă, lizibil, cu majuscule. Furnizorul completează codurile investigaţiilor efectuate, bifează ce a efectuat şi anulează cu o linie ce nu a putut efectua.', short:'Recomandarea vine de la medic · codurile şi bifele le pune furnizorul', who:['medic','noi'],
  ok:[
   {t:'Investigaţiile recomandate sunt scrise <b>lizibil, cu MAJUSCULE</b>', w:'medic'},
   {t:'Codul investigaţiei — medicul îl poate completa, dar este <b>facultativ</b> pentru el', w:'medic'},
@@ -746,17 +781,17 @@ const Z = [
  ],
  law:[{k:'C4std',on:'std'},{k:'C41',on:'hp'},{k:'P_C4',on:'prev'}]
 },
-{id:'z42', b:'4.2', face:'fata', title:'Date clinice care justifică investigaţia', short:'Medicul scrie de ce e nevoie de investigaţie', who:['medic'], on:'hp',
+{id:'z42', b:'4.2', face:'fata', title:'Date clinice care justifică investigaţia', sum:'Medicul care recomandă scrie aici datele clinice şi paraclinice care justifică investigaţia.', short:'Medicul scrie de ce e nevoie de investigaţie', who:['medic'], on:'hp',
  ok:[{t:'Datele clinice şi paraclinice care justifică investigaţia sunt consemnate', w:'medic'}],
  warn:[{t:'Rubrică goală = bilet incomplet.'}],
  law:[{k:'C42'}]
 },
-{id:'z43', b:'4.3', face:'fata', title:'Examen anterior', short:'A mai făcut sau nu acest tip de examen', who:['medic'], on:'hp',
+{id:'z43', b:'4.3', face:'fata', title:'Examen anterior', sum:'Medicul care recomandă bifează DA dacă pacientul a mai efectuat acest tip de examen sau NU dacă nu l-a efectuat.', short:'A mai făcut sau nu acest tip de examen', who:['medic'], on:'hp',
  ok:[{t:'Bifat <b>DA</b> sau <b>NU</b> la examenul anterior', w:'medic'}],
- warn:[],
+ warn:[{t:'Pe formularul RMN rubrica tipărită este „Examen CT/RMN anterior”; instrucţiunile o numesc „Examen RMN anterior”.', on:'rmn'}],
  law:[{k:'C43'}]
 },
-{id:'z44', b:'4.4', face:'fata', title:'Observaţii speciale legate de pacient', short:'Bifele de siguranţă înainte de examinare', who:['medic'], on:'hp',
+{id:'z44', b:'4.4', face:'fata', title:'Observaţii speciale legate de pacient', sum:'Informaţii de siguranţă pentru examinare. Le bifează medicul care recomandă, în funcţie de tipul investigaţiei.', short:'Bifele de siguranţă înainte de examinare', who:['medic'], on:'hp',
  ok:[
   {t:'Bifat DA/NU la fiecare rând: greutate, cooperare, astm, sarcină, valve, dispozitive intrauterine, proteze, metale, osteosinteză, clipuri, asistare cardiorespiratorie, alergii, epilepsie, claustrofobie, proteze auditive, materiale stomatologice, corpi străini intraoculari', w:'medic', on:'rmn'},
   {t:'Completate: greutatea şi toleranţa la substanţa iodată (DA/NU)', w:'medic', on:'ct'},
@@ -771,12 +806,12 @@ const Z = [
  ],
  law:[{k:'C44'},{k:'F44rmn',on:'rmn'},{k:'F44ct',on:'ct'},{k:'F44sc',on:'scinti'},{k:'F44an',on:'angio'}]
 },
-{id:'z45', b:'4.5', face:'fata', title:'Substanţă de contrast', short:'Se bifează de medicul radiolog', who:['noi'], on:'rmnct',
+{id:'z45', b:'4.5', face:'fata', title:'Substanţă de contrast', sum:'Se bifează DA sau NU de medicul radiolog, după cum se foloseşte sau nu substanţă de contrast.', short:'Se bifează de medicul radiolog', who:['noi'], on:'rmnct',
  ok:[{t:'Bifat <b>DA</b> sau <b>NU</b> de medicul radiolog, după cum se foloseşte sau nu substanţă de contrast', w:'noi'}],
  warn:[{t:'Ordinul spune că bifa se face „de către medicul radiolog”, nu de medicul care trimite. În practică se completează la momentul examinării.'}],
  law:[{k:'C45'}]
 },
-{id:'z5', b:'5', face:'fata', title:'Persoana desemnată de furnizor', short:'Numele în clar + semnătura', who:['noi'],
+{id:'z5', b:'5', face:'fata', title:'Persoana desemnată de furnizor', sum:'Persoana desemnată de furnizor îşi scrie numele în clar şi semnează.', short:'Numele în clar + semnătura', who:['noi'],
  ok:[
   {t:'Numele persoanei desemnate de furnizor, scris <b>în clar</b>', w:'noi'},
   {t:'Specimenul de semnătură al acesteia', w:'noi'}
@@ -784,7 +819,7 @@ const Z = [
  warn:[],
  law:[{k:'C5',on:'notprev'},{k:'P_C5',on:'prev'}]
 },
-{id:'z6', b:'6', face:'fata', title:'Data prezentării şi semnătura pacientului', short:'Numai dacă investigaţia se face pe loc', who:['pac'],
+{id:'z6', b:'6', face:'fata', title:'Data prezentării şi semnătura pacientului', sum:'Pacientul scrie data prezentării şi semnează numai dacă investigaţiile se efectuează chiar la momentul prezentării.', short:'Numai dacă investigaţia se face pe loc', who:['pac'],
  ok:[
   {t:'Data prezentării, scrisă de pacient', w:'pac'},
   {t:'Semnătura pacientului, după ce a fost informat despre tipurile de investigaţii de care urmează să beneficieze', w:'pac'}
@@ -796,7 +831,7 @@ const Z = [
  law:[{k:'C6',on:'notprev'},{k:'P_C6',on:'prev'}]
 },
 /* ---------------- VERSO ---------------- */
-{id:'v1', b:'7', face:'verso', title:'Programarea, când nu se poate face pe loc', short:'Data prezentării pentru programare + data programării', who:['noi'],
+{id:'v1', b:'7', face:'verso', title:'Programarea, când nu se poate face pe loc', sum:'Dacă investigaţiile nu pot fi efectuate la prezentare, furnizorul are obligaţia să programeze pacientul în perioada de valabilitate a biletului şi notează pe verso data prezentării pentru programare şi data programării.', short:'Data prezentării pentru programare + data programării', who:['noi'],
  ok:[
   {t:'Dacă din motive obiective investigaţiile nu s-au putut efectua la prezentare, furnizorul <b>are obligaţia de a programa pacientul în perioada de valabilitate a biletului</b>', w:'noi'},
   {t:'Se consemnează pe verso <b>data prezentării pentru programare</b>', w:'noi'},
@@ -808,7 +843,7 @@ const Z = [
  ],
  law:[{k:'C7',on:'notprev'},{k:'P_C7',on:'prev'}]
 },
-{id:'v2', b:'7', face:'verso', title:'Declaraţia pacientului privind internarea', short:'Pe propria răspundere: a fost sau nu internat', who:['pac'],
+{id:'v2', b:'7', face:'verso', title:'Declaraţia pacientului privind internarea', sum:'Când se prezintă pentru efectuarea investigaţiilor, pacientul declară pe verso, pe propria răspundere, dacă a fost sau nu internat de la data eliberării biletului până la data efectuării.', short:'Pe propria răspundere: a fost sau nu internat', who:['pac'],
  ok:[
   {t:'La momentul prezentării pentru efectuarea investigaţiilor, pacientul declară pe verso, <b>pe propria răspundere</b>, dacă a fost sau nu internat', w:'pac'},
   {t:'Perioada la care se referă declaraţia: de la data eliberării biletului până la data efectuării investigaţiilor', w:'pac'},
@@ -819,7 +854,7 @@ const Z = [
  ],
  law:[{k:'C7',on:'notprev'},{k:'P_C7',on:'prev'},{k:'C3v',on:'hp'}]
 },
-{id:'v3', b:'·', face:'verso', title:'După efectuare: originalul rămâne la furnizor', short:'Nu se scrie pe verso — este regula de păstrare a exemplarului alb', who:['noi'],
+{id:'v3', b:'·', face:'verso', title:'După efectuare: originalul rămâne la furnizor', sum:'Nu este o menţiune care se scrie pe verso: este regula de păstrare a originalului, de la litera B a instrucţiunilor.', short:'Nu se scrie pe verso — este regula de păstrare a exemplarului alb', who:['noi'],
  ok:[
   {t:'Furnizorul păstrează <b>exemplarul alb (originalul)</b>', w:'noi'},
   {t:'Se prezintă casei de asigurări <b>doar la solicitarea acesteia</b>', w:'noi'},
@@ -834,6 +869,7 @@ function zoneOn(z,t){ return on(z.on||'all',t); }
 <script>/* ================= STARE ================= */
 var T='rmn', FACE='fata', SEL=null, CK={}, MODE='auto';
 var ZSTEPS=[1,1.1,1.2,1.3,1.4,1.5], ZI=1;
+function el(id){ return document.getElementById(id); }
 function canZoom(){ return window.innerWidth>=900; }
 function pageZoom(){ return canZoom() ? ZSTEPS[ZI] : 1; }
 function eff(){ return MODE!=='auto' ? MODE : ((window.innerWidth/pageZoom())<900?'mobile':'desktop'); }
@@ -842,133 +878,318 @@ function load(){ try{
   var m=localStorage.getItem('bilet-mode'); if(m==='mobile'||m==='desktop') MODE=m;
   var z=parseInt(localStorage.getItem('bilet-zoom'),10); if(!isNaN(z)&&z>=0&&z<ZSTEPS.length) ZI=z;
 }catch(e){} }
+function applyMode(){
+  var m=eff();
+  document.body.dataset.mode=m;
+  el('modebtn').textContent = m==='mobile'?'Vedere: mobil':'Vedere: desktop';
+  el('modebtn').title = MODE==='auto'?'Se potriveşte automat. Apasă pentru a fixa.':'Fixat. Dublu-clic pentru automat.';
+}
 function applyZoom(){
   document.body.classList.toggle('can-zoom', canZoom());
   document.documentElement.style.zoom = pageZoom();
   if(MODE==='auto') applyMode();
   var lbl=el('zlabel'); if(lbl) lbl.textContent = Math.round(ZSTEPS[ZI]*100)+'%';
-  var zo=el('zout'), zi=el('zin');
-  if(zo) zo.disabled = ZI===0;
-  if(zi) zi.disabled = ZI===ZSTEPS.length-1;
+  if(el('zout')) el('zout').disabled = ZI===0;
+  if(el('zin'))  el('zin').disabled  = ZI===ZSTEPS.length-1;
 }
 function setZoom(d){
   if(d===0) ZI=0; else ZI=Math.min(ZSTEPS.length-1, Math.max(0, ZI+d));
   applyZoom(); save();
 }
-function el(id){ return document.getElementById(id); }
 
-/* ================= FRAGMENTE DE FORMULAR ================= */
-function cb(t){ return '<span class="opt"><span class="cb"></span>'+t+'</span>'; }
+/* =====================================================================
+   DESENUL FORMULARELOR — reproduce modelele din anexele 1, 1a–1e
+   la Ord. MS/CNAS 2168/502/2023, cu modificările la câmpurile 2, 3, 6
+   şi la titlul anexei 1e (versiunea în vigoare din 30.12.2025).
+   Poziţiile (stânga / mijloc / dreapta) şi textele sunt cele de pe model.
+   ===================================================================== */
+function wb(t){ return String(t).replace(/\//g,'/<wbr>'); }
+function cb(t){ return '<span class="o"><span class="cb"></span><span>'+wb(t)+'</span></span>'; }
+function cbR(t){ return '<span class="o"><span class="cb"></span><span>'+wb(t)+'</span></span>'; }
 function cells(n){ return '<span class="cells">'+new Array(n+1).join('<i></i>')+'</span>'; }
-function ln(label){ return '<span class="fl">'+(label?'<span class="fl-l">'+label+'</span>':'')+'<span class="fl-u"></span></span>'; }
-function lnc(label,inner){ return '<span class="fl">'+(label?'<span class="fl-l">'+label+'</span>':'')+inner+'</span>'; }
-function fh(t){ return '<div class="fh">'+t+'</div>'; }
-function g(cls,items){ return '<div class="fg '+cls+'">'+items.join('')+'</div>'; }
-function yn(){ return '<span class="yn"><span>DA</span><span>NU</span></span>'; }
+/* rând cu etichetă şi linie punctată care umple restul */
+function dl(label, extra){ return '<div class="dl"><span class="dl-l">'+label+'</span><span class="dl-d"></span>'+(extra||'')+'</div>'; }
+/* linie punctată goală (continuarea unei rubrici) */
+function dd(){ return '<div class="dl dd"><span class="dl-d"></span></div>'; }
+function box(t){ return '<span class="pbox"><span>'+t+'</span><span class="pb"></span></span>'; }
+
+var SUBT = {
+  std:   'pentru investigaţii paraclinice decontate de CAS',
+  rmn:   'pentru investigaţii paraclinice decontate de CAS<br>Servicii de înaltă performanţă – RMN',
+  ct:    'pentru investigaţii paraclinice decontate de CAS<br>Servicii de înaltă performanţă – CT',
+  scinti:'pentru investigaţii paraclinice decontate de CAS<br>Servicii de înaltă performanţă – SCINTIGRAFIE',
+  angio: 'pentru investigaţii paraclinice decontate de CAS<br>Servicii de înaltă performanţă – ANGIOGRAFIE',
+  prev:  'pentru investigaţii paraclinice recomandate de medicii de familie în cadrul consultaţiilor preventive din pachetul de bază'
+};
 
 function frag(id){
-  var hp = HP.indexOf(T)>=0, prev = T==='prev';
-  var sub = {std:'', rmn:'Servicii de înaltă performanţă – RMN', ct:'Servicii de înaltă performanţă – CT',
-    scinti:'Servicii de înaltă performanţă – SCINTIGRAFIE', angio:'Servicii de înaltă performanţă – ANGIOGRAFIE',
-    prev:'recomandate de medicii de familie în cadrul consultaţiilor preventive din pachetul de bază'}[T];
+  var hp = HP.indexOf(T)>=0, prev = T==='prev', std = T==='std';
   switch(id){
+
+  /* ---------- antet ---------- */
   case 'z0':
-    return '<div class="ft">'+
-      '<div class="ft-l"><div class="ft-t">Bilet de trimitere</div>'+
-        '<div class="ft-s">pentru investigaţii paraclinice'+(prev?'':' decontate de CAS')+'</div>'+
-        (sub?'<div class="ft-x">'+sub+'</div>':'')+'</div>'+
-      '<div class="ft-r"><div class="bc" aria-hidden="true"></div>'+
-        g('g2 tight',[ln('Serie'),ln('Nr.')])+'</div>'+
-    '</div>';
+    return '<div class="f-head">'+
+        '<div class="f-title">BILET DE TRIMITERE</div>'+
+        '<div class="f-sub">'+SUBT[T]+'</div>'+
+      '</div>'+
+      '<div class="f-id">'+
+        '<div class="barcode"><span>COD DE BARE</span></div>'+
+        '<div class="f-sn">SERIE <span class="dl-d s"></span> NR. <span class="dl-d m"></span></div>'+
+      '</div>';
+
+  /* ---------- câmpul 1 ---------- */
   case 'z1':
-    return fh('Unitate medicală')+
-      '<div class="fsplit'+(prev?' one':'')+'">'+
-        g('g1',[ln('Denumire'),ln('CUI'),ln('Sediu (localitate, str., nr.)'),ln('Judeţul'),ln('Casa de asigurări'),ln('Nr. contract / convenţie')])+
-        (prev?'':'<div class="fbox"><div class="fbox-t">Tip furnizor</div>'+
-          g('g1 opts',[cb('MF'),cb('Amb. Spec.'),cb('Altele')])+
-          '<div class="fbox-t sep">Nivel de prioritate</div>'+
-          g('g1 opts',[cb('Urgenţă'),cb('Curente')])+'</div>')+
+    if(prev){
+      return '<div class="c1-prev">'+
+        dl('<b>1. Unitate medicală</b>')+dl('CUI')+dl('Sediu (localitate, str., nr.)')+
+        dl('Judeţul')+dl('Casa de asigurări')+dl('Nr. Contract/Convenţie')+'</div>';
+    }
+    var rows1;
+    if(std) rows1 = [            /* anexa 1 */
+      [dl('CUI'), cbR('MF')],
+      [dl('Sediu (localitate, str., nr.)'), cbR('Amb.<br>Spec.')],
+      [dl('Judeţul'), cbR('Unitate<br>sanitară<br>cu paturi'), 2],
+      [dl('Casa de asigurări'), null],
+      [dl('Nr. Contract/Convenţie'), cbR('Altele')]];
+    else if(T==='rmn') rows1 = [ /* anexa 1a */
+      [dl('CUI'), cbR('MF')],
+      [dl('Sediu (localitate, str., nr.)'), ''],
+      [dd(), cbR('Amb.<br>Spec.'), 2],
+      [dl('Judeţul'), null],
+      [dl('Casa de asigurări'), ''],
+      [dl('Nr. Contract/Convenţie'), cbR('Altele')]];
+    else rows1 = [               /* anexele 1b, 1c, 1d */
+      [dl('CUI'), cbR('MF')],
+      [dl('Sediu (localitate, str., nr.)'), cbR('Amb.<br>Spec.')],
+      [dd(), ''],
+      [dl('Judeţul'), cbR('Altele')],
+      [dl('Casa de asigurări'), ''],
+      [dl('Nr. Contract/Convenţie'), '']];
+    var nR = rows1.length, judRow = 0;
+    rows1.forEach(function(r,i){ if(String(r[0]).indexOf(std?'Casa de asigurări':'Judeţul')>=0) judRow=i; });
+    var h1 = '<div class="c1g">'+
+      '<div class="f-lbl" style="grid-column:1;grid-row:1">1. Unitate medicală</div>'+
+      '<div class="c1-rl" style="grid-column:3;grid-row:1 / span '+(nR+1)+'"></div>'+
+      '<div class="f-lbl c1-pt" style="grid-column:3;grid-row:1">Nivel de prioritate</div>'+
+      rows1.map(function(r,i){
+        return '<div class="c1-c" style="grid-column:1;grid-row:'+(i+2)+'">'+r[0]+'</div>'+
+          (r[1]===null||r[1]==='' ? '' : '<div class="c1-o" style="grid-column:2;grid-row:'+(i+2)+(r[2]?' / span '+r[2]:'')+'">'+r[1]+'</div>');
+      }).join('')+
+      '<div class="c1-p" style="grid-column:3;grid-row:3">'+box('Urgenţă')+'</div>'+
+      '<div class="c1-p" style="grid-column:3;grid-row:'+(judRow+2)+'">'+box('Curente')+'</div>'+
       '</div>';
+    return h1;
+
+  /* ---------- câmpul 2 ---------- */
   case 'z2':
-    var head = g('g2',[lnc('', '<span class="fl-l">Asigurat la CAS <span class="slash">/</span> Neasigurat</span><span class="fl-u"></span>'),ln('RC')]);
-    var ident = prev
-      ? g('g2',[ln('Nume'),ln('Prenume'),ln('Data naşterii'),lnc('Vârsta',cells(2)),lnc('Sexul','<span class="opts-inline">'+cb('M')+cb('F')+'</span>')])
-      : g('g2',[ln('Nume'),ln('Prenume')])+'<div class="gap-s"></div>'+g('g1',[ln('Adresa')]);
-    var cats = prev
-      ? '<div class="fbox"><div class="fbox-t">Categorie</div>'+g('g2 opts',[cb('Acorduri internaţionale'),cb('Alte categorii')])+'</div>'
-      : '<div class="fbox"><div class="fbox-t">Categoria de asigurat</div>'+g('g3 opts',['Salariat','Co-asigurat','Liber-profesionist','Copil (&lt; 18 ani)',
-          'Elev / Ucenic / Student (18–26 ani)','Gravidă / Lăuză','Pensionar','Veteran','Revoluţionar','Handicap',
-          'PNS ……','Ajutor social','Şomaj','Card European (CE)','Acorduri internaţionale','Alte categorii'].map(cb))+'</div>';
-    return fh('Date de identificare pacient')+head+'<div class="gap"></div>'+ident+'<div class="gap"></div>'+cats+'<div class="gap"></div>'+
-      '<div class="idg">'+
-        '<span class="fl-l">CID / CNP / '+(prev?'':'CE / ')+'PASS</span>'+cells(20)+'<span class="sp"></span>'+
-        '<span class="fl-l">Cetăţenia</span>'+cells(2)+
-        (hp?'<span class="fl-l">Cod card asigurat</span>'+cells(20)+'<span class="sp"></span><span></span><span></span>':'')+
+    if(std){
+      /* anexa 1 — câmpul 2 modificat (tabel cu trei coloane) */
+      var rows = [
+        ['Asigurat la CAS/Neasigurat: <span class="dl-d m"></span> RC: <span class="dl-d s"></span>','Salariat','Veteran'],
+        [dl('Nume'),'Coasigurat','Revoluţionar'],
+        [dl('Prenume'),'Liber-profesionist','Handicap'],
+        [dl('Adresa'),'Copil (&lt; 18 ani)','PNS ……………'],
+        [dd(),'Elev/Ucenic/Student (18-26 ani)','Ajutor social'],
+        [dd(),'Gravidă/Lăuză','Şomaj'],
+        ['','Pensionar','Card European (CE)'],
+        ['','Alte categorii','Acorduri internaţionale']
+      ];
+      return '<div class="f-lbl">2. Date de identificare pacient</div>'+
+        '<div class="c2t">'+rows.map(function(r){
+          return '<div class="c2-a">'+r[0]+'</div><div class="c2-b">'+cb(r[1])+'</div><div class="c2-c">'+cb(r[2])+'</div>';
+        }).join('')+
+        '<div class="c2-a c2-id">CID/CNP/CE/PASS '+cells(20)+'</div><div class="c2-b">Cetăţenia '+cells(2)+'</div><div class="c2-c"></div>'+
+        '</div>';
+    }
+    if(prev){
+      /* anexa 1e — câmpul 2 modificat */
+      return '<div class="f-lbl">2. Date de identificare pacient</div>'+
+        '<div class="c2p">'+
+          '<div class="c2-a">Asigurat la CAS/Neasigurat: <span class="dl-d m"></span>RC: <span class="dl-d s"></span></div><div class="c2-b"></div>'+
+          '<div class="c2-a">'+dl('RC:')+'</div><div class="c2-b">'+cb('Acorduri internaţionale')+cb('Alte categorii')+'</div>'+
+          '<div class="c2-a">'+dl('Nume')+'</div><div class="c2-b"></div>'+
+          '<div class="c2-a">'+dl('Prenume')+'</div><div class="c2-b"></div>'+
+          '<div class="c2-a">Data naşterii ………/………/…………</div><div class="c2-b"></div>'+
+          '<div class="c2-a">Vârsta '+cells(2)+'</div><div class="c2-b"></div>'+
+          '<div class="c2-a">Sexul '+cb('M')+' '+cb('F')+'</div><div class="c2-b"></div>'+
+          '<div class="c2-a c2-id">CID/CNP/PASS '+cells(20)+'</div><div class="c2-b">Cetăţenia '+cells(2)+'</div>'+
+        '</div>';
+    }
+    /* anexele 1a–1d — câmpul 2 nemodificat, rânduri pereche ca pe model */
+    var t2 = T==='rmn' ? '2. Date de identificare asigurat' : '2. Date identificare asigurat';
+    var rows2 = [
+      ['<div class="dl"><span class="dl-l">Asigurat la CAS:</span><span class="dl-d"></span><span class="dl-l">RC:</span><span class="dl-d s"></span></div>', cbR('Salariat'), cbR('Veteran')],
+      ['', cbR('Co-asigurat'), cbR('Revoluţionar')],
+      [dl('Nume'), cbR('Liber<br>profesionist'), cbR('Handicap')],
+      [dl('Prenume'), cbR('Copil<br>(&lt; 18 ani)'), cbR('PNS ……')],
+      [dl('Adresa')+dd()+dd(), cbR('Elev/Ucenic/<br>Student<br>(18 -<br>26 ani)'), '<div class="c2-sp">'+cbR('Ajutor<br>social')+cbR('Şomaj')+'</div>'],
+      ['', cbR('Gravidă/<br>Lehuză'), cbR('Card<br>European (CE)')],
+      ['', cbR('Pensionar'), cbR('Acorduri<br>internaţionale')],
+      ['', cbR('Alte<br>categorii'), '']
+    ];
+    return '<div class="f-lbl">'+t2+'</div>'+
+      '<div class="c2h">'+rows2.map(function(r){
+        return '<div class="c2h-a">'+r[0]+'</div><div class="c2h-b">'+r[1]+'</div><div class="c2h-b">'+r[2]+'</div>';
+      }).join('')+'</div>'+
+      '<div class="c2-ids">'+
+        '<span>CID/CNP/CE/PASS</span><span class="cw">'+cells(20)+'</span><span class="ct">Cetăţenia '+cells(2)+'</span>'+
+        '<span>COD CARD ASIGURAT</span><span class="cw">'+cells(20)+'</span><span></span>'+
       '</div>';
+
+  /* ---------- câmpul 3 ---------- */
   case 'z3':
-    var tips = T==='std'?['P','A/S','C','M','G','SO','AO','HS']:(hp?['P','A/S','C','SO','AO']:['PREV.']);
-    return fh('Cod diagnostic')+
-      g('g1',[lnc('',cells(5)+'<span class="fl-l">Diagnostic</span><span class="fl-u"></span>'),lnc('',cells(5)+'<span class="fl-u"></span>')])+
-      '<div class="tips">'+tips.map(function(x){return '<span class="t"><b>'+x+'</b><span class="cb"></span></span>';}).join('')+'</div>'+
-      (prev?'':'<div class="fline-opt">'+cb('Accidente de muncă / Boli profesionale / Daune')+'</div>')+
-      g('sign',[ln('Data trimiterii'),ln('Semnătura medicului'),lnc('Cod parafă',cells(6)+(prev?'<span class="ls">L.S.</span>':''))])+
-      (hp?'<div class="off-row">'+g('sign',[ln('Data reconfirmării'),ln('Semnătura medicului'),lnc('Cod parafă',cells(6))])+
-          '<span class="flag">nu se completează</span></div>':'');
+    if(prev){
+      /* anexa 1e — câmpul 3 nemodificat */
+      return '<div class="c3">'+
+          '<div class="c3-l"><div class="f-lbl">3. Cod diagnostic</div>'+
+            '<div class="c3-row">'+cells(5)+'<span class="dl"><span class="dl-l">Diagnostic</span><span class="dl-d"></span></span></div></div>'+
+          '<div class="c3-r"><div class="c3-k"><span>PREV.</span><span class="cb"></span></div></div>'+
+        '</div>'+
+        '<div class="c3-sign1">Data trimiterii ../../.. &nbsp; Semnătura medicului <span class="dl-d m"></span> Cod parafă '+cells(6)+' L.S.</div>';
+    }
+    var keys = std ? ['P','A/S','C','M','G','SO','AO','HS'] : ['P','A/S','C','SO','AO'];
+    var sign = function(lbl){
+      return '<div class="c3-s"><div>'+lbl+'</div><div class="mut">………/………/…………</div></div>'+
+             '<div class="c3-s"><div>Semnătura medicului</div><div class="dl"><span class="dl-d"></span></div></div>'+
+             '<div class="c3-s c3-pf'+(hp?' inl':'')+'"><div>Cod parafă</div>'+cells(6)+'</div>';
+    };
+    return '<div class="c3">'+
+        '<div class="c3-l"><div class="f-lbl">3. Cod diagnostic</div>'+
+          '<div class="c3-row">'+cells(5)+'<span class="dl"><span class="dl-l">Diagnostic</span><span class="dl-d"></span></span></div>'+
+          '<div class="c3-row">'+cells(5)+'<span class="dl"><span class="dl-d"></span></span></div></div>'+
+        '<div class="c3-r'+(keys.length>5?' many':'')+'">'+keys.map(function(k){ return '<div class="c3-k"><span>'+k+'</span><span class="cb"></span></div>'; }).join('')+'</div>'+
+      '</div>'+
+      '<div class="c3-acc">Accidente de muncă/Boli profesionale/Daune <span class="cb"></span></div>'+
+      '<div class="c3-sg">'+sign('Data trimiterii')+'</div>'+
+      (hp?'<div class="c3-sg c3-off">'+sign('Data reconfirmării')+'<div class="c3-flag">nu se completează (lit. C, câmpul 3, pct. v)</div></div>':'');
+
+  /* ---------- câmpul 4 / 4.1 ---------- */
   case 'z4':
-    var n = hp?4:15, rows='';
-    for(var i=1;i<=4;i++) rows+='<tr><td class="pz">'+i+'</td><td class="cN">'+cells(6)+'</td><td class="cM"></td><td class="cN"></td></tr>';
-    if(!hp) rows+='<tr><td colspan="4" class="more">… rândurile 5 – '+n+'</td></tr>';
-    return fh('Investigaţii')+
-      '<div class="tfit"><table class="inv"><colgroup><col class="k-pz"><col class="k-cod"><col class="k-rec"><col class="k-ef"></colgroup>'+
-      '<thead><tr><th class="pz">Poz.</th><th class="cN">Cod investi&shy;gaţie</th><th class="cM">Investi&shy;gaţii recoman&shy;date</th><th class="cN">Investi&shy;gaţii efectuate</th></tr></thead><tbody>'+rows+'</tbody></table></div>'+
-      '<div class="tkey"><span><i class="sw cM"></i>medicul care recomandă</span><span><i class="sw cN"></i>furnizorul</span></div>';
-  case 'z42': return fh('Date clinice şi paraclinice care să justifice investigaţia')+g('g1',[ln(''),ln(''),ln('')]);
-  case 'z43': return '<div class="inline-q">'+fh('Examen '+({rmn:'RMN',ct:'CT',scinti:'scintigrafic',angio:'angiografic'}[T])+' anterior')+yn()+'</div>';
+    var n = hp?4:15, rows4='';
+    for(var i=1;i<=n;i++) rows4+='<tr><td class="pz cT">'+i+'</td><td class="cod cN">'+cells(8)+'</td><td class="cM"></td><td class="cN"></td></tr>';
+    return '<div class="f-lbl">'+(hp?'4.1 Tip investigaţie indicat':'4.')+'</div>'+
+      '<table class="inv"><colgroup><col class="k-pz"><col class="k-cod"><col class="k-rec"><col class="k-ef"></colgroup>'+
+      '<thead><tr><th class="cT">Poziţia</th><th class="cN">Cod investi&shy;gaţie</th><th class="cM">Investi&shy;gaţii recoman&shy;date</th><th class="cN">Investi&shy;gaţii efectuate</th></tr></thead>'+
+      '<tbody>'+rows4+'</tbody></table>'+
+      '<div class="tkey"><span><i class="sw cM"></i>completează medicul care recomandă</span><span><i class="sw cN"></i>completează furnizorul</span><span><i class="sw cT"></i>tipărit pe formular</span></div>';
+
+  case 'z42':
+    return dl('4.2 Date clinice şi paraclinice care să justifice investigaţia:')+dd();
+  case 'z43':
+    return '<div>4.3 Examen '+({rmn:'CT/RMN',ct:'CT',scinti:'scintigrafic',angio:'angiografic'}[T])+' anterior: &nbsp; DA/NU</div>';
+
   case 'z44':
-    function q(l){ return '<span class="qa"><span>'+l+'</span>'+yn()+'</span>'; }
-    var o = {
-      rmn: g('g2 qlist',['<span class="qa"><span>a) Greutate</span><span class="kg"><span class="fl-u short"></span>kg</span></span>',
-             '<span class="qa"><span>b) Cooperare previzibilă</span><span class="yn"><span>Normală</span><span>Dificilă</span></span></span>',
-             q('c) Astm bronşic'),q('d) Suspiciune de sarcină'),q('e) Valve cardiace, ventriculare'),q('f) Dispozitive intrauterine'),
-             q('g) Alte proteze'),q('h) Schije, gloanţe, obiecte metalice'),q('i) Proteze articulare, osteosinteză'),
-             q('j) Meserii cu prelucrarea metalelor'),q('k) Clipuri chirurgicale, suturi metalice'),q('l) Asistat cardiorespirator'),
-             q('m) Antecedente alergice'),q('n) Crize epileptice'),q('o) Claustrofobie'),q('p) Proteze auditive'),
-             q('r) Materiale stomatologice'),q('s) Corpi străini intraocular')])+
-           '<div class="warnline">Prezenţa unui pacemaker este o contraindicaţie absolută pentru examinare</div>',
-      ct: g('g2 qlist',['<span class="qa"><span>a) Greutate</span><span class="kg"><span class="fl-u short"></span>kg</span></span>',q('b) Toleranţă la substanţa iodată')]),
-      scinti: g('g2 qlist',['<span class="qa"><span>a) Greutate</span><span class="kg"><span class="fl-u short"></span>kg</span></span>',q('b) Antecedente alergice')])+
-           '<div class="warnline">Sarcina este o contraindicaţie absolută pentru efectuarea examenului scintigrafic</div>',
-      angio: g('g2 qlist',['<span class="qa"><span>a) Greutate</span><span class="kg"><span class="fl-u short"></span>kg</span></span>',q('b) Antecedente alergice'),
-             '<span class="qa"><span>c) Puls – artera femurală dreaptă</span><span class="kg"><span class="fl-u short"></span></span></span>','<span class="qa"><span>Puls – artera femurală stângă</span><span class="kg"><span class="fl-u short"></span></span></span>',q('d) Pacient diabetic'),q('Tratament cu sulfamide hipoglicemiante'),q('e) Hepatită')])+
-           '<div class="warnline">Teste obligatorii la prezentare: activitate protrombinică şi timp de protrombină din ziua investigaţiei, creatinină, uree, ECG, tensiune arterială, antigen HbS, test HIV</div>'
-    }[T];
-    return fh('Observaţii speciale legate de pacient')+o;
-  case 'z45': return '<div class="inline-q">'+fh('Substanţă de contrast')+yn()+'</div>';
-  case 'z5': return fh('Numele şi semnătura persoanei desemnate de furnizorul de servicii paraclinice')+g('g2',[ln('Nume'),ln('Semnătura')]);
-  case 'z6': return fh('Prezentarea pacientului')+g('g2',[ln('Data prezentării pacientului'),ln('Semnătura pacientului')]);
-  case 'v1': return fh('Programare')+g('g2',[ln('Data prezentării pentru programare'),ln('Data programării')])+'<div class="gap-s"></div>'+
-      g('g1',[ln('Numele şi semnătura persoanei care a programat')]);
-  case 'v2': return fh('Declaraţia pacientului')+
-      '<p class="decl">Declar pe propria răspundere că, de la data eliberării biletului de trimitere până la data efectuării investigaţiilor,</p>'+
-      '<div class="opts-inline big">'+cb('am fost internat(ă)')+cb('nu am fost internat(ă)')+'</div><div class="gap"></div>'+
-      g('g2',[ln('Data'),ln('Semnătura pacientului')]);
-  case 'v3': return fh('Exemplarul 1 – alb (originalul)')+
-      '<p class="decl">Rămâne la furnizorul care a efectuat investigaţiile şi se prezintă casei de asigurări doar la solicitarea acesteia.</p>';
+    var q = function(t){ return '<div class="q"><span class="q-t">'+t+'</span><span class="q-d"></span><span class="q-v">DA/NU</span></div>'; };
+    var qk= function(t){ return '<div class="q"><span class="q-t">'+t+'</span><span class="q-d sh"></span><span class="q-v">kg</span></div>'; };
+    if(T==='rmn'){
+      return '<div>4.4 Observaţii speciale legate de pacient:</div>'+
+        '<div class="c44">'+
+          '<div>'+qk('a) Greutate')+
+            '<div class="q"><span class="q-t">b) Cooperare previzibilă</span><span class="q-d sh"></span><span class="q-v">Normală/<br>Dificilă</span></div>'+
+            q('c) Astm bronşic')+q('d) Suspiciune de sarcină')+q('e) Valve cardiace, ventriculare')+
+            q('f) Dispozitive intrauterine')+q('g) Alte proteze')+'</div>'+
+          '<div>'+q('l) Asistat cardiorespirator')+q('m) Antecedente alergice')+q('n) Crize epileptice')+
+            q('o) Claustrofobie')+q('p) Proteze auditive')+q('r) Materiale stomatologice')+q('s) Corpi străini intraocular')+'</div>'+
+        '</div>'+
+        q('h) Schije, gloanţe, obiecte metalice')+q('i) Proteze articulare, materiale de osteosinteză')+
+        q('j) Meserii legate de prelucrarea metalelor (schije, obiecte metalice)')+q('k) Clipuri chirurgicale, materiale metalice de sutură')+
+        '<div class="caps">PREZENŢA UNUI PACEMAKER ESTE O CONTRAINDICAŢIE ABSOLUTĂ PENTRU EXAMINARE!!!</div>';
+    }
+    if(T==='ct'){
+      return '<div>4.4 Observaţii speciale legate de pacient:</div><div class="c44n">'+qk('a) Greutate')+q('b) Toleranţă la substanţa iodată')+'</div>';
+    }
+    if(T==='scinti'){
+      return '<div>4.4 Observaţii speciale legate de pacient:</div><div class="c44n">'+qk('a) Greutate')+q('b) Antecedente alergice')+'</div>'+
+        '<div class="caps">SARCINA ESTE O CONTRAINDICAŢIE ABSOLUTĂ PENTRU EFECTUAREA EXAMENULUI SCINTIGRAFIC!!!</div>';
+    }
+    return '<div>4.4 Observaţii speciale legate de pacient:</div><div class="c44n">'+qk('a) Greutate')+q('b) Antecedente alergice')+
+        '<div class="q"><span class="q-t">c) Puls: – arteră femurală dreaptă</span><span class="q-d"></span><span class="q-t">şi arteră femurală stângă</span><span class="q-d"></span></div>'+
+        q('d) Pacient diabetic')+
+        '<div class="q ind"><span class="q-t">– în tratament cu sulfamide hipoglicemiante</span><span class="q-d"></span><span class="q-v">DA/NU</span></div>'+
+        '<div class="ind mut">(dacă DA se opreşte tratamentul cu 48 de ore înaintea investigaţiei)</div>'+
+        q('e) Hepatita')+'</div>'+
+        '<div class="c44t">– Pacientul se va prezenta obligatoriu cu următoarele teste efectuate: activitatea protombinică şi timpul de protombină determinate în ziua efectuării investigaţiei, creatinină, uree, ECG, tensiune arterială, antigen HbS, test HIV;<br>'+
+        '– Administrarea anticoagulantelor cumarinice trebuie oprită cu 72 de ore înaintea investigaţiei;<br>'+
+        '– Administrarea medicaţiei antihipertensive şi antiaritmice NU se opreşte.</div>';
+
+  case 'z45':
+    return '<div>4.5 Substanţă de contrast: '+(T==='rmn'?'Da/Nu':'DA/NU')+'</div>';
+
+  case 'z5':
+    return '<div>5. Numele şi semnătura persoanei desemnate de furnizorul de servicii paraclinice:</div>'+dd();
+
+  case 'z6':
+    return '<div class="c6"><div><div>6. Data prezentării pacientului</div><div class="mut">………/………………/………</div></div>'+
+           '<div><div>Semnătura pacientului</div><div class="dl"><span class="dl-d"></span></div></div></div>';
+
+  /* ---------- versoul: ordinul nu dă model grafic, doar conţinutul ---------- */
+  case 'v1':
+    return '<div class="vt">Se consemnează:</div>'+dl('data prezentării pentru programare')+dl('data programării');
+  case 'v2':
+    return '<div class="vt">Pacientul declară pe propria răspundere că a fost sau nu internat pe perioada de la data eliberării biletului de trimitere până la data efectuării investigaţiilor.</div>';
+  case 'v3':
+    return '<div class="vt">Exemplarul 1 (alb, originalul) rămâne la furnizorul de servicii medicale paraclinice; se prezintă casei de asigurări de sănătate doar la solicitarea acesteia.</div>';
   }
   return '';
 }
 
-/* ================= HÂRTIA ================= */
+
+/* ================= BILETUL + EXPLICAŢIA SUB CÂMP ================= */
 function zonesFor(face){ return Z.filter(function(z){ return z.face===face && zoneOn(z,T); }); }
 function badge(z){ return (z.id==='z4' && HP.indexOf(T)>=0) ? '4.1' : z.b; }
+function whoChips(ws){ return ws.map(function(w){ return '<span class="chip c-'+w+'">'+WHO[w].n+'</span>'; }).join(''); }
+function lawKeys(z){
+  var seen={}, out=[];
+  z.law.filter(function(x){return on(x.on||'all',T);}).forEach(function(x){
+    if(L[x.k] && !seen[x.k]){ seen[x.k]=1; out.push(x.k); }
+  });
+  return out;
+}
+function expHTML(z){
+  var ok = z.ok.filter(function(i){return on(i.on||'all',T);});
+  var wr = z.warn.filter(function(i){return on(i.on||'all',T);});
+  var sum = typeof z.sum==='function' ? z.sum(T) : (z.sum||'');
+  var multi = z.who.length>1;
+  var zs = zonesFor(FACE), ix = zs.map(function(x){return x.id;}).indexOf(z.id);
+  var keys = lawKeys(z);
+  return '<div class="exp" id="exp">'+
+    '<div class="exp-h">'+
+      '<div><div class="eyebrow">'+(FACE==='fata'?'Faţa biletului':'Versoul biletului')+' · câmpul '+badge(z)+'</div>'+
+      '<h2>'+z.title+'</h2><div class="who">'+whoChips(z.who)+'</div></div>'+
+      '<button class="x" type="button" data-close aria-label="închide">✕</button>'+
+    '</div>'+
+    (sum?'<p class="sum">'+sum+'</p>':'')+
+    '<div class="exp-g">'+
+      '<section><h3>Ce trebuie să conţină</h3><ul class="ok">'+ok.map(function(i){
+          return '<li>'+i.t+(multi?' <span class="mini c-'+i.w+'">'+WHO[i.w].n+'</span>':'')+'</li>';
+        }).join('')+'</ul>'+
+        (wr.length?'<h3 class="hw">Atenţie</h3><ul class="warn">'+wr.map(function(i){return '<li>'+i.t+'</li>';}).join('')+'</ul>':'')+
+      '</section>'+
+      '<section class="law"><h3>Ce spune ordinul</h3>'+
+        keys.map(function(k){
+          return '<div class="lq">'+L[k]+'<button class="lq-go" type="button" data-law="'+k+'">vezi în textul integral →</button></div>';
+        }).join('')+
+      '</section>'+
+    '</div>'+
+    '<div class="exp-nav">'+
+      '<button type="button" data-step="-1"'+(ix<=0?' disabled':'')+'>← câmpul anterior</button>'+
+      '<button type="button" data-step="1"'+(ix>=zs.length-1?' disabled':'')+'>câmpul următor →</button>'+
+    '</div>'+
+  '</div>';
+}
 function renderSheet(){
   var zs = zonesFor(FACE), tp = TYPES.filter(function(x){return x.id===T;})[0];
   var h = '<div class="sheet"><div class="sheet-top"><b>'+(FACE==='fata'?'Faţa biletului':'Versoul biletului')+
           '</b><span>'+tp.n+' · '+tp.s+'</span></div>';
+  if(FACE==='verso'){
+    h += '<div class="vnote">Ordinul nu stabileşte un model grafic pentru verso. Stabileşte doar ce trebuie consemnat pe verso — anexa 2a, lit. C, câmpul 7'+
+         (T==='prev'?' (pentru biletul de prevenţie: anexa 2b, lit. C, câmpul 7)':'')+'.</div>';
+  }
   zs.forEach(function(z){
-    h += '<div class="fz w-'+z.who[0]+(SEL===z.id?' sel':'')+'" data-z="'+z.id+'" role="button" tabindex="0">'+
-         '<span class="num">'+badge(z)+'</span><span class="tap" aria-hidden="true">\u203A</span>'+
-         frag(z.id)+'</div>';
+    h += '<div class="fz w-'+z.who[0]+(SEL===z.id?' sel':'')+'" data-z="'+z.id+'" id="f-'+z.id+'" role="button" tabindex="0" aria-expanded="'+(SEL===z.id)+'">'+
+         '<span class="num">'+badge(z)+'</span><span class="tap" aria-hidden="true">›</span>'+
+         '<div class="fbody">'+frag(z.id)+'</div></div>';
+    if(SEL===z.id) h += expHTML(z);
   });
   h += '</div>';
   el('sheet').innerHTML = h;
@@ -976,60 +1197,46 @@ function renderSheet(){
     d.onclick = function(){ pick(d.dataset.z); };
     d.onkeydown = function(e){ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); pick(d.dataset.z); } };
   });
-}
-
-/* ================= PANOUL ================= */
-function whoChips(ws){ return ws.map(function(w){ return '<span class="chip c-'+w+'">'+WHO[w].n+'</span>'; }).join(''); }
-function lawHTML(list){
-  var seen={}, out='';
-  list.filter(function(x){return on(x.on||'all',T);}).forEach(function(x){
-    if(!L[x.k]||seen[x.k]) return; seen[x.k]=1; out+=L[x.k];
+  var x = el('sheet').querySelector('[data-close]'); if(x) x.onclick=function(){ pick(SEL); };
+  el('sheet').querySelectorAll('[data-step]').forEach(function(b){
+    b.onclick=function(){
+      var zs2=zonesFor(FACE), i=zs2.map(function(q){return q.id;}).indexOf(SEL)+parseInt(b.dataset.step,10);
+      if(zs2[i]) pick(zs2[i].id, true);
+    };
   });
-  return out;
+  el('sheet').querySelectorAll('[data-law]').forEach(function(b){ b.onclick=function(){ openLaw(b.dataset.law); }; });
+  renderNav();
 }
-function renderPanel(){
-  var p = el('panel');
-  var grab = '<div class="grab"><button id="closep" type="button" aria-label="închide">✕</button></div>';
-  if(!SEL){
-    p.innerHTML = grab+'<div class="pempty">Apasă pe un câmp al biletului pentru a vedea ce trebuie completat acolo şi de către cine.</div>';
-    p.classList.remove('up'); el('backdrop').classList.remove('on');
-    bindPanel(); return;
-  }
-  var z = Z.filter(function(x){return x.id===SEL;})[0];
-  var ok = z.ok.filter(function(i){return on(i.on||'all',T);});
-  var wr = z.warn.filter(function(i){return on(i.on||'all',T);});
-  var multi = z.who.length>1;
-  var zs = zonesFor(FACE), ix = zs.map(function(x){return x.id;}).indexOf(SEL);
-  p.innerHTML = grab+
-    '<div class="ph"><span class="pn">'+badge(z)+'</span><h2>'+z.title+'</h2></div>'+
-    '<div class="who">'+whoChips(z.who)+'</div>'+
-    '<p class="whod">'+z.who.map(function(w){return WHO[w].d;}).join(' ')+'</p>'+
-    '<h4 class="hh">Ce trebuie să conţină</h4>'+
-    '<ul class="ok">'+ok.map(function(i){
-        return '<li>'+i.t+(multi?' <span class="mini c-'+i.w+'">'+WHO[i.w].n+'</span>':'')+'</li>';
-      }).join('')+'</ul>'+
-    (wr.length?'<h4 class="hh hw">Atenţie</h4><ul class="warn">'+wr.map(function(i){return '<li>'+i.t+'</li>';}).join('')+'</ul>':'')+
-    '<details class="law"><summary>Textul din ordin</summary><div class="lawtxt">'+lawHTML(z.law)+'</div></details>'+
-    '<div class="pnav"><button id="pprev" type="button"'+(ix<=0?' disabled':'')+'>← câmpul anterior</button>'+
-    '<button id="pnext" type="button"'+(ix>=zs.length-1?' disabled':'')+'>câmpul următor →</button></div>';
-  if(eff()==='mobile'){ p.classList.add('up'); el('backdrop').classList.add('on'); }
-  bindPanel();
-  function step(d){
-    var t = zs[ix+d]; if(t) pick(t.id, true);
-  }
-  if(el('pprev')) el('pprev').onclick=function(){ step(-1); };
-  if(el('pnext')) el('pnext').onclick=function(){ step(1); };
+function renderNav(){
+  var h='';
+  ['fata','verso'].forEach(function(f){
+    var zs=zonesFor(f);
+    h+='<div class="nav-g"><div class="nav-t">'+(f==='fata'?'Faţa':'Versoul')+'</div>';
+    zs.forEach(function(z){
+      var on1 = (FACE===f && SEL===z.id);
+      h+='<button type="button" class="nv w-'+z.who[0]+(on1?' on':'')+'" data-f="'+f+'" data-zz="'+z.id+'">'+
+         '<span class="nv-n">'+badge(z)+'</span><span class="nv-t">'+z.title+'</span></button>';
+    });
+    h+='</div>';
+  });
+  el('nav').innerHTML=h;
+  var tc=el('toc'); if(tc){ tc.classList.remove('static');
+    if(eff()!=='mobile' && (tc.offsetHeight+90)*pageZoom() > window.innerHeight) tc.classList.add('static'); }
+  el('nav').querySelectorAll('.nv').forEach(function(b){
+    b.onclick=function(){
+      if(FACE!==b.dataset.f){ FACE=b.dataset.f; renderFaceSeg(); }
+      SEL=null; pick(b.dataset.zz, true);
+    };
+  });
 }
-function bindPanel(){
-  if(el('closep')) el('closep').onclick = function(){ SEL=null; renderSheet(); renderPanel(); };
+function scrollToField(id){
+  var n = el('f-'+id); if(!n) return;
+  n.scrollIntoView({behavior:'smooth', block:'start'});
 }
-function pick(id, scroll){
-  SEL = (SEL===id && eff()!=='mobile') ? null : id;
-  renderSheet(); renderPanel();
-  if(SEL && (scroll || eff()==='mobile')){
-    var n = el('sheet').querySelector('.fz.sel');
-    if(n) n.scrollIntoView({behavior:'smooth', block: eff()==='mobile'?'start':'center'});
-  }
+function pick(id, force){
+  SEL = (SEL===id && !force) ? null : id;
+  renderSheet();
+  if(SEL) requestAnimationFrame(function(){ scrollToField(SEL); });
 }
 
 /* ================= VERIFICARE ================= */
@@ -1076,6 +1283,7 @@ function renderCheck(){
   } else if(n&&ok===n){ v.className='verdict show good'; v.innerHTML='<b>Toate punctele sunt în regulă.</b>'; }
   else { v.className='verdict'; v.innerHTML=''; }
 }
+
 
 /* ================= CĂSUŢE ================= */
 function renderDict(){
@@ -1141,6 +1349,7 @@ function renderDict(){
   el('dict').innerHTML=h;
 }
 
+
 /* ================= TEXTUL ORDINULUI ================= */
 var SECTIONS=[
   ['Ordinul — articole',['art1_1','art1_2','art1_3','art1_4','art3_2','art5_2']],
@@ -1150,10 +1359,7 @@ var SECTIONS=[
   ['Anexele 1a–1d — rubrica 4.4 tipărită pe formular',['F44rmn','F44ct','F44sc','F44an']],
   ['Anexa 2b — biletul de prevenţie al medicului de familie',['P_A1','P_A2','P_A3','P_B1','P_C1','P_C2','P_C3','P_C4','P_C5','P_C6','P_C7']]
 ];
-function norm(s){
-  return s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'')
-    .replace(/ş|ș/g,'s').replace(/ţ|ț/g,'t');
-}
+function norm(s){ return s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/ş|ș/g,'s').replace(/ţ|ț/g,'t'); }
 function esc(s){ return s.replace(/&/g,'&amp;').replace(/</g,'&lt;'); }
 function renderText(q){
   var nq=norm(q||'').trim(), h='';
@@ -1162,33 +1368,44 @@ function renderText(q){
     s[1].forEach(function(k){
       if(!L[k]) return;
       var tmp=document.createElement('div'); tmp.innerHTML=L[k];
+      var blk='', bany=false;
       tmp.querySelectorAll('p').forEach(function(p){
         var plain=p.textContent, hit=!nq||norm(plain).indexOf(nq)>=0;
-        if(hit) any=true;
+        if(hit){ any=true; bany=true; }
         var inner=p.innerHTML;
         if(nq&&hit){
           var np=norm(plain), out='', i=0, idx;
-          while((idx=np.indexOf(nq,i))!==-1){
-            out+=esc(plain.slice(i,idx))+'<mark>'+esc(plain.slice(idx,idx+nq.length))+'</mark>'; i=idx+nq.length;
-          }
+          while((idx=np.indexOf(nq,i))!==-1){ out+=esc(plain.slice(i,idx))+'<mark>'+esc(plain.slice(idx,idx+nq.length))+'</mark>'; i=idx+nq.length; }
           out+=esc(plain.slice(i)); inner=out;
         }
-        body+='<p'+(hit?'':' class="hid"')+'>'+inner+'</p>';
+        blk+='<p'+(hit?'':' class="hid"')+'>'+inner+'</p>';
       });
+      body+='<div class="lawblk'+(bany?'':' hid')+'" id="law-'+k+'">'+blk+'</div>';
     });
     if(any) h+='<section class="law-sec"><h3>'+s[0]+'</h3>'+body+'</section>';
   });
   el('lawtext').innerHTML = h || '<p class="empty">Nu am găsit nimic.</p>';
 }
+function openLaw(k){
+  if(el('q').value){ el('q').value=''; renderText(''); }
+  setTab('t-text', true);
+  var n=el('law-'+k); if(!n) return;
+  document.querySelectorAll('.lawblk.flash').forEach(function(x){x.classList.remove('flash');});
+  requestAnimationFrame(function(){
+    n.scrollIntoView({behavior:'smooth', block:'start'});
+    n.classList.add('flash');
+  });
+  var z=Z.filter(function(x){return x.id===SEL;})[0];
+  el('backbtn').textContent = z ? '← Înapoi la câmpul '+badge(z)+' din bilet' : '← Înapoi la bilet';
+  el('backbar').classList.add('on');
+}
 
 /* ================= NAVIGARE ================= */
 function renderTypes(){
   el('types').innerHTML = TYPES.map(function(t){
-    return '<button data-id="'+t.id+'" class="tp'+(t.id===T?' on':'')+'">'+t.n+'</button>';
+    return '<button data-id="'+t.id+'" class="tp'+(t.id===T?' on':'')+'"><b>'+t.n+'</b><span>'+t.s+'</span></button>';
   }).join('');
-  el('types').querySelectorAll('.tp').forEach(function(b){
-    b.onclick=function(){ T=b.dataset.id; CK={}; SEL=null; renderAll(); };
-  });
+  el('types').querySelectorAll('.tp').forEach(function(b){ b.onclick=function(){ T=b.dataset.id; CK={}; SEL=null; renderAll(); }; });
   var tp = TYPES.filter(function(x){return x.id===T;})[0];
   el('typenote').innerHTML = '<b>'+tp.n+' · '+tp.s+'.</b> '+tp.d;
 }
@@ -1197,37 +1414,35 @@ function renderFaceSeg(){
     '<button data-f="fata" class="'+(FACE==='fata'?'on':'')+'">Faţa</button>'+
     '<button data-f="verso" class="'+(FACE==='verso'?'on':'')+'">Versoul</button>';
   el('faceseg').querySelectorAll('button').forEach(function(b){
-    b.onclick=function(){ FACE=b.dataset.f; SEL=null; renderFaceSeg(); renderSheet(); renderPanel(); };
+    b.onclick=function(){ FACE=b.dataset.f; SEL=null; renderFaceSeg(); renderSheet(); };
   });
 }
-function applyMode(){
-  var m=eff();
-  document.body.dataset.mode=m;
-  el('modebtn').textContent = m==='mobile'?'Vedere: mobil':'Vedere: desktop';
-  el('modebtn').title = MODE==='auto'?'Se potriveşte automat. Apasă pentru a fixa.':'Fixat. Dublu-click pentru automat.';
-  if(m!=='mobile'){ el('backdrop').classList.remove('on'); el('panel').classList.remove('up'); }
-  else if(SEL){ el('panel').classList.add('up'); el('backdrop').classList.add('on'); }
-}
-function renderAll(){ renderTypes(); renderFaceSeg(); renderSheet(); renderPanel(); renderCheck(); applyMode(); applyZoom(); }
-function setTab(id){
+function renderAll(){ renderTypes(); renderFaceSeg(); renderSheet(); renderCheck(); applyMode(); applyZoom(); }
+var LASTY=0;
+function setTab(id, keepBack){
+  if(!keepBack){ el('backbar').classList.remove('on'); }
+  if(id==='t-text' && keepBack) LASTY=window.scrollY;
   document.querySelectorAll('nav.tabs button').forEach(function(b){ b.classList.toggle('on',b.dataset.t===id); });
   document.querySelectorAll('section.tab').forEach(function(s){ s.classList.toggle('on',s.id===id); });
   el('topbar').style.display = id==='t-bilet' ? '' : 'none';
-  if(id!=='t-bilet'){ SEL=null; el('panel').classList.remove('up'); el('backdrop').classList.remove('on'); }
-  window.scrollTo({top:0});
+  if(!keepBack) window.scrollTo({top:0});
 }
+el('backbtn').onclick=function(){
+  el('backbar').classList.remove('on');
+  setTab('t-bilet', true);
+  requestAnimationFrame(function(){ if(SEL) scrollToField(SEL); else window.scrollTo({top:LASTY}); });
+};
 document.querySelectorAll('nav.tabs button').forEach(function(b){ b.onclick=function(){ setTab(b.dataset.t); }; });
-el('modebtn').onclick=function(){ MODE = eff()==='mobile'?'desktop':'mobile'; save(); applyMode(); renderSheet(); renderPanel(); };
+el('modebtn').onclick=function(){ MODE = eff()==='mobile'?'desktop':'mobile'; save(); applyMode(); renderSheet(); };
+el('modebtn').ondblclick=function(){ MODE='auto'; save(); applyMode(); };
 el('zin').onclick=function(){ setZoom(1); };
 el('zout').onclick=function(){ setZoom(-1); };
 el('zlabel').onclick=function(){ setZoom(0); };
-el('modebtn').ondblclick=function(){ MODE='auto'; save(); applyMode(); };
-el('backdrop').onclick=function(){ SEL=null; renderSheet(); renderPanel(); };
 el('ck-reset').onclick=function(){ CK={}; renderCheck(); };
 el('q').addEventListener('input',function(e){ renderText(e.target.value); });
-window.addEventListener('resize',function(){ applyZoom(); if(MODE==='auto') applyMode(); });
+window.addEventListener('resize',function(){ applyZoom(); });
 document.addEventListener('keydown',function(e){
-  if(e.key==='Escape'&&SEL){ SEL=null; renderSheet(); renderPanel(); return; }
+  if(e.key==='Escape'&&SEL){ pick(SEL); return; }
   if(!canZoom()||e.metaKey||e.ctrlKey||e.altKey) return;
   var t=(e.target.tagName||'').toLowerCase();
   if(t==='input'||t==='textarea'||t==='select') return;
@@ -1235,8 +1450,7 @@ document.addEventListener('keydown',function(e){
   else if(e.key==='-'||e.key==='_'){ setZoom(-1); }
   else if(e.key==='0'){ setZoom(0); }
 });
-
-load(); renderAll(); renderDict(); renderText(''); setTab('t-bilet'); applyZoom();
+load(); renderAll(); renderDict(); renderText(''); setTab('t-bilet');
 </script>
 </body>
 </html>
