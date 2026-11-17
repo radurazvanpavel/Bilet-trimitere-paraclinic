@@ -143,10 +143,12 @@ section.tab{display:none} section.tab.on{display:block;animation:fade .22s ease}
 .i-tipar{background:var(--tipar);box-shadow:0 0 0 3px var(--tipar-bg)}
 
 /* ============ LAYOUT ============ */
-.split{display:grid;grid-template-columns:minmax(0,1fr) 250px;grid-template-areas:"sheet nav";gap:24px;align-items:start}
+.split{display:grid;grid-template-columns:minmax(0,1fr) minmax(340px,410px);grid-template-areas:"sheet panel";gap:24px;align-items:start}
 #sheet{grid-area:sheet;min-width:0}
-#navwrap{grid-area:nav;min-width:0;align-self:stretch}
+#navwrap{grid-area:nav;min-width:0;display:none}
+#panel{grid-area:panel;min-width:0}
 body[data-mode="mobile"] .split{grid-template-columns:minmax(0,1fr);grid-template-areas:"nav" "sheet";gap:12px}
+body[data-mode="mobile"] #navwrap{display:block}
 
 
 /* etichete de rol */
@@ -226,7 +228,7 @@ body[data-mode="mobile"] .fz{scroll-margin-top:124px}
   font-family:var(--font);font-size:15px;font-weight:700;line-height:1;color:var(--ink-3);background:#fff;
   box-shadow:inset 0 0 0 1px var(--line);opacity:.0;transition:opacity .16s,transform .2s,background .16s,color .16s}
 .fz:hover .tap{opacity:1}
-.fz.sel .tap{opacity:1;background:var(--accent);color:#fff;box-shadow:none;transform:rotate(90deg)}
+.fz.sel .tap{opacity:1;background:var(--accent);color:#fff;box-shadow:none}
 body[data-mode="mobile"] .fz .tap{opacity:.7}
 
 /* elemente comune ale formularului */
@@ -376,47 +378,75 @@ body[data-mode="mobile"] .fz{padding:10px 12px 14px 12px}
 body[data-mode="mobile"] .fz .num{position:static;display:inline-grid;margin:0 0 8px}
 body[data-mode="mobile"] .fz .tap{right:10px;top:9px}
 
-/* ============ EXPLICAŢIA, DESCHISĂ SUB CÂMP ============ */
-.exp{position:relative;background:#fff;border-bottom:1px solid var(--line);padding:4px 24px 20px 58px;
-  font-family:var(--font);animation:fade .2s ease}
-.exp:before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--accent)}
-body[data-mode="mobile"] .exp{padding:4px 16px 18px 16px}
-.exp-h{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;padding-top:12px;
-  border-top:1px dashed var(--line-2)}
-.eyebrow{font-size:.68em;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--accent)}
-.exp h2{margin:3px 0 0;font-size:1.12em;font-weight:650;letter-spacing:-.015em;line-height:1.3}
-.exp .who{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
-.exp .x{flex:0 0 auto;border:1px solid var(--line-2);background:#fff;border-radius:9px;width:34px;height:34px;
-  color:var(--ink-2);cursor:pointer;font-size:.95em}
-.exp .x:hover{border-color:var(--accent);color:var(--accent)}
-.sum{margin:12px 0 4px;font-size:.98em;line-height:1.6;color:var(--ink);background:var(--accent-soft);
+/* ============ PANOUL DIN DREAPTA (explicaţia câmpului) ============ */
+.panel{position:sticky;top:var(--ptop,66px);display:flex;flex-direction:column;
+  max-height:calc(var(--avail,100vh) - var(--ptop,66px) - 16px);
+  background:var(--surface);border:1px solid var(--line);border-radius:var(--r-l);box-shadow:var(--sh-2);
+  overflow:hidden;font-family:var(--font)}
+.p-head{flex:0 0 auto;display:flex;gap:12px;align-items:flex-start;justify-content:space-between;
+  padding:18px 20px 14px;border-bottom:1px solid transparent;transition:border-color .15s,box-shadow .15s}
+.panel.scrolled .p-head{border-bottom-color:var(--line);box-shadow:0 6px 12px -10px rgba(16,19,26,.18)}
+.p-head .pn{flex:0 0 auto;min-width:32px;height:30px;padding:0 8px;border-radius:9px;display:grid;place-items:center;
+  font-weight:700;font-size:.8em;background:var(--accent);color:#fff}
+.p-ht{flex:1;min-width:0}
+.eyebrow{font-size:.68em;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3)}
+.panel h2{margin:3px 0 0;font-size:1.08em;font-weight:650;letter-spacing:-.015em;line-height:1.3;outline:0}
+.panel .who{display:flex;flex-wrap:wrap;gap:6px;margin-top:9px}
+.p-x{flex:0 0 auto;border:1px solid var(--line-2);background:#fff;border-radius:9px;width:36px;height:36px;
+  color:var(--ink-2);cursor:pointer;font-size:.95em;display:grid;place-items:center}
+.p-x:hover{border-color:var(--accent);color:var(--accent)}
+.p-x:focus-visible,.p-nav button:focus-visible,.nv:focus-visible,.lq-go:focus-visible,.fz:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.p-body{flex:1 1 auto;min-height:0;overflow-y:auto;overscroll-behavior:contain;padding:0 20px 18px;
+  scrollbar-width:thin;scrollbar-color:var(--line-2) transparent;-webkit-overflow-scrolling:touch}
+.p-body::-webkit-scrollbar{width:8px}
+.p-body::-webkit-scrollbar-thumb{background:var(--line-2);border-radius:8px;border:2px solid var(--surface)}
+.p-hint{margin:0 0 12px;font-size:.86em;color:var(--ink-2);line-height:1.55}
+.sum{margin:2px 0 4px;font-size:.95em;line-height:1.6;color:var(--ink);background:var(--accent-soft);
   border-radius:11px;padding:11px 14px}
-.exp-g{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);gap:22px;margin-top:6px;container-type:inline-size}
-.exp h3{font-size:.7em;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);
-  margin:16px 0 9px}
-.exp h3.hw{color:var(--warn)}
-.exp ul.ok,.exp ul.warn{list-style:none;padding:0;margin:0}
-.exp ul.ok li{position:relative;padding:0 0 0 20px;margin-bottom:9px;font-size:.92em;line-height:1.55;color:var(--ink-2)}
-.exp ul.ok li b{color:var(--ink);font-weight:650}
-.exp ul.ok li:before{content:"";position:absolute;left:4px;top:.6em;width:5px;height:5px;border-radius:50%;
+.panel h3{font-size:.7em;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);
+  margin:18px 0 9px;display:flex;align-items:center;gap:9px}
+.panel h3:after{content:"";flex:1;height:1px;background:var(--line)}
+.panel h3.hw{color:var(--warn)}
+.panel .law h3{color:var(--accent)}
+.panel ul.ok,.panel ul.warn{list-style:none;padding:0;margin:0}
+.panel ul.ok li{position:relative;padding:0 0 0 20px;margin-bottom:9px;font-size:.92em;line-height:1.55;color:var(--ink-2)}
+.panel ul.ok li b{color:var(--ink);font-weight:650}
+.panel ul.ok li:before{content:"";position:absolute;left:4px;top:.6em;width:5px;height:5px;border-radius:50%;
   background:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
-.exp ul.warn li{position:relative;background:var(--warn-bg);border-radius:10px;padding:9px 12px 9px 26px;
+.panel ul.warn li{position:relative;background:var(--warn-bg);border-radius:10px;padding:9px 12px 9px 26px;
   margin-bottom:7px;font-size:.89em;line-height:1.5;color:#6d2a21}
-.exp ul.warn li:before{content:"";position:absolute;left:11px;top:1em;width:5px;height:5px;border-radius:50%;background:var(--warn)}
-.exp .law h3{color:var(--accent)}
+.panel ul.warn li:before{content:"";position:absolute;left:11px;top:1em;width:5px;height:5px;border-radius:50%;background:var(--warn)}
 .lq{background:var(--surface-2);border:1px solid var(--line);border-left:3px solid var(--accent-2);border-radius:10px;
   padding:11px 14px 9px;margin-bottom:9px;font-size:.86em;line-height:1.6;color:var(--ink-2)}
 .lq p{margin:0 0 7px}
 .lq b{color:var(--ink)}
 .lq-go{display:block;margin:2px 0 0 auto;border:0;background:none;color:var(--accent);font-size:.92em;font-weight:650;
-  cursor:pointer;padding:3px 0}
+  cursor:pointer;padding:6px 0;min-height:32px}
 .lq-go:hover{text-decoration:underline}
-.exp-nav{display:flex;gap:8px;margin-top:16px;padding-top:12px;border-top:1px solid var(--line)}
-.exp-nav button{flex:1;border:1px solid var(--line-2);background:#fff;border-radius:var(--r-s);padding:9px;
+.p-nav{flex:0 0 auto;display:flex;gap:8px;padding:12px 20px 14px;border-top:1px solid var(--line);background:var(--surface)}
+.p-nav button{flex:1;border:1px solid var(--line-2);background:#fff;border-radius:var(--r-s);padding:9px;
   font-size:.83em;font-weight:650;color:var(--accent);cursor:pointer;min-height:var(--tap)}
-.exp-nav button:hover:not(:disabled){background:var(--accent-soft);border-color:var(--accent)}
-.exp-nav button:disabled{color:#c4c9d4;cursor:default}
-@container sheet (max-width: 760px){ .exp-g{grid-template-columns:minmax(0,1fr);gap:0} }
+.p-nav button:hover:not(:disabled){background:var(--accent-soft);border-color:var(--accent)}
+.p-nav button:disabled{color:#c4c9d4;cursor:default}
+.p-pos{flex:0 0 auto;align-self:center;font-size:.76em;color:var(--ink-3);font-variant-numeric:tabular-nums;min-width:44px;text-align:center}
+/* indexul rubricilor, în panou, când nu e ales niciun câmp */
+.panel .nav-t{margin:14px 6px 6px}
+.panel .nav-g:first-child .nav-t{margin-top:2px}
+.panel .nv{padding:8px 8px;min-height:38px}
+/* pe telefon: sertar care urcă de jos, cu scroll propriu */
+#backdrop{display:none}
+body[data-mode="mobile"] .panel{position:fixed;left:0;right:0;bottom:0;top:auto;z-index:60;
+  max-height:min(82vh, calc(var(--avail,100vh) - 56px));border-radius:20px 20px 0 0;border:1px solid var(--line-2);border-bottom:0;
+  box-shadow:0 -10px 40px rgba(16,19,26,.24);transform:translateY(102%);visibility:hidden;
+  transition:transform .26s cubic-bezier(.32,.72,0,1),visibility 0s linear .26s}
+body[data-mode="mobile"] .panel.up{transform:translateY(0);visibility:visible;transition:transform .26s cubic-bezier(.32,.72,0,1)}
+body[data-mode="mobile"] .p-head{padding:22px 16px 12px;position:relative}
+body[data-mode="mobile"] .p-head:before{content:"";position:absolute;left:50%;top:8px;transform:translateX(-50%);
+  width:40px;height:4px;border-radius:2px;background:var(--line-2)}
+body[data-mode="mobile"] .p-body{padding:0 16px 16px}
+body[data-mode="mobile"] .p-nav{padding:10px 16px calc(12px + env(safe-area-inset-bottom))}
+body[data-mode="mobile"] #backdrop.on{display:block;position:fixed;inset:0;background:rgba(16,19,26,.32);
+  z-index:55;animation:fade .2s ease}
 
 /* ============ ÎNAPOI DIN TEXTUL ORDINULUI ============ */
 .backbar{display:none;position:sticky;top:50px;z-index:25;margin:0 calc(-1 * var(--pad)) 12px;padding:8px var(--pad);background:rgba(245,246,249,.94);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
@@ -547,7 +577,7 @@ footer{color:var(--ink-3);font-size:.76em;text-align:center;padding:10px 16px 34
 
   <section class="tab on" id="t-bilet">
     <p class="typenote" id="typenote"></p>
-    <p class="helper">Biletul e desenat exact după modelul din ordin. Apasă pe un câmp: explicaţia şi textul din ordin se deschid chiar sub el. Fondul fiecărui câmp arată cui îi revine completarea.</p>
+    <p class="helper">Biletul e desenat exact după modelul din ordin. Apasă pe un câmp: explicaţia şi textul din ordin apar <span id="where">în panoul din dreapta</span>. Fondul fiecărui câmp arată cui îi revine completarea.</p>
     <div class="legend">
       <span><i class="i-medic"></i>medicul care recomandă</span>
       <span><i class="i-noi"></i>furnizorul de servicii paraclinice</span>
@@ -557,7 +587,9 @@ footer{color:var(--ink-3);font-size:.76em;text-align:center;padding:10px 16px 34
     <div class="split">
       <aside id="navwrap"><div class="toc" id="toc"><div class="toc-h">Rubricile biletului</div><div id="nav"></div></div></aside>
       <div id="sheet"></div>
+      <aside class="panel" id="panel" aria-label="Explicaţia câmpului ales"></aside>
     </div>
+    <div id="backdrop"></div>
   </section>
 
   <section class="tab" id="t-check">
@@ -883,6 +915,7 @@ function applyMode(){
   document.body.dataset.mode=m;
   el('modebtn').textContent = m==='mobile'?'Vedere: mobil':'Vedere: desktop';
   el('modebtn').title = MODE==='auto'?'Se potriveşte automat. Apasă pentru a fixa.':'Fixat. Dublu-clic pentru automat.';
+  if(el('panel').innerHTML) syncDrawer();
 }
 function applyZoom(){
   document.body.classList.toggle('can-zoom', canZoom());
@@ -891,6 +924,7 @@ function applyZoom(){
   var lbl=el('zlabel'); if(lbl) lbl.textContent = Math.round(ZSTEPS[ZI]*100)+'%';
   if(el('zout')) el('zout').disabled = ZI===0;
   if(el('zin'))  el('zin').disabled  = ZI===ZSTEPS.length-1;
+  setAvail();
 }
 function setZoom(d){
   if(d===0) ZI=0; else ZI=Math.min(ZSTEPS.length-1, Math.max(0, ZI+d));
@@ -1134,7 +1168,7 @@ function frag(id){
 }
 
 
-/* ================= BILETUL + EXPLICAŢIA SUB CÂMP ================= */
+/* ================= BILETUL + PANOUL DIN DREAPTA ================= */
 function zonesFor(face){ return Z.filter(function(z){ return z.face===face && zoneOn(z,T); }); }
 function badge(z){ return (z.id==='z4' && HP.indexOf(T)>=0) ? '4.1' : z.b; }
 function whoChips(ws){ return ws.map(function(w){ return '<span class="chip c-'+w+'">'+WHO[w].n+'</span>'; }).join(''); }
@@ -1145,69 +1179,7 @@ function lawKeys(z){
   });
   return out;
 }
-function expHTML(z){
-  var ok = z.ok.filter(function(i){return on(i.on||'all',T);});
-  var wr = z.warn.filter(function(i){return on(i.on||'all',T);});
-  var sum = typeof z.sum==='function' ? z.sum(T) : (z.sum||'');
-  var multi = z.who.length>1;
-  var zs = zonesFor(FACE), ix = zs.map(function(x){return x.id;}).indexOf(z.id);
-  var keys = lawKeys(z);
-  return '<div class="exp" id="exp">'+
-    '<div class="exp-h">'+
-      '<div><div class="eyebrow">'+(FACE==='fata'?'Faţa biletului':'Versoul biletului')+' · câmpul '+badge(z)+'</div>'+
-      '<h2>'+z.title+'</h2><div class="who">'+whoChips(z.who)+'</div></div>'+
-      '<button class="x" type="button" data-close aria-label="închide">✕</button>'+
-    '</div>'+
-    (sum?'<p class="sum">'+sum+'</p>':'')+
-    '<div class="exp-g">'+
-      '<section><h3>Ce trebuie să conţină</h3><ul class="ok">'+ok.map(function(i){
-          return '<li>'+i.t+(multi?' <span class="mini c-'+i.w+'">'+WHO[i.w].n+'</span>':'')+'</li>';
-        }).join('')+'</ul>'+
-        (wr.length?'<h3 class="hw">Atenţie</h3><ul class="warn">'+wr.map(function(i){return '<li>'+i.t+'</li>';}).join('')+'</ul>':'')+
-      '</section>'+
-      '<section class="law"><h3>Ce spune ordinul</h3>'+
-        keys.map(function(k){
-          return '<div class="lq">'+L[k]+'<button class="lq-go" type="button" data-law="'+k+'">vezi în textul integral →</button></div>';
-        }).join('')+
-      '</section>'+
-    '</div>'+
-    '<div class="exp-nav">'+
-      '<button type="button" data-step="-1"'+(ix<=0?' disabled':'')+'>← câmpul anterior</button>'+
-      '<button type="button" data-step="1"'+(ix>=zs.length-1?' disabled':'')+'>câmpul următor →</button>'+
-    '</div>'+
-  '</div>';
-}
-function renderSheet(){
-  var zs = zonesFor(FACE), tp = TYPES.filter(function(x){return x.id===T;})[0];
-  var h = '<div class="sheet"><div class="sheet-top"><b>'+(FACE==='fata'?'Faţa biletului':'Versoul biletului')+
-          '</b><span>'+tp.n+' · '+tp.s+'</span></div>';
-  if(FACE==='verso'){
-    h += '<div class="vnote">Ordinul nu stabileşte un model grafic pentru verso. Stabileşte doar ce trebuie consemnat pe verso — anexa 2a, lit. C, câmpul 7'+
-         (T==='prev'?' (pentru biletul de prevenţie: anexa 2b, lit. C, câmpul 7)':'')+'.</div>';
-  }
-  zs.forEach(function(z){
-    h += '<div class="fz w-'+z.who[0]+(SEL===z.id?' sel':'')+'" data-z="'+z.id+'" id="f-'+z.id+'" role="button" tabindex="0" aria-expanded="'+(SEL===z.id)+'">'+
-         '<span class="num">'+badge(z)+'</span><span class="tap" aria-hidden="true">›</span>'+
-         '<div class="fbody">'+frag(z.id)+'</div></div>';
-    if(SEL===z.id) h += expHTML(z);
-  });
-  h += '</div>';
-  el('sheet').innerHTML = h;
-  el('sheet').querySelectorAll('.fz').forEach(function(d){
-    d.onclick = function(){ pick(d.dataset.z); };
-    d.onkeydown = function(e){ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); pick(d.dataset.z); } };
-  });
-  var x = el('sheet').querySelector('[data-close]'); if(x) x.onclick=function(){ pick(SEL); };
-  el('sheet').querySelectorAll('[data-step]').forEach(function(b){
-    b.onclick=function(){
-      var zs2=zonesFor(FACE), i=zs2.map(function(q){return q.id;}).indexOf(SEL)+parseInt(b.dataset.step,10);
-      if(zs2[i]) pick(zs2[i].id, true);
-    };
-  });
-  el('sheet').querySelectorAll('[data-law]').forEach(function(b){ b.onclick=function(){ openLaw(b.dataset.law); }; });
-  renderNav();
-}
-function renderNav(){
+function navHTML(){
   var h='';
   ['fata','verso'].forEach(function(f){
     var zs=zonesFor(f);
@@ -1219,24 +1191,131 @@ function renderNav(){
     });
     h+='</div>';
   });
-  el('nav').innerHTML=h;
-  var tc=el('toc'); if(tc){ tc.classList.remove('static');
-    if(eff()!=='mobile' && (tc.offsetHeight+90)*pageZoom() > window.innerHeight) tc.classList.add('static'); }
-  el('nav').querySelectorAll('.nv').forEach(function(b){
-    b.onclick=function(){
-      if(FACE!==b.dataset.f){ FACE=b.dataset.f; renderFaceSeg(); }
-      SEL=null; pick(b.dataset.zz, true);
-    };
+  return h;
+}
+function goNav(f, id){
+  if(FACE!==f){ FACE=f; renderFaceSeg(); }
+  SEL=null; pick(id, true);
+}
+function renderSheet(){
+  var zs = zonesFor(FACE), tp = TYPES.filter(function(x){return x.id===T;})[0];
+  var h = '<div class="sheet"><div class="sheet-top"><b>'+(FACE==='fata'?'Faţa biletului':'Versoul biletului')+
+          '</b><span>'+tp.n+' · '+tp.s+'</span></div>';
+  if(FACE==='verso'){
+    h += '<div class="vnote">Ordinul nu stabileşte un model grafic pentru verso. Stabileşte doar ce trebuie consemnat pe verso — anexa 2a, lit. C, câmpul 7'+
+         (T==='prev'?' (pentru biletul de prevenţie: anexa 2b, lit. C, câmpul 7)':'')+'.</div>';
+  }
+  zs.forEach(function(z){
+    h += '<div class="fz w-'+z.who[0]+(SEL===z.id?' sel':'')+'" data-z="'+z.id+'" id="f-'+z.id+'" role="button" tabindex="0" aria-controls="panel" aria-pressed="'+(SEL===z.id)+'">'+
+         '<span class="num">'+badge(z)+'</span><span class="tap" aria-hidden="true">›</span>'+
+         '<div class="fbody">'+frag(z.id)+'</div></div>';
   });
+  h += '</div>';
+  el('sheet').innerHTML = h;
+  el('sheet').querySelectorAll('.fz').forEach(function(d){
+    d.onclick = function(){ pick(d.dataset.z); };
+    d.onkeydown = function(e){ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); pick(d.dataset.z, false, true); } };
+  });
+  renderNav();
+  renderPanel();
+}
+function renderNav(){
+  el('nav').innerHTML=navHTML();
+  el('nav').querySelectorAll('.nv').forEach(function(b){
+    b.onclick=function(){ goNav(b.dataset.f, b.dataset.zz); };
+  });
+}
+var PSHOWN=null;
+function renderPanel(){
+  var p=el('panel'), mob=eff()==='mobile', h;
+  var z = SEL ? Z.filter(function(x){return x.id===SEL;})[0] : null;
+  if(!z){
+    h = '<div class="p-head"><div class="p-ht"><div class="eyebrow">Rubricile biletului</div>'+
+          '<h2 tabindex="-1">Alege un câmp</h2></div></div>'+
+        '<div class="p-body"><p class="p-hint">Apasă pe un câmp din bilet sau alege-l din lista de mai jos. Explicaţia apare aici.</p>'+
+          navHTML()+'</div>';
+  } else {
+    var ok = z.ok.filter(function(i){return on(i.on||'all',T);});
+    var wr = z.warn.filter(function(i){return on(i.on||'all',T);});
+    var sum = typeof z.sum==='function' ? z.sum(T) : (z.sum||'');
+    var multi = z.who.length>1;
+    var zs = zonesFor(FACE), ix = zs.map(function(x){return x.id;}).indexOf(z.id);
+    var keys = lawKeys(z);
+    h = '<div class="p-head">'+
+          '<span class="pn">'+badge(z)+'</span>'+
+          '<div class="p-ht"><div class="eyebrow">'+(FACE==='fata'?'Faţa biletului':'Versoul biletului')+'</div>'+
+          '<h2 tabindex="-1">'+z.title+'</h2><div class="who">'+whoChips(z.who)+'</div></div>'+
+          '<button class="p-x" type="button" data-close aria-label="Închide explicaţia" title="Închide (Esc)">✕</button>'+
+        '</div>'+
+        '<div class="p-body">'+
+          (sum?'<p class="sum">'+sum+'</p>':'')+
+          '<section><h3>Ce trebuie să conţină</h3><ul class="ok">'+ok.map(function(i){
+              return '<li>'+i.t+(multi?' <span class="mini c-'+i.w+'">'+WHO[i.w].n+'</span>':'')+'</li>';
+            }).join('')+'</ul>'+
+            (wr.length?'<h3 class="hw">Atenţie</h3><ul class="warn">'+wr.map(function(i){return '<li>'+i.t+'</li>';}).join('')+'</ul>':'')+
+          '</section>'+
+          (keys.length?'<section class="law"><h3>Ce spune ordinul</h3>'+
+            keys.map(function(k){
+              return '<div class="lq">'+L[k]+'<button class="lq-go" type="button" data-law="'+k+'">vezi în textul integral →</button></div>';
+            }).join('')+'</section>':'')+
+        '</div>'+
+        '<div class="p-nav">'+
+          '<button type="button" data-step="-1"'+(ix<=0?' disabled':'')+'>← câmpul anterior</button>'+
+          '<button type="button" data-step="1"'+(ix>=zs.length-1?' disabled':'')+'>câmpul următor →</button>'+
+        '</div>';
+  }
+  var key = (SEL||'-')+'|'+FACE+'|'+T;
+  var prevTop = (key===PSHOWN && p.querySelector('.p-body')) ? p.querySelector('.p-body').scrollTop : 0;
+  p.innerHTML = h;
+  var body = p.querySelector('.p-body');
+  body.scrollTop = prevTop;
+  p.classList.toggle('scrolled', body.scrollTop>2);
+  body.onscroll = function(){ p.classList.toggle('scrolled', body.scrollTop>2); };
+  PSHOWN = key;
+  syncDrawer();
+}
+function syncDrawer(){
+  var up = eff()==='mobile' && !!SEL;
+  el('panel').classList.toggle('up', up);
+  el('backdrop').classList.toggle('on', up);
+  var w=el('where'); if(w) w.textContent = eff()==='mobile' ? 'într-un panou care urcă de jos' : 'în panoul din dreapta';
+}
+/* un singur ascultător pentru tot ce e în panou */
+el('panel').addEventListener('click', function(e){
+  var t = e.target.closest('button'); if(!t) return;
+  if(t.hasAttribute('data-close')){ pick(SEL); return; }
+  if(t.dataset.step){
+    var zs2=zonesFor(FACE), i=zs2.map(function(q){return q.id;}).indexOf(SEL)+parseInt(t.dataset.step,10);
+    if(zs2[i]) pick(zs2[i].id, true);
+    return;
+  }
+  if(t.dataset.law){ openLaw(t.dataset.law); return; }
+  if(t.dataset.zz){ goNav(t.dataset.f, t.dataset.zz); }
+});
+el('backdrop').onclick=function(){ if(SEL) pick(SEL); };
+function setAvail(){
+  document.documentElement.style.setProperty('--avail', (window.innerHeight/pageZoom())+'px');
+  var tabs=document.querySelector('nav.tabs');
+  if(tabs) document.documentElement.style.setProperty('--ptop', (Math.round(tabs.getBoundingClientRect().height/pageZoom())+14)+'px');
 }
 function scrollToField(id){
   var n = el('f-'+id); if(!n) return;
-  n.scrollIntoView({behavior:'smooth', block:'start'});
+  if(eff()==='mobile'){ n.scrollIntoView({behavior:'smooth', block:'start'}); return; }
+  var r=n.getBoundingClientRect(), vh=window.innerHeight, top=70*pageZoom();
+  if(r.top>=top && r.bottom<=vh) return;           /* deja vizibil: nu mişcăm pagina */
+  n.scrollIntoView({behavior:'smooth', block: (r.height > vh-top) ? 'start' : 'center'});
 }
-function pick(id, force){
+/* force = ales din panou / listă / anterior-următor (pagina se duce la câmp);
+   focus = ales de la tastatură (focusul trece în panou) */
+function pick(id, force, focus){
+  var was = SEL;
   SEL = (SEL===id && !force) ? null : id;
   renderSheet();
-  if(SEL) requestAnimationFrame(function(){ scrollToField(SEL); });
+  if(SEL && (force || eff()==='mobile')) requestAnimationFrame(function(){ scrollToField(SEL); });
+  if(SEL && focus){ var hd=el('panel').querySelector('h2'); if(hd) hd.focus({preventScroll:true}); }
+  if(!SEL && was && document.activeElement && el('panel').contains(document.activeElement)){
+    var f=el('f-'+was); if(f) f.focus({preventScroll:true});
+  }
 }
 
 /* ================= VERIFICARE ================= */
@@ -1425,6 +1504,7 @@ function setTab(id, keepBack){
   document.querySelectorAll('nav.tabs button').forEach(function(b){ b.classList.toggle('on',b.dataset.t===id); });
   document.querySelectorAll('section.tab').forEach(function(s){ s.classList.toggle('on',s.id===id); });
   el('topbar').style.display = id==='t-bilet' ? '' : 'none';
+  if(id==='t-bilet') syncDrawer(); else { el('panel').classList.remove('up'); el('backdrop').classList.remove('on'); }
   if(!keepBack) window.scrollTo({top:0});
 }
 el('backbtn').onclick=function(){
