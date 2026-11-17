@@ -378,6 +378,17 @@ body[data-mode="mobile"] .fz{padding:10px 12px 14px 12px}
 body[data-mode="mobile"] .fz .num{position:static;display:inline-grid;margin:0 0 8px}
 body[data-mode="mobile"] .fz .tap{right:10px;top:9px}
 
+/* ============ AVERTISMENT: BILETUL NU SE CORECTEAZĂ ============ */
+.nocorr{background:var(--surface);border:1px solid var(--warn-ring);border-left:3px solid var(--warn);border-radius:var(--r-m);
+  padding:13px 16px 12px 17px;margin:0 0 12px;box-shadow:var(--sh-1);font-size:.88em;line-height:1.6;color:var(--ink-2)}
+.nocorr-h{font-weight:700;color:var(--warn);font-size:1.02em;margin:0 0 4px;letter-spacing:-.005em}
+.nocorr p{margin:0 0 6px}
+.nocorr p b{color:var(--ink)}
+.nocorr q{display:block;quotes:none;margin:8px 0 0;padding:9px 12px;background:var(--surface-2);border-radius:9px;
+  border:1px solid var(--line);font-size:.95em}
+.nocorr q:before,.nocorr q:after{content:none}
+.nocorr .lq-go{margin-top:2px}
+
 /* ============ PANOUL DIN DREAPTA (explicaţia câmpului) ============ */
 .panel{position:sticky;top:var(--ptop,66px);display:flex;flex-direction:column;
   max-height:calc(var(--avail,100vh) - var(--ptop,66px) - 16px);
@@ -577,6 +588,13 @@ footer{color:var(--ink-3);font-size:.76em;text-align:center;padding:10px 16px 34
 
   <section class="tab on" id="t-bilet">
     <p class="typenote" id="typenote"></p>
+    <div class="nocorr" role="note" aria-label="Biletul nu se corectează">
+      <div class="nocorr-h">Biletul corectat nu se primeşte</div>
+      <p>Pe bilet <b>nu se admite nicio corectură</b> – nici ştersătură, nici text tăiat şi rescris, nici adăugire – chiar dacă lângă ea sunt parafa şi semnătura medicului sau menţiunea „corectat”. Biletul greşit <b>se anulează</b>, iar medicul <b>emite altul, corect</b>. Un bilet corectat şi primit poate duce la imputarea investigaţiilor la control.</p>
+      <p>Temeiul: Ordinul nr. 2.168/502/2023, anexa 2a, lit. B, pct. 2:
+      <q>„În situaţia în care în interiorul carnetului cu bilete de trimitere există formulare greşit tipărite, incomplete sau completate greşit de către medic, se va scrie cuvântul "ANULAT" pe formular şi acesta nu va fi decupat din carnet.”</q></p>
+      <button class="lq-go" type="button" data-law-open="B2">vezi în textul integral →</button>
+    </div>
     <p class="helper">Biletul e desenat exact după modelul din ordin. Apasă pe un câmp: explicaţia şi textul din ordin apar <span id="where">în panoul din dreapta</span>. Fondul fiecărui câmp arată cui îi revine completarea.</p>
     <div class="legend">
       <span><i class="i-medic"></i>medicul care recomandă</span>
@@ -722,6 +740,7 @@ const WHO = {
 const Z = [
 {id:'z0', b:'0', face:'fata', title:'Formularul în sine', sum:function(t){ return t==='prev' ? 'Biletul de prevenţie al medicului de familie este un formular distinct (anexa 1e). Se primeşte doar exemplarul alb, original, cu cod de bare, serie şi număr.' : (HP.indexOf(t)>=0 ? 'Pentru RMN, CT, scintigrafie şi angiografie există câte un formular propriu. Trebuie să fie exact formularul investigaţiei cerute, în original (exemplarul alb), cu cod de bare, serie şi număr.' : 'Este formularul pentru toate investigaţiile paraclinice decontate de CAS, în afară de RMN, CT, scintigrafie şi angiografie. Se primeşte doar exemplarul alb, original, cu cod de bare, serie şi număr.'); }, short:'Serie, număr, cod de bare, exemplarul corect', who:['tipar'],
  ok:[
+  {t:'<b>Fără nicio corectură</b>: nimic şters, tăiat şi rescris sau adăugat pe bilet', w:'tipar'},
   {t:'Formular tipizat cu regim special, cu <b>cod de bare</b>, <b>serie</b> şi <b>număr</b>', w:'tipar'},
   {t:'Furnizorului de servicii paraclinice i se predă <b>exemplarul 1 – ALB</b> (originalul); exemplarul 2 verde rămâne în carnet, la medicul care a recomandat', w:'tipar', on:'notprev'},
   {t:'Furnizorului de servicii paraclinice i se predă <b>exemplarul 1 – ALB</b> (originalul); exemplarul 2 roz rămâne în carnet, la medicul de familie', w:'tipar', on:'prev'},
@@ -734,10 +753,11 @@ const Z = [
   {t:'Testul Babeş-Papanicolau are bilet separat', w:'tipar', on:'prev'}
  ],
  warn:[
+  {t:'<b>Biletul corectat nu se primeşte</b>, nici dacă lângă corectură sunt parafa şi semnătura medicului sau menţiunea „corectat”. Biletul completat greşit se anulează şi medicul emite altul, corect (anexa 2a, lit. B, pct. 2).'},
   {t:'Orice alt formular (copie, reţetă, scrisoare medicală, bilet de trimitere pentru consultaţie) NU ţine loc de bilet. Folosirea altor formulare atrage răspunderea furnizorului.'},
   {t:'Un formular pe care scrie „ANULAT” nu poate fi primit — fila respectivă trebuia să rămână pliată în carnet.'}
  ],
- law:[{k:'A1'},{k:'P_A1',on:'prev'},{k:'art1_2',on:'hp'},{k:'art1_3',on:'prev'},{k:'art1_4',on:'prev'},{k:'B1',on:'notprev'},{k:'P_B1',on:'prev'},{k:'P_A2',on:'prev'},{k:'B2'},{k:'Ccod'},{k:'C4nota',on:'rmnct'},{k:'art3_2'}]
+ law:[{k:'B2'},{k:'A1'},{k:'P_A1',on:'prev'},{k:'art1_2',on:'hp'},{k:'art1_3',on:'prev'},{k:'art1_4',on:'prev'},{k:'B1',on:'notprev'},{k:'P_B1',on:'prev'},{k:'P_A2',on:'prev'},{k:'Ccod'},{k:'C4nota',on:'rmnct'},{k:'art3_2'}]
 },
 {id:'z1', b:'1', face:'fata', title:'Unitatea medicală care trimite', sum:function(t){ return t==='prev' ? 'Arată cine trimite pacientul: unitatea medicală, CUI-ul, adresa, casa de asigurări şi contractul cu CAS. Pe biletul de prevenţie nu există căsuţe pentru tipul de furnizor sau pentru prioritate.' : 'Arată cine trimite pacientul: unitatea medicală, CUI-ul, adresa, casa de asigurări şi contractul cu CAS în baza căruia lucrează medicul. În mijloc se bifează tipul de furnizor, iar în dreapta nivelul de prioritate.'; }, short:'Denumire, CUI, adresă, CAS, nr. contract + tip unitate şi prioritate', who:['medic'],
  ok:[
@@ -1293,6 +1313,7 @@ el('panel').addEventListener('click', function(e){
   if(t.dataset.zz){ goNav(t.dataset.f, t.dataset.zz); }
 });
 el('backdrop').onclick=function(){ if(SEL) pick(SEL); };
+document.querySelectorAll('[data-law-open]').forEach(function(b){ b.onclick=function(){ openLaw(b.dataset.lawOpen); }; });
 function setAvail(){
   document.documentElement.style.setProperty('--avail', (window.innerHeight/pageZoom())+'px');
   var tabs=document.querySelector('nav.tabs');
